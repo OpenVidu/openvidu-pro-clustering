@@ -1,10 +1,14 @@
 - hosts: kurento
+  strategy: free
+  serial: 5
   roles:
     - kms
     - file-server
     - healthcheck
     
 - hosts: openvidu
+  strategy: free
+  serial: 5
   roles:
     - geerlingguy.docker
     - nginx
