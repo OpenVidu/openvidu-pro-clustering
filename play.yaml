@@ -12,4 +12,4 @@
     - elastic
     - supervisord
     - system-shutdown
-
+    - healthcheck
