@@ -1,4 +1,15 @@
 ---
 - name: restart coturn
-  service: name=coturn state=restarted
+  service: 
+    name: coturn
+    state: restarted
 
+- name: start coturn
+  service: 
+    name: coturn
+    state: started
+
+- name: stop coturn
+  service: 
+    name: coturn
+    state: stopped

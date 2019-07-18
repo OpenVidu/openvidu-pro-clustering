@@ -3,11 +3,17 @@
   apt:
     name: supervisor
     update_cache: yes
+  notify: 
+    - stop supervisor
 
 - name: copying supervisor openvidu stanza
   copy:
     src: "openvidu.conf"
     dest: "/etc/supervisor/conf.d/openvidu.conf"
   notify:
-    - restart supervisor
+    - start supervisor
 
+- name: start supervisor
+  service: 
+    name: supervisor 
+    state: started
