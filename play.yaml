@@ -4,7 +4,6 @@
   roles:
     - kms
     - file-server
-    - healthcheck
     
 - hosts: openvidu
   strategy: free
@@ -17,4 +16,7 @@
     - elastic
     - supervisord
     - system-shutdown
+
+- hosts: all
+  roles:
     - healthcheck
