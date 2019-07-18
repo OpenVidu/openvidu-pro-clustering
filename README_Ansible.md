@@ -113,7 +113,7 @@ In `group_vars/all` file you will find all the parameters we use to configure th
 
 For futher information check out https://openvidu.io/docs/reference-docs/openvidu-server-params/
 
-### Deployment
+## Deployment
 
 First time you connect to an instance through SSH, it will ask you to confirm the instance fingerprint, so try to login into all the instances to accept the fingerprint so Ansible can do the job.
 
