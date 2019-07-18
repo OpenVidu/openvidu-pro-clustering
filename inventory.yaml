@@ -1,0 +1,20 @@
+---
+all:
+  hosts:
+    openvidu-server:
+      ansible_host: 193.147.51.59
+    kurento-server-1:
+      ansible_host: 193.147.51.69
+  vars:
+      ansible_become: true
+      ansible_user: ubuntu
+      ansible_ssh_private_key_file: /home/nordri/CodeURJC/RSA-Keys-Team/pablo
+  children:
+    kurento:
+      hosts:
+        kurento-server-1:
+    openvidu:
+      hosts:
+        openvidu-server:
+
+       
