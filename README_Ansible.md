@@ -51,46 +51,14 @@ As you probably alredy know, Ansible uses an inventory file to know which instan
 all:
   hosts:
     openvidu-server:
-    kurento-server:
-  vars:
-      ansible_become: true
-      ansible_user: USER
-      ansible_ssh_private_key_file: /PATH/TO/SSH_public_key
-  children:
-    kurento:
-      hosts:
-        kurento-server:
-      vars:
-        ansible_host: KURENTO_SERVER_IP
-    openvidu:
-      hosts:
-        openvidu-server
-      vars: 
-        ansible_host: OPENVIDU_SERVER_IP
-```
-
-You need to change:
-
-  - `ansible_user`: the user you use to connect to the instances, i.e. Ubuntu Server Cloud uses _ubuntu_. If you've deployed those instances in OpenStack using Ubuntu Official Image, this will be the user. 
-  - `ansible_ssh_private_key_file`: Path to the RSA private key you use to connect to your instances.
-  - `OPENVIDU_SERVER_IP`: Public IP to connect to the instance.
-  - `KURENTO_SERVER_IP`: Public IP to connect to the instance.
-
-If you're using more than one Kurento Media Server, the inventory file will look like:
-
-```
----
-all:
-  hosts:
-    openvidu-server:
       ansible_host: X.Y.Z.W
     kurento-server-1:
       ansible_host: X.Y.Z.1
-    kurento-server-2:
-      ansible_host: X.Y.Z.2
-    ...
-    kurento-server-N:
-      ansible_host: X.Y.Z.N
+    # kurento-server-2:
+    #   ansible_host: X.Y.Z.2
+    # ...
+    # kurento-server-N:
+    #   ansible_host: X.Y.Z.N
   vars:
       ansible_become: true
       ansible_user: USER
@@ -99,13 +67,22 @@ all:
     kurento:
       hosts:
         kurento-server-1:
-        kurento-server-2:
-        ...
-        kurento-server-N:
+      #   kurento-server-2:
+      #   ...
+      #   kurento-server-N:
     openvidu:
       hosts:
         openvidu-server:
 ```
+
+You need to change:
+
+  - `ansible_user`: the user you use to connect to the instances, i.e. Ubuntu Server Cloud uses _ubuntu_. If you've deployed those instances in OpenStack using Ubuntu Official Image, this will be the user. 
+  - `ansible_ssh_private_key_file`: Path to the RSA private key you use to connect to your instances.
+  - `X.Y.Z.W`: Public IP to connect to the instance.
+  - `X.Y.Z.1`: Public IP to connect to the instance.
+
+Uncomment the lines if you're using more than one Kurento Media Server
 
 ## Group vars
 
