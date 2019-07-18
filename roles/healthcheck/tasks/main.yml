@@ -7,6 +7,6 @@
 
 - name: execute health check
   shell: /usr/local/bin/openvidu_healthcheck.sh
-  register: healthcheck.out
+  register: healthcheck
 
-- debug: var=healthcheck.out.stdout_lines
+- debug: var=healthcheck.stdout_lines
