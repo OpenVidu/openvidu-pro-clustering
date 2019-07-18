@@ -4,7 +4,7 @@
 PUBLIC_IP=$(curl http://169.254.169.254/latest/meta-data/public-ipv4)
 PUBLIC_HOSTNAME=$(curl http://169.254.169.254/latest/meta-data/public-hostname)
 {% else %}
-PUBLIC_IP={{ ov_public_ip }}
+PUBLIC_IP={{ openvidu_public_ip }}
 PUBLIC_HOSTNAME={{ openvidu_publicurl }}
 {% endif %}
 
