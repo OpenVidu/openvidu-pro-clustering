@@ -1,9 +1,12 @@
 ---
-- name: copying script for healh check
+- name: copying script for health check
   copy:
     src: "openvidu_healthcheck.sh"
     dest: "/usr/local/bin"
     mode: "0755"
 
-- name: execute healh check
+- name: execute health check
   shell: /usr/local/bin/openvidu_healthcheck.sh
+  register: healthcheck.out
+
+- debug: var=healthcheck.out.stdout_lines
