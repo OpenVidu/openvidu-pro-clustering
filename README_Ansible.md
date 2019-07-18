@@ -104,7 +104,7 @@ This command will perform a _ping_ command in the instances, so we're now sure y
 
 Once you have completed all the information and parameters you can launch the playbook by running:
 
-`ansible-playbook -i inventory.yml play.yml`
+`ansible-playbook -i inventory.yaml play.yaml`
 
 We'll know the deployment is ready checking the app's log in the OpenVidu server. Should show something like:
 
