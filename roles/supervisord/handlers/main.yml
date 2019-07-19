@@ -1,16 +1,16 @@
 ---
 - name: stop supervisor
-  service: 
+  systemd: 
     name: supervisor 
     state: stopped
 
 - name: start supervisor
-  service: 
+  systemd: 
     name: supervisor 
     state: started
 
 - name: restart supervisor
-  service: 
+  systemd: 
     name: supervisor 
     state: restarted
 

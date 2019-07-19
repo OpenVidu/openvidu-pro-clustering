@@ -1,22 +1,23 @@
 ---
 - name: start kibana
-  service: 
+  systemd: 
     name: kibana
     state: started
     enabled: true
 
 - name: stop kibana
-  service: 
+  systemd: 
     name: kibana
     state: stopped
 
 - name: restart kibana
-  service: 
+  systemd: 
     name: kibana
     state: restarted
+    enabled: true
 
 - name: restart elasticsearch
-  service: 
+  systemd: 
     name: elasticsearch
     state: restarted
     enabled: true

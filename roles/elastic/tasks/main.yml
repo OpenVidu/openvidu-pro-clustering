@@ -24,16 +24,6 @@
   copy: 
     src: kibana.yml
     dest: /etc/kibana/kibana.yml
-  notify: stop kibana
-
-- name: start elasticsearch
-  service:
-    name: elasticsearch
-    state: started
-    enabled: true
-
-- name: start kibana
-  service:
-    name: kibana
-    state: started
-    enabled: true
+  notify:
+    - restart elasticsearch
+    - restart kibana

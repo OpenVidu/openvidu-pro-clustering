@@ -1,16 +1,16 @@
 ---
 - name: start nginx
-  service: 
+  systemd: 
     name: nginx
     state: started
 
 - name: stop nginx
-  service: 
+  systemd: 
     name: nginx
     state: stopped
 
 - name: restart nginx
-  service: 
+  systemd: 
     name: nginx
     state: restarted
 

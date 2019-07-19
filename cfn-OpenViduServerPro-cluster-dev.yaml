@@ -540,8 +540,8 @@ Resources:
 
           mkdir -p /usr/src/openvidu
           cd /usr/src/openvidu
-          git clone https://github.com/OpenVidu/openvidu-cloud-devops.git
-          cd openvidu-cloud-devops/clustering
+          git clone https://github.com/OpenVidu/openvidu-pro-clustering.git
+          cd openvidu-pro-clustering
           git checkout master
 
           OPENVIDU_IP=$(aws ec2 describe-instances --query 'Reservations[].Instances[].[PublicIpAddress]' --output text --filters Name=instance-state-name,Values=running Name=tag:ov-cluster-member,Values=server)
@@ -555,14 +555,15 @@ Resources:
           sed -i "s/KURENTO_MIN_PORT/$MIDDLEPLUSONE/" group_vars/all
           sed -i "s/KURENTO_MAX_PORT/${MaxOpenPort}/" group_vars/all
 
-          cat>play.yml<<EOF
+          cat>play.yaml<<EOF
           - hosts: all
             roles:
               - kms
               - file-server
+              - healthcheck
           EOF
 
-          ansible-playbook -i "localhost," -c local play.yml 
+          ansible-playbook -i "localhost," -c local play.yaml 
 
   KurentoAutoScalingGroup:
     Type: 'AWS::AutoScaling::AutoScalingGroup'
@@ -617,8 +618,8 @@ Resources:
                 #!/bin/bash -xe
                 mkdir -p /usr/src/openvidu
                 cd /usr/src/openvidu
-                git clone https://github.com/OpenVidu/openvidu-cloud-devops.git
-                cd /usr/src/openvidu/openvidu-cloud-devops/clustering            
+                git clone https://github.com/OpenVidu/openvidu-pro-clustering.git
+                cd openvidu-pro-clustering
                 git checkout master
               mode: "000755"
               owner: "root"
@@ -627,7 +628,7 @@ Resources:
               content: !Sub |
                 #!/bin/bash -xe
                 
-                cd /usr/src/openvidu/openvidu-cloud-devops/clustering
+                cd /usr/src/openvidu/openvidu-pro-clustering
                 
                 PIP=$(curl http://169.254.169.254/latest/meta-data/public-ipv4)
                 PublicHostname=$(curl http://169.254.169.254/latest/meta-data/public-hostname)
@@ -670,7 +671,7 @@ Resources:
             "/usr/local/bin/buildCerts.sh":
               content: !Sub |
                 #!/bin/bash
-                cd /usr/src/openvidu/openvidu-cloud-devops/clustering/roles/nginx/files
+                cd /usr/src/openvidu/openvidu-pro-clustering
                 wget -O nginx.crt ${OwnCertCRT}
                 wget -O nginx.key ${OwnCertKEY}
               mode: "000755"
@@ -710,9 +711,9 @@ Resources:
               /usr/local/bin/buildCerts.sh || { echo "[Openvidu] error with the certificate files"; exit 1; }
             fi
 
-            cd /usr/src/openvidu/openvidu-cloud-devops/clustering            
+            cd /usr/src/openvidu/openvidu-pro-clustering
 
-            cat>play.yml<<EOF
+            cat>play.yaml<<EOF
             - hosts: all
               roles:
                 - geerlingguy.docker
@@ -722,9 +723,10 @@ Resources:
                 - supervisord
                 - system-shutdown
                 - coturn
+                - healthcheck
             EOF
 
-            ansible-playbook -i "localhost," -c local play.yml
+            ansible-playbook -i "localhost," -c local play.yaml
 
             # Wait for the app
             /usr/local/bin/check_app_ready.sh

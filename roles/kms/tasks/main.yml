@@ -28,7 +28,6 @@
   template:
     src: "WebRtcEndpoint.conf.ini.j2"
     dest: "/etc/kurento/modules/kurento/WebRtcEndpoint.conf.ini"
-  notify: restart kms
 
 - name: preconfiguring Kurento Media Server
   template:

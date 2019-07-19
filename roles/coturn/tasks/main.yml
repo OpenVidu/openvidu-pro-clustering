@@ -2,10 +2,9 @@
 - name: installing necesary software
   apt:
     name: coturn
-  notify: stop coturn
 
 - name: preconfiguring coturn
-  template:
+  copy:
     src: "coturn.j2"
     dest: "/etc/default/coturn"
 
@@ -13,4 +12,4 @@
   template:
     src: "turnserver.conf.j2"
     dest: "/etc/turnserver.conf"
-  notify: start coturn
+  notify: restart coturn

@@ -29,7 +29,7 @@ sed -i "s/MY_UID=.*/MY_UID=$(id -u $USER)/" ${OV_PROPERTIES}
 sed -i "s#openvidu.recording.composed-url=.*#openvidu.recording.composed-url=https://${PUBLIC_HOSTNAME}/inspector/#" ${OV_PROPERTIES}
 
 EVENTS_LIST=$(echo {{ openvidu_webhook_events }} | tr , ' ')
-if [ "x$EVENTS_LIST" != "x" ]; then
+if [ "$EVENTS_LIST" != "WEBHOOK_EVENTS" ]; then
 	E=$(for EVENT in ${EVENTS_LIST}
 	do
 		echo $EVENT | awk '{ print "\"" $1 "\"" }'
@@ -43,7 +43,7 @@ if [ "x$EVENTS_LIST" != "x" ]; then
 fi
 
 HEADERS="{{ openvidu_webhook_headers }}"
-if [ "x${HEADERS}" != "x" ]; then
+if [ "${HEADERS}" != "WEBHOOK_HEADERS" ]; then
 	OPENVIDU_HEADERS="[\"${HEADERS}\"]"
 	if ! grep -Fq "openvidu.webhook.headers" ${OV_PROPERTIES}
 	then

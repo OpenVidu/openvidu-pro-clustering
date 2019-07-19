@@ -1,11 +1,11 @@
 ---
 - name: restart kms
-  service: 
+  systemd: 
     name: kurento-media-server
     state: restarted
 
 - name: start kms
-  service: 
+  systemd: 
     name: kurento-media-server
     state: started 
     enabled: true

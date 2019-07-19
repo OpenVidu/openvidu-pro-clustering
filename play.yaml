@@ -20,3 +20,7 @@
 - hosts: all
   roles:
     - healthcheck
+
+- hosts: openvidu
+  roles:
+    - check-app-ready

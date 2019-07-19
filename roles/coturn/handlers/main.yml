@@ -1,15 +1,16 @@
 ---
 - name: restart coturn
-  service: 
+  systemd: 
     name: coturn
     state: restarted
 
 - name: start coturn
-  service: 
+  systemd: 
     name: coturn
     state: started
 
 - name: stop coturn
-  service: 
+  systemd: 
     name: coturn
     state: stopped
+

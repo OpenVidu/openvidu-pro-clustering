@@ -33,13 +33,13 @@ else
 	echo "[OK] COTURN is running..."
 fi
 
-# Check Openvidu
-OPENVIDU=$(ps ax | grep [o]penvidu-server)
-if [ "x${OPENVIDU}" == "x" ]; then
-	echo "[ERROR] OPENVIDU is not running..."
+# Check supervisor
+SUPERVISOR=$(ps ax | grep [s]upervisor)
+if [ "x${SUPERVISOR}" == "x" ]; then
+	echo "[ERROR] SUPERVISOR is not running..."
 	exit 1
 else
-	echo "[OK] OPENVIDU is running..."	
+	echo "[OK] SUPERVISOR is running..."	
 fi
 
 # Check Elastic
