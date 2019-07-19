@@ -110,16 +110,16 @@ After a while, you'll see this lines showing OpenVidu Server Pro is up and ready
 
 ```
 *********************************************************
- TASK [check-app-ready : check every 60 seconds for 40 attempts if openvidu is up and ready] 
+ TASK [check-app-ready : check every 60 seconds for 10 attempts if openvidu is up and ready] 
 *********************************************************
-FAILED - RETRYING: check every 60 seconds for 40 attempts if openvidu is up and ready (40 retries left).
-FAILED - RETRYING: check every 60 seconds for 40 attempts if openvidu is up and ready (39 retries left).
+FAILED - RETRYING: check every 60 seconds for 10 attempts if openvidu is up and ready (10 retries left).
+FAILED - RETRYING: check every 60 seconds for 10 attempts if openvidu is up and ready ( 9 retries left).
 ok: [openvidu-server]
 
 *********************************************************
  PLAY RECAP 
 *********************************************************
-kurento-server-1           : ok=21   changed=18   unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+kurento-server-1           : ok=21   cshanged=18   unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 kurento-server-2           : ok=21   changed=18   unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 openvidu-server            : ok=53   changed=43   unreachable=0    failed=0    skipped=14   rescued=0    ignored=0   
 ```
@@ -128,9 +128,8 @@ Once it's installed you can access the service through the URL: _https://YOUR_DN
 
 ## Troubleshooting
 
-If you get stuck deploying this playbooks remember we're here to help you. So please, when you open a new issue provide the full Ansible output log and, if you were able to deploy OpenVidu Server, please provide also the content of files:
+If you get stuck deploying this playbooks remember we're here to help you. So please, when you open a new issue provide the full Ansible output log and, if you were able to deploy OpenVidu Server, please provide also the log from the server:
 
-- /var/log/cloud-init-output.log
-- /var/log/supervisor/openvidu-server-stdout---supervisor-XXXX.log
+`sudo journalctl -u openvidu`
 
-XXXX means random characters.
+this content could be big. Check if you can spot any failure to help us to help you.
