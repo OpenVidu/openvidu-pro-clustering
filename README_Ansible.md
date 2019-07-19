@@ -106,18 +106,22 @@ Once you have completed all the information and parameters you can launch the pl
 
 `ansible-playbook -i inventory.yaml play.yaml`
 
-We'll know the deployment is ready checking the app's log in the OpenVidu server. Should show something like:
+After a while, you'll see this lines showing OpenVidu Server Pro is up and ready:
 
 ```
-[INFO] 2019-06-21 15:40:10,777 [main] org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainer (start) - Tomcat started on port(s): 5443 (http)
-[INFO] 2019-06-21 15:40:10,784 [main] io.openvidu.server.pro.OpenViduServerPro (whenReady) - Starting server monitoring
-[INFO] 2019-06-21 15:40:10,786 [main] io.openvidu.server.pro.monitoring.OpenViduServerMonitor (startMonitoringGathering) - Local host net, cpu and mem usage is now being monitored (in an interval of 30 seconds)
-[INFO] 2019-06-21 15:40:10,786 [main] io.openvidu.server.OpenViduServer (whenReady) - 
+*********************************************************
+ TASK [check-app-ready : check every 60 seconds for 40 attempts if openvidu is up and ready] 
+*********************************************************
+FAILED - RETRYING: check every 60 seconds for 40 attempts if openvidu is up and ready (40 retries left).
+FAILED - RETRYING: check every 60 seconds for 40 attempts if openvidu is up and ready (39 retries left).
+ok: [openvidu-server]
 
-    ACCESS IP            
--------------------------
-https://YOUR_DNS_NAME:4443/
--------------------------
+*********************************************************
+ PLAY RECAP 
+*********************************************************
+kurento-server-1           : ok=21   changed=18   unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+kurento-server-2           : ok=21   changed=18   unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+openvidu-server            : ok=53   changed=43   unreachable=0    failed=0    skipped=14   rescued=0    ignored=0   
 ```
 
 Once it's installed you can access the service through the URL: _https://YOUR_DNS_NAME/inspector_ replace **YOUR_DNS_NAME** by your FQDN. Also, we provide a full featured Kibana Dashboard in _https://YOUR_DNS_NAME/kibana_ where you can check for performance and useful statics.
