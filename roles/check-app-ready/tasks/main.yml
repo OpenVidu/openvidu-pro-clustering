@@ -1,13 +1,5 @@
-# - name: copying script to check app ready
-#   copy:
-#     src: "check_app_ready.sh"
-#     dest: "/usr/local/bin"
-#     mode: "0755"
-
-# - name: execute check app ready
-#   shell: /usr/local/bin/check_app_ready.sh
-
-- name: check every 60 seconds for 40 attempts if openvidu is up and ready
+---
+- name: check every 60 seconds for 10 attempts if openvidu is up and ready
   uri:
     url: 'https://localhost/inspector/'
     validate_certs: false
@@ -15,5 +7,5 @@
     timeout: 2
   register: openvidu_result
   until: openvidu_result['status']|default(0) == 200
-  retries: 40
+  retries: 10
   delay: 60
