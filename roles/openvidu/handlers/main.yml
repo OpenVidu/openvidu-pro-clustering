@@ -1,0 +1,24 @@
+---
+- name: restart redis
+  systemd:
+    state: restarted
+    name: redis-server
+    enabled: True
+
+- name: start openvidu
+  systemd:
+    state: started
+    name: openvidu
+
+- name: stop openvidu
+  systemd:
+    state: stopped
+    name: openvidu
+
+- name: restart openvidu
+  systemd:
+    state: restarted
+    name: openvidu
+    enabled: True
+    daemon_reload: yes
+

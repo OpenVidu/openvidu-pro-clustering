@@ -33,15 +33,6 @@ else
 	echo "[OK] COTURN is running..."
 fi
 
-# Check supervisor
-SUPERVISOR=$(ps ax | grep [s]upervisor)
-if [ "x${SUPERVISOR}" == "x" ]; then
-	echo "[ERROR] SUPERVISOR is not running..."
-	exit 1
-else
-	echo "[OK] SUPERVISOR is running..."	
-fi
-
 # Check Elastic
 ELASTICSEARCH=$(ps ax | grep [e]lasticsearch)
 if [ "x${ELASTICSEARCH}" == "x" ]; then

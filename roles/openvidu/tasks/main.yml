@@ -5,6 +5,11 @@
     state: "directory"
     mode: 0755
 
+- name: registering openvidu systemd service
+  copy:
+    src: "openvidu.service"
+    dest: "/etc/systemd/system/openvidu.service"
+
 - name: installing Java 8
   apt:
     name: openjdk-8-jdk
@@ -36,6 +41,7 @@
     src: "application.properties.j2"
     dest: "/opt/openvidu/application.properties"
     mode: "u+rwx"
+  notify: restart openvidu
 
 - name: copying script for aws signal
   copy:
