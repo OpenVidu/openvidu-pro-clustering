@@ -153,10 +153,10 @@ kurento_max_port: KURENTO_MAX_PORT
 run_ec2: false
 aws_default_region: AWS_DEFAULT_REGION
 
+##########################
+# Kibana Configuration
+##########################
 
-
-
-
-# Kibana dashboard configuration (Credentials)
+# Kibana dashboard credentials
 kibana_user: kibanaadmin
 kibana_password: "MY_SECRET"
