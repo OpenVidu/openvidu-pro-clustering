@@ -38,7 +38,7 @@ openvidu_publicurl: OPENVIDU_INSTANCE_PUBLIC_DOMAIN_NAME
 # Call Detail Record enabled
 # Whether to enable Call Detail Record or not
 # Values: true | false
-openvidu_cdr = OPENVIDU_CDR
+openvidu_cdr: OPENVIDU_CDR
 
 # Parameter "openvidu.recording.public-access"
 # if true any client can connect to
