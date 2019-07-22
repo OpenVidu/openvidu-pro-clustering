@@ -31,8 +31,14 @@ openvidu_secret: "MY_SECRET"
 # Parameter "openvidu.publicurl"
 # For selfsigned certificate, type the public domain name
 # We use this value to access OpenVidu Inspector and Kibana Dashboard
-# i. e. openvidu.example.com
+# i.e. openvidu.example.com
 openvidu_publicurl: OPENVIDU_INSTANCE_PUBLIC_DOMAIN_NAME
+
+# Parameter "openvidu.cdr"
+# Call Detail Record enabled
+# Whether to enable Call Detail Record or not
+# Values: true | false
+openvidu_cdr = OPENVIDU_CDR
 
 # Parameter "openvidu.recording.public-access"
 # if true any client can connect to
