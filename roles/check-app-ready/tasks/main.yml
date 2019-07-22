@@ -1,5 +1,5 @@
 ---
-- name: check every 60 seconds for 10 attempts if openvidu is up and ready
+- name: check every 5 seconds for 60 attempts (5 minutes total) if openvidu is up and ready
   uri:
     url: 'https://localhost/inspector/'
     validate_certs: false
@@ -7,5 +7,5 @@
     timeout: 2
   register: openvidu_result
   until: openvidu_result['status']|default(0) == 200
-  retries: 10
-  delay: 60
+  retries: 60
+  delay: 5
