@@ -2,6 +2,7 @@
 - name: installing necesary software
   apt:
     name: coturn
+  when: install_software|bool
 
 - name: preconfiguring coturn
   copy:

@@ -4,17 +4,19 @@
     name: nginx 
     state: latest
     update_cache: true
+  when: install_software|bool
 
 - name: install letsencrypt
   apt: 
     name: letsencrypt
     state: latest
-  when: whichcert == "letsencrypt"
+  when: whichcert == "letsencrypt" and install_software|bool
 
 - name: install apache2-utils
   apt:
     name: ['apache2-utils', 'python-passlib']
     state: latest
+  when: install_software|bool
 
 - name: Remove default nginx config
   file: 

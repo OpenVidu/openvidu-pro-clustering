@@ -3,22 +3,26 @@
   apt: 
     name: apt-transport-https
     state: present
+  when: install_software|bool
 
 - name: add elastic apt key
   apt_key:
     url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
     state: present
+  when: install_software|bool
 
 - name: add elastic repository
   apt_repository:
     repo: "deb https://artifacts.elastic.co/packages/6.x/apt stable main"
     state: present
     update_cache: true
+  when: install_software|bool
 
 - name: install elastic's packages
   package:
     name: ['elasticsearch', 'kibana']
     state: present
+  when: install_software|bool
 
 - name: adding kibana conf
   copy: 

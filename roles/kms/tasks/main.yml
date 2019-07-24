@@ -2,27 +2,32 @@
 - name: installing jq
   apt:
     name: jq
+  when: install_software|bool
 
 - name: adding kurento PGP key
   apt_key: 
     keyserver: keyserver.ubuntu.com
     id: 234821A61B67740F89BFD669FC8A16625AFA7A83
     state: present
+  when: install_software|bool
 
 - name: adding script for kurento repository
   template: 
     src: add-kms-repo.sh
     dest: /usr/local/bin/add-kms-repo.sh
     mode: 0755
+  when: install_software|bool
 
 - name: ading kurento repository
   command: /usr/local/bin/add-kms-repo.sh
+  when: install_software|bool
 
 - name: installing Kurento Media Server
   apt:
     name: "kurento-media-server"
     update_cache: yes
   notify: start kms
+  when: install_software|bool
 
 - name: preconfiguring Kurento Media Server
   template:

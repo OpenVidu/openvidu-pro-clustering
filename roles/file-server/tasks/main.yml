@@ -4,6 +4,7 @@
     name: ['nginx', 'apache2-utils', 'python-passlib']
     state: latest
     update_cache: true
+  when: install_software|bool
 
 - name: Creating user for kms recordings
   htpasswd:

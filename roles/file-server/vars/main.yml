@@ -1,0 +1,5 @@
+---
+# If we're running in AWS marketplace
+# we don't need to install the software
+# because we're using custom AMIs
+install_software: true

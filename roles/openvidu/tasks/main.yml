@@ -14,11 +14,13 @@
   apt:
     name: openjdk-8-jdk
     update_cache: yes
+  when: install_software|bool
 
 - name: installing Redis
   apt:
     name: redis-server
   notify: restart redis
+  when: install_software|bool
 
 - name: download OpenVidu JAR file
   get_url:
@@ -29,6 +31,7 @@
     group: ubuntu
     username: "{{ openvidu_pro_username }}"
     password: "{{ openvidu_pro_password }}"
+  when: install_software|bool
 
 - name: copying openvidu launch script
   template:
