@@ -1,0 +1,108 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: Kurento Media Server CloudFormation AMI template.
+
+Resources:
+  KurentoMediaServer:
+    Type: 'AWS::EC2::Instance'
+    Metadata:
+      Comment: "Install Kurento Media Server"
+      AWS::CloudFormation::Init:
+        config:
+          files:
+            "/etc/cfn/cfn-hup.conf":
+              content: !Sub |
+                [main]
+                stack=${AWS::StackId}
+                region=${AWS::Region}
+              mode: "000400"
+              owner: "root"
+              group: "root"
+            "/etc/cfn/hooks.d/cfn-auto-reloader.conf":
+              content: !Sub |
+                [cfn-auto-reloader-hook]
+                triggers=post.update
+                path=Resources.KurentoMediaServer.Metadata.AWS::CloudFormation::Init
+                action=/usr/local/bin/cfn-init -v --stack ${AWS::StackName} --resource KurentoMediaServer --region ${AWS::Region}
+              mode: "000400"
+              owner: "root"
+              group: "root"
+            "/usr/local/bin/installSoftware.sh":
+              content: |
+                #!/bin/bash
+                set -eu -o pipefail
+                apt-get update && apt-get install -y \
+                  nginx \
+                  apache2-utils \
+                  python-passlib \
+                  jq \
+                  awscli
+                
+                # installing ansible
+                apt-add-repository -y ppa:ansible/ansible
+                apt-get update 
+                apt-get install -y ansible
+              mode: "000755"
+              owner: "root"
+              group: "root"
+            "/usr/local/bin/installKMS.sh":
+              content: |
+                #!/bin/bash
+                set -eu -o pipefail
+                OV_VERSION=OPENVIDU_VERSION
+                KMS_VERSION=$(curl --silent https://oudzlg0y3m.execute-api.eu-west-1.amazonaws.com/v1/ov_kms_matrix?ov=$OV_VERSION | jq --raw-output '.[0] | .kms' )
+                echo "deb [arch=amd64] http://ubuntu.openvidu.io/$KMS_VERSION xenial kms6" > /etc/apt/sources.list.d/kurento.list
+                apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 5AFA7A83
+                apt-get update
+                apt-get -y install kurento-media-server
+                systemctl enable kurento-media-server
+              mode: "000755"
+              owner: "root"
+              group: "root"
+            "/usr/local/bin/getSoftware.sh":
+              content: |
+                #!/bin/bash
+                set -eu -o pipefail
+
+                git clone https://github.com/OpenVidu/openvidu-pro-clustering.git /usr/src/openvidu
+              mode: "000755"
+              owner: "root"
+              group: "root"
+    Properties:
+      ImageId:  "ami-0cfee17793b08a293"
+      InstanceType: "t2.2xlarge"
+      Tags:
+        - Key: Name
+          Value: !Ref AWS::StackName
+      UserData:
+        "Fn::Base64":
+          !Sub |
+            #!/bin/bash -x
+            set -eu -o pipefail
+            apt-get update
+            apt-get install -y python-pip
+            pip install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz
+
+            cfn-init --region ${AWS::Region} --stack ${AWS::StackId} --resource KurentoMediaServer
+
+            /usr/local/bin/installSoftware.sh || { echo "[Openvidu] error installing software"; exit 1; }
+                        
+            /usr/local/bin/installKMS.sh || { echo "[Openvidu] error installing Kurento Media Server"; exit 1; }
+            
+            /usr/local/bin/getSoftware.sh || { echo "[Openvidu] error getting software"; exit 1; }
+
+            # sending the finish call
+            /usr/local/bin/cfn-signal -e $? --stack ${AWS::StackId} --resource WaitCondition --region ${AWS::Region}
+            
+            # Cleaning the house
+            shred -v -u /var/log/cloud-init-output.log
+            shred -v -u /etc/ssh/*_key /etc/ssh/*_key.pub
+            find /var/lib/cloud/instances/$(curl http://169.254.169.254/latest/meta-data/instance-id) -type f | xargs shred -v -u
+            rm -rf /var/lib/cloud/instances/$(curl http://169.254.169.254/latest/meta-data/instance-id)
+
+  WaitCondition:
+    Type: AWS::CloudFormation::WaitCondition
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT10M
+        Count: 1

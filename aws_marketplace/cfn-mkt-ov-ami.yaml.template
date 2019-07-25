@@ -1,0 +1,147 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: Openvidu Server Pro CloudFormation AMI template.
+
+Parameters:
+  OpenViduProUsername:
+    Description: Username to download OpenVidu Pro
+    Type: String
+    NoEcho: true
+  OpenViduProPassword:
+    Description: AWS Password to download OpenVidu Pro
+    Type: String
+    NoEcho: true
+
+Resources:
+  OpenviduServerPro:
+    Type: 'AWS::EC2::Instance'
+    Metadata:
+      Comment: "Install OpenVidu Server Pro"
+      AWS::CloudFormation::Init:
+        config:
+          files:
+            "/etc/cfn/cfn-hup.conf":
+              content: !Sub |
+                [main]
+                stack=${AWS::StackId}
+                region=${AWS::Region}
+              mode: "000400"
+              owner: "root"
+              group: "root"
+            "/etc/cfn/hooks.d/cfn-auto-reloader.conf":
+              content: !Sub |
+                [cfn-auto-reloader-hook]
+                triggers=post.update
+                path=Resources.OpenviduServerPro.Metadata.AWS::CloudFormation::Init
+                action=/usr/local/bin/cfn-init -v --stack ${AWS::StackName} --resource OpenviduServerPro --region ${AWS::Region}
+              mode: "000400"
+              owner: "root"
+              group: "root"
+            "/usr/local/bin/installSoftware.sh":
+              content: |
+                #!/bin/bash
+                set -eu -o pipefail
+                # installing necessary software
+                apt-get update
+                apt-get install -y awscli \
+                  zip \
+                  unzip \
+                  openjdk-8-jdk \
+                  pwgen \
+                  nginx \
+                  supervisor \
+                  ec2-ami-tools \
+                  apache2-utils \
+                  python-passlib
+                
+                # install coturn
+                apt-get install -y coturn
+
+                # install redis
+                apt-get install -y redis-server
+
+                # install let's encrypt
+                apt-get install -y software-properties-common
+                add-apt-repository -y ppa:certbot/certbot
+                apt-get update
+                apt-get install -y python-certbot-nginx 
+
+                # installing ansible
+                apt-add-repository -y ppa:ansible/ansible
+                apt-get update 
+                apt-get install -y ansible
+
+                # installing elasticsearch and kibana
+                wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | apt-key add -
+                echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" > /etc/apt/sources.list.d/elastic-6.x.list
+                apt-get update
+                apt-get install -y elasticsearch kibana
+                systemctl enable kibana
+                systemctl enable elasticsearch
+              mode: "000755"
+              owner: "root"
+              group: "root"
+            "/usr/local/bin/installDocker.sh":
+              content: !Sub |
+                #!/bin/bash
+                set -eu -o pipefail
+                curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+                add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable"
+                apt-get update 
+                apt-get install -y docker-ce
+              mode: "000755"
+              owner: "root"
+              group: "root"
+            "/usr/local/bin/getOpenVidu.sh":
+              content: !Sub |
+                #!/bin/bash
+                set -eu -o pipefail
+
+                mkdir -p /opt/openvidu
+                chmod 777 /opt/openvidu
+                
+                curl -o /opt/openvidu/openvidu-server.jar -u ${OpenViduProUsername}:${OpenViduProPassword} https://pro.openvidu.io/openvidu-server-pro-OPENVIDU_VERSION.jar
+
+                git clone https://github.com/OpenVidu/openvidu-pro-clustering.git /usr/src/openvidu
+              mode: "000755"
+              owner: "root"
+              group: "root"
+    Properties:
+      ImageId:  "ami-0cfee17793b08a293"
+      InstanceType: "t2.2xlarge"
+      Tags:
+        - Key: Name
+          Value: !Ref AWS::StackName
+      UserData:
+        "Fn::Base64":
+          !Sub |
+            #!/bin/bash -x
+            set -eu -o pipefail
+            apt-get update
+            apt-get install -y python-pip
+            pip install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz
+
+            cfn-init --region ${AWS::Region} --stack ${AWS::StackId} --resource OpenviduServerPro
+                        
+            /usr/local/bin/installSoftware.sh || { echo "[Openvidu] error installing software"; exit 1; }
+
+            /usr/local/bin/installDocker.sh || { echo "[Openvidu] error installing Docker"; exit 1; }
+            
+            /usr/local/bin/getOpenVidu.sh || { echo "[Openvidu] error installing OpenVidu"; exit 1; }
+
+            # sending the finish call
+            /usr/local/bin/cfn-signal -e $? --stack ${AWS::StackId} --resource WaitCondition --region ${AWS::Region}
+            
+            # Cleaning the house
+            shred -u /var/log/cloud-init-output.log
+            shred -u /etc/ssh/*_key /etc/ssh/*_key.pub
+            shred -u /usr/local/bin/getOpenVidu.sh
+            find /var/lib/cloud/instances/$(curl http://169.254.169.254/latest/meta-data/instance-id) -type f | xargs shred -u
+            rm -rf /var/lib/cloud/instances/$(curl http://169.254.169.254/latest/meta-data/instance-id)
+
+  WaitCondition:
+    Type: AWS::CloudFormation::WaitCondition
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT10M
+        Count: 1
