@@ -9,8 +9,8 @@ DATESTAMP=$(date +%s)
 TEMPJSON=$(mktemp -t cloudformation-XXX --suffix .json)
 
 ## Setting Openvidu Version
-sed "s/OPENVIDU_VERSION/${OPENVIDU_VERSION}/" cfn-mkt-kms-ami.yaml.template > cfn-mkt-kms-ami.yaml
-sed "s/OPENVIDU_VERSION/${OPENVIDU_VERSION}/" cfn-mkt-ov-ami.yaml.template  > cfn-mkt-ov-ami.yaml
+sed "s/OPENVIDU_VERSION/${OPENVIDU_PRO_VERSION}/" cfn-mkt-kms-ami.yaml.template > cfn-mkt-kms-ami.yaml
+sed "s/OPENVIDU_VERSION/${OPENVIDU_PRO_VERSION}/" cfn-mkt-ov-ami.yaml.template  > cfn-mkt-ov-ami.yaml
 
 ## KMS AMI
 
