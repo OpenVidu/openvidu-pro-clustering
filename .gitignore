@@ -3,3 +3,5 @@ openstack.txt
 inventory.yml
 inventory2.yaml
 play2.yaml
+*.xlsx
+
