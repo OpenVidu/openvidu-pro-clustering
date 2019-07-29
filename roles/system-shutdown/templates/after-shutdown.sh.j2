@@ -22,7 +22,7 @@ if [ "${CLUSTER_MEMBER}" == "server" ]; then
 
 cat >/etc/nginx/sites-enabled/kms-ov<<EOF
 server {
-    listen {{ openvidu_server_port }} ssl;
+    listen 4443 ssl;
     server_name ${PUBLIC_HOSTNAME};
 
     ssl on;

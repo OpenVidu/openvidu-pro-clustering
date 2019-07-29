@@ -3,8 +3,8 @@
 ###########################
 # Credentials needed to download the jar file from https://pro.openvidu.io
 # Please contact openvidu@gmail.com to request one
-openvidu_pro_username: 
-openvidu_pro_password: 
+openvidu_pro_username: OPENVIDU_PRO_USERNAME
+openvidu_pro_password: OPENVIDU_PRO_PASSWORD
 
 ###########################################
 # OpenVidu Server configuration parameters
@@ -14,11 +14,11 @@ openvidu_pro_password:
 
 # Which OpenVidu version to use
 # Check out https://github.com/OpenVidu/openvidu/releases
-openvidu_version: 
+openvidu_version: OPENVIDU_VERSION
 
 # A comma separate list of IPs from the KMS instances
 # i.e. 192.168.0.5,192.168.0.6
-kms_ips: 
+kms_ips: KURENTO_ENDPOINTS
 
 # Parameter "openvidu.secret"
 # Use this to connect to OpenVidu endpoint
@@ -27,8 +27,14 @@ openvidu_secret: "MY_SECRET"
 # Parameter "openvidu.publicurl"
 # For selfsigned certificate, type the public domain name
 # We use this value to access OpenVidu Inspector and Kibana Dashboard
-# i. e. openvidu.example.com
-openvidu_publicurl: 
+# i.e. openvidu.example.com
+openvidu_publicurl: OPENVIDU_INSTANCE_PUBLIC_DOMAIN_NAME
+
+# Parameter "openvidu.cdr"
+# Call Detail Record enabled
+# Whether to enable Call Detail Record or not
+# Values: true | false
+openvidu_cdr: OPENVIDU_CDR
 
 # Parameter "openvidu.recording.public-access"
 # if true any client can connect to
@@ -37,7 +43,7 @@ openvidu_publicurl:
 # openvidu.secret param just as OpenVidu Server dashboard at
 # https://OPENVIDU_SERVER_IP:OPENVIDU_PORT
 # Values: true | false
-openvidu_recording_public_access: true
+openvidu_recording_public_access: FREEHTTPACCESTORECORDINGVIDEOS
 
 # Parameter "openvidu.recording.notification"
 # Which users should receive the recording events in the client side
@@ -45,48 +51,46 @@ openvidu_recording_public_access: true
 # the session), publisher_moderator (users with role 'PUBLISHER' or 
 # 'MODERATOR'), moderator (only users with role 'MODERATOR') or none 
 # (no user will receive these events)
-openvidu_recording_notification: all
+openvidu_recording_notification: OPENVIDURECORDINGNOTIFICATION
 
 # Parameter "openvidu.streams.video.max-recv-bandwidth"
 # Maximum video bandwidth sent from clients to OpenVidu Server, in kbps.
 # 0 means unconstrained
-openvidu_streams_video_max_recv_bandwidth: 0
+openvidu_streams_video_max_recv_bandwidth: OPENVIDUSTREAMSVIDEOMAX-RECV-BANDWIDTH
 
 # Parameter "openvidu.streams.video.min-recv-bandwidth"
 # Minimum video bandwidth sent from clients to OpenVidu Server, in kbps.
 # 0 means unconstrained
-openvidu_streams_video_min_recv_bandwidth: 0
+openvidu_streams_video_min_recv_bandwidth: OPENVIDUSTREAMSVIDEOMIN-RECV-BANDWIDTH
 
 # Parameter "openvidu.streams.video.max-send-bandwidth"
 # Maximum video bandwidth sent from OpenVidu Server to clients, in kbps.
 # 0 means unconstrained
-openvidu_streams_video_max_send_bandwidth: 0
+openvidu_streams_video_max_send_bandwidth: OPENVIDUSTREAMSVIDEOMAX-SEND-BANDWIDTH
 
 # Parameter "openvidu.streams.video.min-send-bandwidth"
 # Minimum video bandwidth sent from OpenVidu Server to clients, in kbps.
 # 0 means unconstrained
-openvidu_streams_video_min_send_bandwidth: 0
+openvidu_streams_video_min_send_bandwidth: OPENVIDUSTREAMSVIDEOMIN-SEND-BANDWIDTH
 
 # Parameter "openvidu.webhook"
 # true to enable OpenVidu Server Webhook service. false' otherwise
 # Values: true | false
-openvidu_webhook: false
+openvidu_webhook: WEBHOOK_ENABLED
 
 # Parameter "openvidu.webhook.endpoint"
 # HTTP endpoint where OpenVidu Server will send Webhook HTTP POST messages
 # Must be a valid URL: http(s)://ENDPOINT
-openvidu_webhook_endpoint: 
+openvidu_webhook_endpoint: "WEBHOOK_ENDPOINT"
 
 # Parameter "openvidu.webhook.headers"
 # List of headers that OpenVidu Server Webhook service will attach to HTTP POST messages
-# Example: 
-# openvidu_webhook_headers: "Authorization: Basic T1BFTlZJRFVBUFA6TVlfU0VDUkVU"
-openvidu_webhook_headers: 
+openvidu_webhook_headers: "WEBHOOK_HEADERS"
 
 # Parameter "openvidu.webhook.events"
 # List of events that will be sent by OpenVidu Server Webhook service
 # Leave blank if all events.
-openvidu_webhook_events: 
+openvidu_webhook_events: WEBHOOK_EVENTS
 
 ######################################
 # OpenVidu PRO specific configuration 
@@ -97,13 +101,13 @@ openvidu_webhook_events:
 # Parameter "openvidu.pro.cluster"
 # Is running in cluster?
 # Values: true | false
-openvidu_pro_cluster: true
+openvidu_pro_cluster: KMS_RUN_CLUSTER
 
 # Parameter "openvidu.pro.cluster.load.strategy"
 # What parameter should be used to distribute the creation of new sessions
 # (and therefore distribution of load) among all available KMSs. 
 # Can be: [streams, sessions, mediaObjects, cpu]
-openvidu_pro_cluster_load_strategy: streams
+openvidu_pro_cluster_load_strategy: OPENVIDUCLUSTERLOADSTRATEGY
 
 ##########################
 # Instances IPs and names
@@ -111,7 +115,7 @@ openvidu_pro_cluster_load_strategy: streams
 
 # Should be the same than in the inventory file
 # We use this value for proxying
-openvidu_public_ip: 
+openvidu_public_ip: OPENVIDU_INSTANCE_PUBLIC_IP
 
 # Certificate type
 # You can choose:
@@ -125,10 +129,10 @@ whichcert: selfsigned
 
 # Your custom domain name i.e. openvidu.example.com
 # If you're using OwnCert or Let's Encrypt type here your FQDN
-domain_name: cluster.openvidu.io
+domain_name: DOMAIN_NAME
 
 # Let's Encrypt email to receive notifications
-letsencrypt_email: 
+letsencrypt_email: LETSENCRYPT_EMAIL
 
 # Port configuration
 # We divide port range in two, half for Coturn Server and the other half
@@ -136,12 +140,12 @@ letsencrypt_email:
 # i.e. 1024 ~ 32255 for coturn and 32256 ~ 65535 for KMS
 
 # Turn port config
-turn_min_port: 1024
-turn_max_port: 32255
+turn_min_port: TURN_MIN_PORT
+turn_max_port: TURN_MAX_PORT
 
 # Kurento port config
-kurento_min_port: 32256
-kurento_max_port: 65535
+kurento_min_port: KURENTO_MIN_PORT
+kurento_max_port: KURENTO_MAX_PORT
 
 ##########################
 # AWS Configuration
@@ -151,6 +155,10 @@ kurento_max_port: 65535
 run_ec2: false
 aws_default_region: AWS_DEFAULT_REGION
 
-# Kibana dashboard configuration (Credentials)
+##########################
+# Kibana Configuration
+##########################
+
+# Kibana dashboard credentials
 kibana_user: kibanaadmin
 kibana_password: "MY_SECRET"
