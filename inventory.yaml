@@ -3,24 +3,24 @@ all:
   hosts:
     openvidu-server:
       ansible_host: OPENVIDU_SERVER_IP
-    kurento-server-1:
-      ansible_host: KURENTO_SERVER_1_IP
-    # kurento-server-2:
-    #   ansible_host: KURENTO_SERVER_2_IP
+    media-server-1:
+      ansible_host: MEDIA_SERVER_1_IP
+    # media-server-2:
+    #   ansible_host: MEDIA_SERVER_2_IP
     # ...
-    # kurento-server-N:
-    #   ansible_host: KURENTO_SERVER_N_IP
+    # media-server-N:
+    #   ansible_host: MEDIA_SERVER_N_IP
   vars:
       ansible_become: true
       ansible_user: USER
       ansible_ssh_private_key_file: /PATH/TO/SSH_public_key
   children:
-    kurento:
+    media-servers:
       hosts:
-        kurento-server-1:
-      #   kurento-server-2:
+        media-server-1:
+      #   media-server-2:
       #   ...
-      #   kurento-server-N:
+      #   media-server-N:
     openvidu:
       hosts:
         openvidu-server:

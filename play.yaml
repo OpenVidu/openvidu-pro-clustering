@@ -1,4 +1,4 @@
-- hosts: kurento
+- hosts: media-servers
   strategy: free
   serial: 5
   roles:
