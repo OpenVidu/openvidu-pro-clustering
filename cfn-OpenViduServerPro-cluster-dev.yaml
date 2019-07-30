@@ -106,7 +106,7 @@ Parameters:
     Description: "Password provided to download the jar file from https://pro.openvidu.io. Please request one at openvidu@gmail.com" 
     Type: String
     NoEcho: true
-  
+
   OpenviduCDREnable:
     Description: "Whether to enable Call Detail Record or not"
     Type: String
@@ -546,6 +546,8 @@ Resources:
           cd openvidu-pro-clustering
           git checkout master
 
+          cp group_vars/all.cf group_vars/all
+
           OPENVIDU_IP=$(aws ec2 describe-instances --query 'Reservations[].Instances[].[PublicIpAddress]' --output text --filters Name=instance-state-name,Values=running Name=tag:ov-cluster-member,Values=server)
           OV_VERSION=2.10.0-SNAPSHOT
 
@@ -630,6 +632,7 @@ Resources:
                 #!/bin/bash -xe
                 
                 cd /usr/src/openvidu/openvidu-pro-clustering
+                cp group_vars/all.cf group_vars/all
                 
                 PIP=$(curl http://169.254.169.254/latest/meta-data/public-ipv4)
                 PublicHostname=$(curl http://169.254.169.254/latest/meta-data/public-hostname)
