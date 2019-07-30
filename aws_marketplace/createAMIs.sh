@@ -34,7 +34,7 @@ echo "wait for the instance to stop"
 aws ec2 wait instance-stopped --instance-ids ${INSTANCE_ID}
 
 echo "Creating AMI"
-RAW_AMI_ID=$(aws ec2 create-image --instance-id ${INSTANCE_ID} --name KMS-ov-${OPENVIDU_VERSION}-${DATESTAMP} --description "Kurento Media Server")
+RAW_AMI_ID=$(aws ec2 create-image --instance-id ${INSTANCE_ID} --name KMS-ov-${OPENVIDU_PRO_VERSION}-${DATESTAMP} --description "Kurento Media Server")
 
 echo "Cleaning up"
 aws cloudformation delete-stack --stack-name kms-${DATESTAMP}
@@ -69,7 +69,7 @@ echo "wait for the instance to stop"
 aws ec2 wait instance-stopped --instance-ids ${INSTANCE_ID}
 
 echo "Creating AMI"
-RAW_AMI_ID=$(aws ec2 create-image --instance-id ${INSTANCE_ID} --name OpenViduServerPro-${OPENVIDU_VERSION}-${DATESTAMP} --description "Openvidu Server Pro")
+RAW_AMI_ID=$(aws ec2 create-image --instance-id ${INSTANCE_ID} --name OpenViduServerPro-${OPENVIDU_PRO_VERSION}-${DATESTAMP} --description "Openvidu Server Pro")
 
 echo "Cleaning up"
 aws cloudformation delete-stack --stack-name openvidu-${DATESTAMP}
