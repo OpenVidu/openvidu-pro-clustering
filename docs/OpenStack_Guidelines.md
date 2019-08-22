@@ -8,11 +8,11 @@ You can use this notes as an example of how to deploy OpenVidu in your infrastru
 
 We assume you've experience with Linux terminal and managing OpenStack from the shell.
 
-Please, load the OpenStack Environment veriables before running the commands.
+Please, load the OpenStack Environment variables before running the commands.
 
 ## Security groups
 
-We've created two security groups, one for OpenVidu Server and the other one for the media servers.
+We're going to create two security groups, one for OpenVidu Server and the other one for the media servers.
 
 ### OpenVidu server
 
@@ -30,7 +30,7 @@ $ openstack security group rule create --protocol tcp --dst-port 4443 openvidu-s
 $ openstack security group rule create --protocol tcp --dst-port 3478 openvidu-server
 ```
 
-_Note_: It's probably you already have a security group for SSH, HTTP and HTTPS.
+**Note**: It's probably you already have a security group for SSH, HTTP and HTTPS.
 
 ### Media servers
 
@@ -47,11 +47,13 @@ $ openstack security group rule create --protocol tcp --dst-port 443 openvidu-se
 $ openstack security group rule create --protocol tcp --dst-port 40000:65535 testing
 ```
 
-We'll need access to port 8888 from the OpenVidu Server. But we need to know the private IP of the instances first.
+**Note**: It's probably you already have a security group for SSH, HTTP and HTTPS.
+
+We'll need access to port 8888 from the OpenVidu Server. But we must know the private IP of the instance first.
 
 ## Volumes
 
-We recomend to use volumes for the instances so you can expand volumes sizes if you need for example.
+We recomend to use volumes for the instances so you can expand volumes sizes if you need, for example.
 
 So, create the volume for OpenVidu:
 
@@ -116,7 +118,7 @@ done
 
 We're using a **m1.large** flavor which has 4vcpus and 8Gigs RAM.
 
-You've to replace the network and the key name by the appropiate values. The network we're using can use floating IPs.
+You've to replace the **network** and the **key name** by the appropiate values. The network we're using can use floating IPs.
 
 We use a little `user_data.cfg` script to install Python because we need it for Ansible:
 
@@ -137,7 +139,7 @@ exit 0
 
 Now we're going to restrict access to port 8888 of media servers to OpenVidu server. 
 
-First, we need to locate which private IP our OpenVidu server is using because we are going to limit access to port 8888 of media servers to this source IP.
+First, we need to locate which private IP our OpenVidu server is using.
 
 `$ openstack server show openvidu-server -c addresses`
 
@@ -165,7 +167,7 @@ To assing the floating IP `A.B.C.D` to the instance `openvidu-server` run this c
 
 Keep going with the rest of the instances.
 
-**Note**: floating IP does not necesarily means open to the Internet. Could be an IP class C within your local network.
+**Note**: floating IP does not necessarily means open to the Internet. Could be an IP class C within your local network.
 
 ## Running Ansible
 
