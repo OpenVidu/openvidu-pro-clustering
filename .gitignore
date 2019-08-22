@@ -5,3 +5,4 @@ inventory2.yaml
 play2.yaml
 *.xlsx
 
+taskcat/*
