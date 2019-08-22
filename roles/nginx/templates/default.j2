@@ -6,11 +6,7 @@ upstream kibana {
 }
 
 upstream inspector {
-{% if whichcert == "letsencrypt" or whichcert == "owncert" %}
-    server {{ domain_name }}:5443;
-{% else %}
-    server {{ openvidu_publicurl }}:5443;
-{% endif %}
+    server localhost:5443;
 }
 
 server {
