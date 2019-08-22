@@ -5,4 +5,4 @@ inventory2.yaml
 play2.yaml
 *.xlsx
 
-taskcat/*
+taskcat/taskcast_outputs*
