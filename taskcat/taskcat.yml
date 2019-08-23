@@ -23,5 +23,8 @@ tests:
   openvidu-all-regions:
     parameter_input: parameters_input.json
     template_file: TEMPLATE_TO_TEST
+  openvidu-stockholm:
+    parameter_input: parameters_input-stockholm.json
+    template_file: TEMPLATE_TO_TEST
     regions:
-      - eu-west-1
+      - eu-north-1
