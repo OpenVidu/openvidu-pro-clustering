@@ -11,6 +11,8 @@ set -eu -o pipefail
 # OV_AMI_NAME   OpenVidu AMI Name
 # OV_AMI_ID     OpenVidu AMI ID
 
+export AWS_ACCESS_KEY_ID=${NAEVA_AWS_ACCESS_KEY_ID}
+export AWS_SECRET_ACCESS_KEY=${NAEVA_AWS_SECRET_ACCESS_KEY}
 export AWS_DEFAULT_REGION=us-east-1
 
 TARGET_REGIONS="us-east-2 
