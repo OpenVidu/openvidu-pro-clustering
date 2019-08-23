@@ -11,6 +11,8 @@ set -eu -o pipefail
 # OV_AMI_NAME   OpenVidu AMI Name
 # OV_AMI_ID     OpenVidu AMI ID
 
+export AWS_DEFAULT_REGION=us-east-1
+
 TARGET_REGIONS="us-east-2 
                 us-west-1 
                 us-west-2 
