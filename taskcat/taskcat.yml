@@ -22,6 +22,6 @@ global:
 tests:
   openvidu-all-regions:
     parameter_input: parameters_input.json
-    template_file: cfn-mkt-openvidu-server-pro-2.11.0.yaml
+    template_file: TEMPLATE_TO_TEST
     regions:
       - eu-west-1
