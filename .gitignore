@@ -4,5 +4,4 @@ inventory.yml
 inventory2.yaml
 play2.yaml
 *.xlsx
-
-taskcat/taskcast_outputs*
+*tar.gz
