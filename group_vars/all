@@ -17,6 +17,8 @@ openvidu_pro_password:
 openvidu_version: 
 
 # A comma separate list of IPs from the KMS instances
+# This IPs of media servers should be reachable from OpenVidu 
+# to port 8888 AND not to be publicly accessible.
 # i.e. 192.168.0.5,192.168.0.6
 kms_ips: 
 
