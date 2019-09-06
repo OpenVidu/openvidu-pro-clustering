@@ -4,7 +4,7 @@
 
 ### Clone the repo
 
-git clone http
+`git clone https://github.com/OpenVidu/openvidu-pro-clustering.git`
 
 ### Local Machine
 
@@ -15,6 +15,10 @@ $ sudo apt-add-repository -y ppa:ansible/ansible
 $ sudo apt-get update 
 $ sudo apt-get install -y ansible
 ```
+
+Besides you need to install this role for Docker:
+
+`sudo ansible-galaxy install -p /etc/ansible/roles geerlingguy.docker`
 
 ## Instances
 

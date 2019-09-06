@@ -29,6 +29,7 @@ openvidu_secret: "MY_SECRET"
 # Parameter "openvidu.publicurl"
 # For selfsigned certificate, type the public domain name
 # We use this value to access OpenVidu Inspector and Kibana Dashboard
+# Use only the domain name, without port or scheme.
 # i. e. openvidu.example.com
 openvidu_publicurl: 
 
