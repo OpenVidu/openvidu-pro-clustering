@@ -33,6 +33,12 @@ openvidu_secret: "MY_SECRET"
 # i. e. openvidu.example.com
 openvidu_publicurl: 
 
+# Parameter "openvidu.cdr"
+# Call Detail Record enabled
+# Whether to enable Call Detail Record or not
+# Values: true | false
+openvidu_cdr: 
+
 # Parameter "openvidu.recording.public-access"
 # if true any client can connect to
 # https://OPENVIDU_SERVER_IP:OPENVIDU_PORT/recordings/any_session_file.mp4
