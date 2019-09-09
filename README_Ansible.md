@@ -33,14 +33,13 @@ The instances (all of then) need Python to be installed.
 * OpenVidu Pro Server
 
   - 4443 TCP (OpenVidu Server listens on port 4443 by default)
-  - 3478 TCP (COTURN listens on port 3478 by default)
-  - 49152 - 65535 UDP (these ports are strongly recommended to be opened, as WebRTC randomly exchanges media through any of them)
+  - 3478 TCP (coturn listens on port 3478 by default)
 
-* Kurento Media Server
+* Media Servers
 
-  - 8888 TCP
-  - 1024 - 65535 UDP
-  - 1024 - 65535 TCP
+  - 40000 - 65535 UDP (WebRTC connections with clients may be established using a random port inside this range)
+  - 40000 - 65535 TCP (WebRTC connections with clients may be established using a random port inside this range, if UDP can't be used because client network is blocking it)
+  - 8888 TCP (must only be accessible for OpenVidu Server Pro instance) (Kurento Media Server listens on port 8888 by default)
 
 ## DNS Server
 
@@ -56,24 +55,24 @@ all:
   hosts:
     openvidu-server:
       ansible_host: X.Y.Z.W
-    kurento-server-1:
+    media-server-1:
       ansible_host: X.Y.Z.1
-    # kurento-server-2:
+    # media-server-2:
     #   ansible_host: X.Y.Z.2
     # ...
-    # kurento-server-N:
+    # media-server-N:
     #   ansible_host: X.Y.Z.N
   vars:
       ansible_become: true
       ansible_user: USER
       ansible_ssh_private_key_file: /PATH/TO/SSH_public_key
   children:
-    kurento:
+    media:
       hosts:
-        kurento-server-1:
-      #   kurento-server-2:
+        media-server-1:
+      #   media-server-2:
       #   ...
-      #   kurento-server-N:
+      #   media-server-N:
     openvidu:
       hosts:
         openvidu-server:
@@ -86,7 +85,7 @@ You need to change:
   - `X.Y.Z.W`: Public IP to connect to the instance.
   - `X.Y.Z.1`: Public IP to connect to the instance.
 
-Uncomment the lines if you're using more than one Kurento Media Server
+Uncomment the lines if you're using more than one Media Server
 
 ## Group vars
 
