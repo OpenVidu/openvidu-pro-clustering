@@ -27,8 +27,8 @@
     url: https://pro.openvidu.io/openvidu-server-pro-{{ openvidu_version }}.jar
     dest: /opt/openvidu/openvidu-server.jar
     mode: u+rwx
-    owner: ubuntu
-    group: ubuntu
+    owner: {{ openvidu_user }}
+    group: {{ openvidu_group }}
     username: "{{ openvidu_pro_username }}"
     password: "{{ openvidu_pro_password }}"
   when: install_software|bool

@@ -163,3 +163,13 @@ aws_default_region: AWS_DEFAULT_REGION
 # Kibana dashboard configuration (Credentials)
 kibana_user: kibanaadmin
 kibana_password: "MY_SECRET"
+
+##########################
+# On premises config
+##########################
+
+# Cloud provider like AWS or OpenStack set up
+# ubuntu user without password. Put your own user
+# if you're using another provider or bare metal
+openvidu_user: ubuntu
+openvidu_group: ubuntu
