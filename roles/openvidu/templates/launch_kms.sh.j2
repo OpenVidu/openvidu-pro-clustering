@@ -1,0 +1,60 @@
+#!/bin/bash -x
+
+IMAGE_ID={{ image_id }}
+INSTANCE_TYPE={{ instance_type }}
+KEY_NAME={{ aws_key_name }}
+SUBNET_ID={{ subnet_id }}
+AWS_REGION={{ aws_default_region }}
+OPENVIDU_SECRET={{ openvidu_secret }}
+SECURITY_GROUP={{ security_group }}
+
+TMPFILE=$(mktemp -t openvidu-userdata-XXX --suffix .txt)
+OUTPUT=$(mktemp -t openvidu-launch-kms-XXX --suffix .json)
+
+cat >${TMPFILE}<<EOF
+    #!/bin/bash -xe
+
+    cd /usr/src/openvidu
+
+    export AWS_DEFAULT_REGION=${AWS_REGION}
+    OPENVIDU_IP=$(aws ec2 describe-instances --query 'Reservations[].Instances[].[PublicIpAddress]' --output text --filters Name=instance-state-name,Values=running Name=tag:ov-cluster-member,Values=server)
+
+    cp group_vars/all.cf group_vars/all
+
+    sed -i "s/OPENVIDU_INSTANCE_PUBLIC_IP/$OPENVIDU_IP/" group_vars/all
+    sed -i "s/MY_SECRET/${OPENVIDU_SECRET}/" group_vars/all
+    sed -i "s/KURENTO_MIN_PORT/40000/" group_vars/all
+    sed -i "s/KURENTO_MAX_PORT/65535/" group_vars/all
+
+    # Running in MarketPlace
+    sed -i "s/install_software: true/install_software: false/" roles/kms/vars/main.yml
+    sed -i "s/install_software: true/install_software: false/" roles/file-server/vars/main.yml
+
+    cat>play.yaml<<EOF
+    - hosts: all
+      roles:
+        - kms
+        - file-server
+    EOF
+
+    ansible-playbook -i "localhost," -c local play.yaml 
+EOF
+
+aws ec2 run-instances \
+    --image-id ${IMAGE_ID} --count 1 \
+    --instance-type ${INSTANCE_TYPE} \
+    --key-name ${KEY_NAME} \
+    --subnet-id ${SUBNET_ID} \
+    --tag-specifications 'ResourceType=instance,Tags=[{Key="Name",Value="Kurento Media Server"},{Key="ov-cluster-member",Value="media-server"}]' \
+    --user-data file://${TMPFILE} \
+    --security-group-ids ${SECURITY_GROUP} > ${OUTPUT}
+
+KMS_IP=$(cat ${OUTPUT} | jq --raw-output ' .Instances[] | .NetworkInterfaces[0] | .PrivateIpAddress')
+KMS_ID=$(cat ${OUTPUT} | jq --raw-output ' .Instances[] | .InstanceId')
+
+echo ${KMS_IP} ${KMS_ID} >> /opt/openvidu/kms_list.txt
+
+rm ${TMPFILE}
+rm ${OUTPUT}
+
+
