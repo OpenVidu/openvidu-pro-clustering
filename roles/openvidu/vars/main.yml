@@ -3,3 +3,12 @@
 # we don't need to install the software
 # because we're using custom AMIs
 install_software: true
+
+# KMS launch script vars
+# This vars are for /usr/local/bin/launch_kms.sh script
+image_id: IMAGE_ID
+instance_type: INSTANCE_TYPE
+aws_key_name: KEY_NAME
+subnet_id: SUBNET_ID
+security_group: SECURITY_GROUP
+openvidu_secret: OPENVIDU_SECRET
