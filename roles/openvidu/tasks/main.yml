@@ -27,8 +27,8 @@
     url: https://pro.openvidu.io/openvidu-server-pro-{{ openvidu_version }}.jar
     dest: /opt/openvidu/openvidu-server.jar
     mode: u+rwx
-    owner: {{ openvidu_user }}
-    group: {{ openvidu_group }}
+    owner: "{{ openvidu_user }}"
+    group: "{{ openvidu_group }}"
     username: "{{ openvidu_pro_username }}"
     password: "{{ openvidu_pro_password }}"
   when: install_software|bool
@@ -38,6 +38,12 @@
     src: "openvidu-server.sh"
     dest: "/usr/local/bin"
     mode: "u+rwx"
+
+- name: copying launch media server script
+  template:
+    src: "launch_kms.sh.j2"
+    dest: "/usr/local/bin/launch_kms.sh"
+    mode: "0755"
 
 - name: copying openvidu application.properties
   template:
@@ -55,9 +61,9 @@
 
 - name: creating recording directory
   file:
-    path: /opt/openvidu/recordings
-    state: directory
-    mode: 0777
+    path: "/opt/openvidu/recordings"
+    state: "directory"
+    mode: "0777"
 
 - name: registering who i am
   copy:
