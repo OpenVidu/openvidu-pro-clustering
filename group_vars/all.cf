@@ -17,6 +17,8 @@ openvidu_pro_password: OPENVIDU_PRO_PASSWORD
 openvidu_version: OPENVIDU_VERSION
 
 # A comma separate list of IPs from the KMS instances
+# This IPs of media servers should be reachable from OpenVidu 
+# to port 8888 AND not to be publicly accessible.
 # i.e. 192.168.0.5,192.168.0.6
 kms_ips: KURENTO_ENDPOINTS
 
@@ -27,7 +29,8 @@ openvidu_secret: "MY_SECRET"
 # Parameter "openvidu.publicurl"
 # For selfsigned certificate, type the public domain name
 # We use this value to access OpenVidu Inspector and Kibana Dashboard
-# i.e. openvidu.example.com
+# Use only the domain name, without port or scheme.
+# i. e. openvidu.example.com
 openvidu_publicurl: OPENVIDU_INSTANCE_PUBLIC_DOMAIN_NAME
 
 # Parameter "openvidu.cdr"
@@ -85,7 +88,9 @@ openvidu_webhook_endpoint: "WEBHOOK_ENDPOINT"
 
 # Parameter "openvidu.webhook.headers"
 # List of headers that OpenVidu Server Webhook service will attach to HTTP POST messages
-openvidu_webhook_headers: "WEBHOOK_HEADERS"
+# Example: 
+# openvidu_webhook_headers: "Authorization: Basic T1BFTlZJRFVBUFA6TVlfU0VDUkVU"
+openvidu_webhook_headers: 
 
 # Parameter "openvidu.webhook.events"
 # List of events that will be sent by OpenVidu Server Webhook service
@@ -159,6 +164,16 @@ aws_default_region: AWS_DEFAULT_REGION
 # Kibana Configuration
 ##########################
 
-# Kibana dashboard credentials
+# Kibana dashboard configuration (Credentials)
 kibana_user: kibanaadmin
 kibana_password: "MY_SECRET"
+
+##########################
+# On premises config
+##########################
+
+# Cloud provider like AWS or OpenStack set up
+# ubuntu user without password. Put your own user
+# if you're using another provider or bare metal
+openvidu_user: ubuntu
+openvidu_group: ubuntu
