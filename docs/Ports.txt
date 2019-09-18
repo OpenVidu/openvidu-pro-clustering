@@ -1,0 +1,3 @@
+OpenVidu Pro:
+- Master node: 4443 TCP, 3478 TCP. 
+- Media nodes: 40000-65535 TCP y UDP y 8888 TCP (From OpenVidu Server)
