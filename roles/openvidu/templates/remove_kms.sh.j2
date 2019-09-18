@@ -1,0 +1,11 @@
+#!/bin/bash -x
+set -e -o pipefail
+
+export AWS_DEFAULT_REGION={{ aws_default_region }}
+
+IP=$1
+if [ -z ${IP} ] && { echo "Must provide IP address"; exit 1 }
+
+AWS_INSTANCE_ID=$(grep ${IP} /opt/openvidu/kms_list.txt | awk '{ print $2 }')
+
+aws ec2 terminate-instances --instance-ids ${AWS_INSTANCE_ID}

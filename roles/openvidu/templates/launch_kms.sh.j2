@@ -1,44 +1,46 @@
 #!/bin/bash -x
+set -e -o pipefail
 
 IMAGE_ID={{ image_id }}
 INSTANCE_TYPE={{ instance_type }}
 KEY_NAME={{ aws_key_name }}
 SUBNET_ID={{ subnet_id }}
-AWS_DEFAULT_REGION={{ aws_default_region }}
 OPENVIDU_SECRET={{ openvidu_secret }}
 SECURITY_GROUP=SEC_GROUP_ID
+
+export AWS_DEFAULT_REGION={{ aws_default_region }}
 
 TMPFILE=$(mktemp -t openvidu-userdata-XXX --suffix .txt)
 OUTPUT=$(mktemp -t openvidu-launch-kms-XXX --suffix .json)
 
-cat >${TMPFILE}<<EOF
-    #!/bin/bash -xe
+cat >${TMPFILE}<<FDF
+#!/bin/bash -xe
 
-    cd /usr/src/openvidu
+cd /usr/src/openvidu
 
-    export AWS_DEFAULT_REGION=${AWS_REGION}
-    OPENVIDU_IP=$(aws ec2 describe-instances --query 'Reservations[].Instances[].[PublicIpAddress]' --output text --filters Name=instance-state-name,Values=running Name=tag:ov-cluster-member,Values=server)
+export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+OPENVIDU_IP=\$(aws ec2 describe-instances --query 'Reservations[].Instances[].[PublicIpAddress]' --output text --filters Name=instance-state-name,Values=running Name=tag:ov-cluster-member,Values=server)
 
-    cp group_vars/all.cf group_vars/all
+cp group_vars/all.cf group_vars/all
 
-    sed -i "s/OPENVIDU_INSTANCE_PUBLIC_IP/$OPENVIDU_IP/" group_vars/all
-    sed -i "s/MY_SECRET/${OPENVIDU_SECRET}/" group_vars/all
-    sed -i "s/KURENTO_MIN_PORT/40000/" group_vars/all
-    sed -i "s/KURENTO_MAX_PORT/65535/" group_vars/all
+sed -i "s/OPENVIDU_INSTANCE_PUBLIC_IP/\$OPENVIDU_IP/" group_vars/all
+sed -i "s/MY_SECRET/${OPENVIDU_SECRET}/" group_vars/all
+sed -i "s/KURENTO_MIN_PORT/40000/" group_vars/all
+sed -i "s/KURENTO_MAX_PORT/65535/" group_vars/all
 
-    # Running in MarketPlace
-    sed -i "s/install_software: true/install_software: false/" roles/kms/vars/main.yml
-    sed -i "s/install_software: true/install_software: false/" roles/file-server/vars/main.yml
+# Running in MarketPlace
+sed -i "s/install_software: true/install_software: false/" roles/kms/vars/main.yml
+sed -i "s/install_software: true/install_software: false/" roles/file-server/vars/main.yml
 
-    cat>play.yaml<<EOF
-    - hosts: all
-      roles:
-        - kms
-        - file-server
-    EOF
-
-    ansible-playbook -i "localhost," -c local play.yaml 
+cat>play.yaml<<EOF
+- hosts: all
+  roles:
+    - kms
+    - file-server
 EOF
+
+ansible-playbook -i "localhost," -c local play.yaml 
+FDF
 
 aws ec2 run-instances \
     --image-id ${IMAGE_ID} --count 1 \

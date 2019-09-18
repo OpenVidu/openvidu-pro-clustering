@@ -22,6 +22,11 @@
   notify: restart redis
   when: install_software|bool
 
+- name: installing other tools
+  apt:
+    name: jq
+  when: install_software|bool
+
 - name: download OpenVidu JAR file
   get_url:
     url: https://pro.openvidu.io/openvidu-server-pro-{{ openvidu_version }}.jar
@@ -43,6 +48,12 @@
   template:
     src: "launch_kms.sh.j2"
     dest: "/usr/local/bin/launch_kms.sh"
+    mode: "0755"
+
+- name: copying remove media server script
+  template:
+    src: "remove_kms.sh.j2"
+    dest: "/usr/local/bin/remove_kms.sh"
     mode: "0755"
 
 - name: copying openvidu application.properties
