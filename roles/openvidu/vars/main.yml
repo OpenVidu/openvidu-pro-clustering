@@ -10,5 +10,4 @@ image_id: IMAGE_ID
 instance_type: INSTANCE_TYPE
 aws_key_name: KEY_NAME
 subnet_id: SUBNET_ID
-security_group: SECURITY_GROUP
 openvidu_secret: OPENVIDU_SECRET
