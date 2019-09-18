@@ -1,9 +1,13 @@
 #!/bin/bash -x
 set -eu -o pipefail
 
-export AWS_ACCESS_KEY_ID=${NAEVA_AWS_ACCESS_KEY_ID}
-export AWS_SECRET_ACCESS_KEY=${NAEVA_AWS_SECRET_ACCESS_KEY}
-export AWS_DEFAULT_REGION=us-east-1
+TARGET=${TARGET:-nomarket}
+
+if [ ${TARGET} == "market" ]; then
+  export AWS_ACCESS_KEY_ID=${NAEVA_AWS_ACCESS_KEY_ID}
+  export AWS_SECRET_ACCESS_KEY=${NAEVA_AWS_SECRET_ACCESS_KEY}
+  export AWS_DEFAULT_REGION=us-east-1
+fi
 
 DATESTAMP=$(date +%s)
 TEMPJSON=$(mktemp -t cloudformation-XXX --suffix .json)
@@ -15,11 +19,17 @@ sed "s/OPENVIDU_VERSION/${OPENVIDU_PRO_VERSION}/" cfn-mkt-ov-ami.yaml.template  
 ## KMS AMI
 
 # Copy template to S3
-aws s3 cp cfn-mkt-kms-ami.yaml s3://naeva-openvidu-pro
+if [ ${TARGET} == "market" ]; then
+  aws s3 cp cfn-mkt-kms-ami.yaml s3://naeva-openvidu-pro
+  TEMPLATE_URL=https://s3-eu-west-1.amazonaws.com/naeva-openvidu-pro/cfn-mkt-kms-ami.yaml
+else
+  aws s3 cp cfn-mkt-kms-ami.yaml s3://aws.openvidu.io
+  TEMPLATE_URL=https://s3-eu-west-1.amazonaws.com/aws.openvidu.io/cfn-mkt-kms-ami.yaml
+fi
 
 aws cloudformation create-stack \
   --stack-name kms-${DATESTAMP} \
-  --template-url https://s3-eu-west-1.amazonaws.com/naeva-openvidu-pro/cfn-mkt-kms-ami.yaml \
+  --template-url ${TEMPLATE_URL} \
   --disable-rollback
 
 aws cloudformation wait stack-create-complete --stack-name kms-${DATESTAMP}
@@ -34,7 +44,7 @@ echo "wait for the instance to stop"
 aws ec2 wait instance-stopped --instance-ids ${INSTANCE_ID}
 
 echo "Creating AMI"
-RAW_AMI_ID=$(aws ec2 create-image --instance-id ${INSTANCE_ID} --name KMS-ov-${OPENVIDU_PRO_VERSION}-${DATESTAMP} --description "Kurento Media Server")
+KMS_RAW_AMI_ID=$(aws ec2 create-image --instance-id ${INSTANCE_ID} --name KMS-ov-${OPENVIDU_PRO_VERSION}-${DATESTAMP} --description "Kurento Media Server" --output text)
 
 echo "Cleaning up"
 aws cloudformation delete-stack --stack-name kms-${DATESTAMP}
@@ -42,7 +52,13 @@ aws cloudformation delete-stack --stack-name kms-${DATESTAMP}
 ## OpenVidu AMI
 
 # Copy template to S3
-aws s3 cp cfn-mkt-ov-ami.yaml s3://naeva-openvidu-pro
+if [ ${TARGET} == "market" ]; then
+  aws s3 cp cfn-mkt-ov-ami.yaml s3://naeva-openvidu-pro
+  TEMPLATE_URL=https://s3-eu-west-1.amazonaws.com/naeva-openvidu-pro/cfn-mkt-ov-ami.yaml
+else
+  aws s3 cp cfn-mkt-ov-ami.yaml s3://aws.openvidu.io
+  TEMPLATE_URL=https://s3-eu-west-1.amazonaws.com/aws.openvidu.io/cfn-mkt-ov-ami.yaml
+fi
 
 cat > $TEMPJSON<<EOF
   [
@@ -53,7 +69,7 @@ EOF
 
 aws cloudformation create-stack \
   --stack-name openvidu-${DATESTAMP} \
-  --template-url https://s3-eu-west-1.amazonaws.com/naeva-openvidu-pro/cfn-mkt-ov-ami.yaml \
+  --template-url ${TEMPLATE_URL} \
   --parameters file:///$TEMPJSON \
   --disable-rollback
 
@@ -69,9 +85,17 @@ echo "wait for the instance to stop"
 aws ec2 wait instance-stopped --instance-ids ${INSTANCE_ID}
 
 echo "Creating AMI"
-RAW_AMI_ID=$(aws ec2 create-image --instance-id ${INSTANCE_ID} --name OpenViduServerPro-${OPENVIDU_PRO_VERSION}-${DATESTAMP} --description "Openvidu Server Pro")
+OV_RAW_AMI_ID=$(aws ec2 create-image --instance-id ${INSTANCE_ID} --name OpenViduServerPro-${OPENVIDU_PRO_VERSION}-${DATESTAMP} --description "Openvidu Server Pro" --output text)
 
 echo "Cleaning up"
 aws cloudformation delete-stack --stack-name openvidu-${DATESTAMP}
 
+# Wait for the instance
+aws ec2 wait image-available --image-ids ${OV_RAW_AMI_ID}
+
+echo "OV  -> " ${OV_RAW_AMI_ID}
+echo "KMS -> " ${KMS_RAW_AMI_ID}
+
 rm $TEMPJSON
+rm cfn-mkt-kms-ami.yaml
+rm cfn-mkt-ov-ami.yaml
