@@ -2,6 +2,13 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Openvidu Server Pro CloudFormation AMI template.
 
+Mappings:
+  AMIMAP:
+    eu-west-1:
+      AMI: ami-03ef731cc103c9f09
+    us-east-1:
+      AMI: ami-04763b3055de4860b
+
 Parameters:
   OpenViduProUsername:
     Description: Username to download OpenVidu Pro
@@ -52,7 +59,8 @@ Resources:
                   supervisor \
                   ec2-ami-tools \
                   apache2-utils \
-                  python-passlib
+                  python-passlib \
+                  jq
                 
                 # install coturn
                 apt-get install -y coturn
@@ -78,6 +86,10 @@ Resources:
                 apt-get install -y elasticsearch kibana
                 systemctl enable kibana
                 systemctl enable elasticsearch
+
+                # update aws cli
+                pip install --upgrade awscli
+
               mode: "000755"
               owner: "root"
               group: "root"
@@ -107,7 +119,7 @@ Resources:
               owner: "root"
               group: "root"
     Properties:
-      ImageId:  "ami-0cfee17793b08a293"
+      ImageId: !FindInMap [AMIMAP, !Ref 'AWS::Region', AMI]
       InstanceType: "t2.2xlarge"
       Tags:
         - Key: Name

@@ -2,6 +2,13 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Kurento Media Server CloudFormation AMI template.
 
+Mappings:
+  AMIMAP:
+    eu-west-1:
+      AMI: ami-03ef731cc103c9f09
+    us-east-1:
+      AMI: ami-04763b3055de4860b
+
 Resources:
   KurentoMediaServer:
     Type: 'AWS::EC2::Instance'
@@ -69,7 +76,7 @@ Resources:
               owner: "root"
               group: "root"
     Properties:
-      ImageId:  "ami-0cfee17793b08a293"
+      ImageId: !FindInMap [AMIMAP, !Ref 'AWS::Region', AMI]
       InstanceType: "t2.2xlarge"
       Tags:
         - Key: Name
