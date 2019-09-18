@@ -55,9 +55,9 @@ aws ec2 run-instances \
 KMS_IP=$(cat ${OUTPUT} | jq --raw-output ' .Instances[] | .NetworkInterfaces[0] | .PrivateIpAddress')
 KMS_ID=$(cat ${OUTPUT} | jq --raw-output ' .Instances[] | .InstanceId')
 
-echo ${KMS_IP} ${KMS_ID} >> /opt/openvidu/kms_list.txt
+echo ${KMS_ID} ${KMS_IP} >> /opt/openvidu/kms_list.txt
 
 rm ${TMPFILE}
 rm ${OUTPUT}
 
-
+echo ${KMS_IP}
