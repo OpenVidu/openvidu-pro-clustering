@@ -47,8 +47,9 @@ aws ec2 run-instances \
     --instance-type ${INSTANCE_TYPE} \
     --key-name ${KEY_NAME} \
     --subnet-id ${SUBNET_ID} \
-    --tag-specifications 'ResourceType=instance,Tags=[{Key="Name",Value="Kurento Media Server"},{Key="ov-cluster-member",Value="media-server"}]' \
+    --tag-specifications 'ResourceType=instance,Tags=[{Key="Name",Value="Kurento Media Server"},{Key="ov-cluster-member",Value="kms"}]' \
     --user-data file://${TMPFILE} \
+    --iam-instance-profile Name=OpenViduInstanceProfile \
     --security-group-ids ${SECURITY_GROUP} > ${OUTPUT}
 
 KMS_IP=$(cat ${OUTPUT} | jq --raw-output ' .Instances[] | .NetworkInterfaces[0] | .PrivateIpAddress')
