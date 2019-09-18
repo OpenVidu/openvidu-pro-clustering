@@ -6,6 +6,6 @@ export AWS_DEFAULT_REGION={{ aws_default_region }}
 IP=$1
 [ -z "${IP}" ] && { echo "Must provide IP address"; exit 1; }
 
-AWS_INSTANCE_ID=$(grep ${IP} /opt/openvidu/kms_list.txt | awk '{ print $2 }')
+AWS_INSTANCE_ID=$(grep ${IP} /opt/openvidu/kms_list.txt | awk '{ print $1 }')
 
 aws ec2 terminate-instances --instance-ids ${AWS_INSTANCE_ID}
