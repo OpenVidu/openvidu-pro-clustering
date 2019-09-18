@@ -1,0 +1,665 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Openvidu Server Pro CloudFormation template."
+
+Parameters:
+  KeyName:
+    Description: "Name of an existing EC2 KeyPair to enable SSH access to the instance."
+    Type: AWS::EC2::KeyPair::KeyName
+    ConstraintDescription: "must be the name of an existing EC2 KeyPair."
+  
+  KurentoAvailabilityZone:
+    Type: AWS::EC2::AvailabilityZone::Name
+    Description: must be the name of an existing AWS Availability Zone
+    Default: eu-west-1a
+
+  AwsInstanceTypeOV:
+    Type: String
+    Description: Specifies the EC2 instance type for your OpenVidu instance
+    Default: t2.large
+    AllowedValues: 
+    - t2.large
+    - t2.xlarge
+    - t2.2xlarge
+    - t3.large
+    - t3.xlarge
+    - t3.2xlarge
+    - m4.large
+    - m4.xlarge
+    - m4.2xlarge
+    - m5.large
+    - m5.xlarge
+    - m5.2xlarge
+    - c4.large
+    - c4.xlarge
+    - c4.2xlarge
+    - c5.large
+    - c5.xlarge
+    - c5.2xlarge
+    ConstraintDescription: "Must be a valid EC2 instance type."
+
+  AwsInstanceTypeKMS:
+    Type: String
+    Description: Specifies the EC2 instance type for your Kurento instances
+    Default: t2.large
+    AllowedValues: 
+    - t2.large
+    - t2.xlarge
+    - t2.2xlarge
+    - t3.large
+    - t3.xlarge
+    - t3.2xlarge
+    - m4.large
+    - m4.xlarge
+    - m4.2xlarge
+    - m5.large
+    - m5.xlarge
+    - m5.2xlarge
+    - c4.large
+    - c4.xlarge
+    - c4.2xlarge
+    - c5.large
+    - c5.xlarge
+    - c5.2xlarge
+    ConstraintDescription: "Must be a valid EC2 instance type."
+
+  MyDomainName: 
+    Description: "Valid DNS record name like mycompany.com."
+    Type: String
+    Default: openvidu.mycompany.com
+    AllowedPattern: >-
+      ^(?:_?(?>[a-z\d][a-z\d-]{0,61}[a-z\d]|[a-z\d])\.)*(?:_?(?>[a-z\d][a-z\d-]{0,61}[a-z\d]|[a-z\d]))\.?$
+    ConstraintDescription: >-
+      Must be a valid DNS name. Like myapp.example.com 
+  
+  PublicElasticIP:
+    Description: "Valid AWS elastic IP for using with Let's Encrypt or OwnCertificate."
+    Type: String
+    Default: 1.0.2.0
+    AllowedPattern: >-
+      ^([01]?\d{1,2}|2[0-4]\d|25[0-5])\.([01]?\d{1,2}|2[0-4]\d|25[0-5])\.([01]?\d{1,2}|2[0-4]\d|25[0-5])\.([01]?\d{1,2}|2[0-4]\d|25[0-5])$
+    ConstraintDescription: >-
+      Must be a valid IP address. A valid IP address must be in the form of xxx.xxx.xxx.xxx, where xxx is a number from 0-255.
+  
+  OpenViduSecret:
+    Description: "Secret to connect to your OpenVidu Server and Kibana Dashboard."
+    Type: String
+    NoEcho: true
+  
+  OpenviduCDREnable:
+    Description: "Whether to enable Call Detail Record or not"
+    Type: String
+    Default: true
+
+  KibanaUser:
+    Description: "Username for Kibana Dashboard"
+    Type: String
+    Default: kibanaadmin
+
+  KibanaPassword:
+    Description: "Password for Kibana Dashboard"
+    Type: String
+    NoEcho: true
+  
+  WhichCert: 
+    Description: "You can choose from the list below which certificate to use."
+    Type: String
+    Default: selfsigned
+    AllowedValues:
+    - selfsigned
+    - letsencrypt
+    - owncert
+  
+  LetsEncryptEmail:
+    Description: "Email necesary for Let's Encrypt notifications."
+    Type: String
+  
+  OwnCertCRT:
+    Description: "URL to the CRT file"
+    Type: String
+
+  OwnCertKEY: 
+    Description: "URL to the KEY file"
+    Type: String
+
+  FreeHTTPAccesToRecordingVideos:
+    Description: "Do you want your recordings to be access publicly?"
+    Type: String
+    Default: false
+    AllowedValues:
+    - true
+    - false
+  
+  OpenviduRecordingNotification:
+    Description: "Which users should receive the recording events in the client side (recordingStarted, recordingStopped)."
+    Type: String
+    Default: "publisher_moderator"
+    AllowedValues: 
+    - "all"
+    - "publisher_moderator"
+    - "moderator"
+    - "none"
+  
+  OpenviduStreamsVideoMaxRecvBandwidth: 
+    Description: "Maximum video bandwidth sent from clients to OpenVidu Server, in kbps. 0 means unconstrained."
+    Type: String
+    Default: 0
+    
+  OpenviduStreamsVideoMinRecvBandwidth:
+    Description: "Minimum video bandwidth sent from clients to OpenVidu Server, in kbps. 0 means unconstrained."
+    Type: String
+    Default: 0
+
+  OpenviduStreamsVideoMaxSendBandwidth: 
+    Description: "Maximum video bandwidth sent from OpenVidu Server to clients, in kbps. 0 means unconstrained."
+    Type: String
+    Default: 0
+    
+  OpenviduStreamsVideoMinSendBandwidth:
+    Description: "Minimum video bandwidth sent from OpenVidu Server to clients, in kbps. 0 means unconstrained."
+    Type: String
+    Default: 0
+
+  OpenViduWebhook:
+    Description: "true to enable OpenVidu Server Webhook service. false otherwise."
+    Type: String
+    Default: false
+    AllowedValues:
+    - false
+    - true
+
+  OpenViduWebhookEndpoint:
+    Description: "HTTP endpoint where OpenVidu Server will send Webhook HTTP POST messages."
+    Type: String
+    Default: http://my.endpoint.com
+
+  OpenViduWebhookHeaders:
+    Description: "List of headers that OpenVidu Server Webhook service will attach to HTTP POST messages. JUST one header at the moment"
+    Type: String
+
+  OpenViduWebhookEvents:
+    Description: >-
+      Comma separate list of events that will be sent by OpenVidu Server Webhook service. Check out all the events
+       here: https://openvidu.io/docs/reference-docs/openvidu-server-cdr/
+    Type: String
+    Default: "sessionCreated,sessionDestroyed,participantJoined,participantLeft,webrtcConnectionCreated,webrtcConnectionDestroyed,recordingStatusChanged"
+
+  OpenViduCidrBlock:
+    Description: "Dedicated VPC for OpenVidu cluster"
+    Type: String
+    Default: 172.16.0.0/16
+    AllowedPattern: >-
+      ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
+    ConstraintDescription: >-
+      Must be in CIDR notation. 
+
+  OpenViduSubnet:
+    Description: "Subnet for OpenVidu cluster"
+    Type: String
+    Default: 172.16.0.0/24
+    AllowedPattern: >-
+      ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
+    ConstraintDescription: >-
+      Must be in CIDR notation.
+
+  OpenviduClusterLoadStrategy:
+    Description: >
+      What parameter should be used to distribute the creation of new sessions 
+      (and therefore distribution of load) among all available KMSs. Can be: [streams, sessions, mediaObjects, cpu]
+    Type: String
+    Default: streams
+    AllowedValues:
+      - streams
+      - sessions
+      - mediaObjects
+      - cpu
+
+Mappings:
+  OVAMIMAP:
+    eu-west-1:
+      AMI: OV_AMI_ID
+
+  KMSAMIMAP:
+    eu-west-1:
+      AMI: KMS_AMI_ID
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      -
+        Label:
+          default: SSL Certificate Configuration
+        Parameters:
+        - WhichCert
+        - LetsEncryptEmail
+        - MyDomainName
+        - PublicElasticIP
+        - OwnCertCRT
+        - OwnCertKEY
+      -
+        Label:
+          default: Openvidu Configuration
+        Parameters:
+        - OpenViduSecret
+        - OpenviduCDREnable
+        - OpenviduClusterLoadStrategy
+        - FreeHTTPAccesToRecordingVideos
+        - OpenviduRecordingNotification
+        - OpenviduStreamsVideoMaxRecvBandwidth
+        - OpenviduStreamsVideoMinRecvBandwidth
+        - OpenviduStreamsVideoMaxSendBandwidth
+        - OpenviduStreamsVideoMinSendBandwidth
+        - OpenViduWebhook
+        - OpenViduWebhookEndpoint
+        - OpenViduWebhookHeaders
+        - OpenViduWebhookEvents
+      -
+        Label:
+          default: Kibana Dashboard
+        Parameters:
+        - KibanaUser
+        - KibanaPassword
+      -
+        Label:
+          default: Networking Info
+        Parameters:
+        - OpenViduCidrBlock
+        - OpenViduSubnet
+        - KurentoAvailabilityZone  
+
+Conditions: 
+  NoSelfSigned:
+    'Fn::Not':
+      - 'Fn::Equals':
+          - Ref: WhichCert
+          - selfsigned
+
+Resources:
+
+  OpenViduVPC:
+    Type: 'AWS::EC2::VPC'
+    Properties:
+      CidrBlock: !Ref OpenViduCidrBlock
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: OpenViduVPC
+
+  OpenViduSubnet1:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      CidrBlock: !Ref OpenViduSubnet
+      VpcId: !Ref OpenViduVPC
+      AvailabilityZone: !Ref KurentoAvailabilityZone
+      MapPublicIpOnLaunch: true
+
+  InternetGateway:
+    Type: 'AWS::EC2::InternetGateway'
+
+  AttachInternetGateway:
+    Type: 'AWS::EC2::VPCGatewayAttachment'
+    Properties:
+      VpcId: !Ref OpenViduVPC
+      InternetGatewayId: !Ref InternetGateway
+
+  RouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref OpenViduVPC
+
+  PublicSubnet1RouteTableAssociation:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      RouteTableId: !Ref RouteTable
+      SubnetId: !Ref OpenViduSubnet1
+
+  InternetRoute:
+    Type: AWS::EC2::Route
+    DependsOn: AttachInternetGateway
+    Properties: 
+      RouteTableId: !Ref RouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+
+  OpenViduManageEC2Role:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      Policies:
+        - PolicyName: OpenViduManageEC2Policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'ec2:DescribeInstances'
+                  - 'ec2:RunInstances'
+                  - 'ec2:TerminateInstances'
+                  - 'ec2:CreateTags'
+                  - 'iam:PassRole'
+                Resource: '*'
+      RoleName: OpenViduManageEC2Role
+
+  OpenviduInstancesProfile:
+    Type: 'AWS::IAM::InstanceProfile'
+    Properties:
+      InstanceProfileName: "OpenViduInstanceProfile"
+      Path: /
+      Roles:
+        - OpenViduManageEC2Role
+    DependsOn:
+      - OpenViduManageEC2Role  
+
+  OpenViduServer:
+    Type: AWS::EC2::Instance
+    Metadata:
+      Comment: OpenVidu Pro
+      AWS::CloudFormation::Init:
+        config:
+          files:
+            "/usr/local/bin/feedGroupVars.sh":
+              content: !Sub |
+                #!/bin/bash -xe
+                
+                cd /usr/src/openvidu
+                
+                PIP=$(curl http://169.254.169.254/latest/meta-data/public-ipv4)
+                PublicHostname=$(curl http://169.254.169.254/latest/meta-data/public-hostname)
+                AWS_AMI_ID=KMS_AMI_ID
+
+                cp group_vars/all.cf group_vars/all
+
+                sed -i "s/OPENVIDU_INSTANCE_PUBLIC_IP/$PIP/" group_vars/all
+                sed -i "s/OPENVIDU_INSTANCE_PUBLIC_DOMAIN_NAME/$PublicHostname/" group_vars/all
+                sed -i "s/OPENVIDU_CDR/${OpenviduCDREnable}/" group_vars/all
+                sed -i "s/selfsigned/${WhichCert}/" group_vars/all
+                sed -i "s/DOMAIN_NAME/${MyDomainName}/" group_vars/all
+                sed -i "s/LETSENCRYPT_EMAIL/${LetsEncryptEmail}/" group_vars/all
+                sed -i "s/MY_SECRET/${OpenViduSecret}/" group_vars/all
+                sed -i "s/FREEHTTPACCESTORECORDINGVIDEOS/${FreeHTTPAccesToRecordingVideos}/" group_vars/all
+                sed -i "s/run_ec2: false/run_ec2: true/" group_vars/all
+                sed -i "s/KMS_RUN_CLUSTER/true/" group_vars/all
+                sed -i "s/OPENVIDURECORDINGNOTIFICATION/${OpenviduRecordingNotification}/" group_vars/all
+                sed -i "s/OPENVIDUSTREAMSVIDEOMAX-RECV-BANDWIDTH/${OpenviduStreamsVideoMaxRecvBandwidth}/" group_vars/all
+                sed -i "s/OPENVIDUSTREAMSVIDEOMIN-RECV-BANDWIDTH/${OpenviduStreamsVideoMinRecvBandwidth}/" group_vars/all
+                sed -i "s/OPENVIDUSTREAMSVIDEOMAX-SEND-BANDWIDTH/${OpenviduStreamsVideoMaxSendBandwidth}/" group_vars/all
+                sed -i "s/OPENVIDUSTREAMSVIDEOMIN-SEND-BANDWIDTH/${OpenviduStreamsVideoMinSendBandwidth}/" group_vars/all
+                sed -i "s/OPENVIDUCLUSTERLOADSTRATEGY/${OpenviduClusterLoadStrategy}/" group_vars/all
+                sed -i "s/KIBANA_USERNAME/${KibanaUser}/" group_vars/all
+                sed -i "s/KIBANA_PASSWORD/${KibanaPassword}/" group_vars/all
+                sed -i "s/AWS_DEFAULT_REGION/${AWS::Region}/" group_vars/all
+                sed -i "s/WEBHOOK_ENABLED/${OpenViduWebhook}/" group_vars/all
+                sed -i "s#WEBHOOK_ENDPOINT#${OpenViduWebhookEndpoint}#" group_vars/all
+                sed -i "s/WEBHOOK_HEADERS/${OpenViduWebhookHeaders}/" group_vars/all
+                sed -i "s/WEBHOOK_EVENTS/${OpenViduWebhookEvents}/" group_vars/all
+                sed -i "s/TURN_MIN_PORT/40000/" group_vars/all
+                sed -i "s/TURN_MAX_PORT/65535/" group_vars/all
+
+                # Running in MarketPlace
+                sed -i "s/install_software: true/install_software: false/" roles/coturn/vars/main.yml
+                sed -i "s/install_software: true/install_software: false/" roles/elastic/vars/main.yml
+                sed -i "s/install_software: true/install_software: false/" roles/nginx/vars/main.yml
+                sed -i "s/install_software: true/install_software: false/" roles/openvidu/vars/main.yml
+
+                # Launch kms on demand script
+                sed -i "s/IMAGE_ID/$AWS_AMI_ID/" roles/openvidu/vars/main.yml
+                sed -i "s/INSTANCE_TYPE/${AwsInstanceTypeKMS}/" roles/openvidu/vars/main.yml
+                sed -i "s/KEY_NAME/${KeyName}/" roles/openvidu/vars/main.yml
+                sed -i "s/SUBNET_ID/${OpenViduSubnet1}/" roles/openvidu/vars/main.yml
+                sed -i "s/OPENVIDU_SECRET/${OpenViduSecret}/" roles/openvidu/vars/main.yml
+              mode: "000755"
+              owner: "root"
+              group: "root"
+            "/usr/local/bin/buildCerts.sh":
+              content: !Sub |
+                #!/bin/bash
+                cd /usr/src/openvidu
+                wget -O nginx.crt ${OwnCertCRT}
+                wget -O nginx.key ${OwnCertKEY}
+              mode: "000755"
+              owner: "root"
+              group: "root"
+            "/usr/local/bin/getSecurityGroupId.sh":
+              content: !Sub |
+                #!/bin/bash
+                export AWS_DEFAULT_REGION=${AWS::Region}
+                SECGRPID=$(aws ec2 describe-instances --output text --filters Name=instance-state-name,Values=running Name=tag:ov-cluster-member,Values=kms --query 'Reservations[].Instances[].NetworkInterfaces[].Groups[].GroupId[]')
+                sed -i "s/SEC_GROUP_ID/$SECGRPID/" /usr/local/bin/launch_kms.sh 
+              mode: "000755"
+              owner: "root"
+              group: "root"
+            "/usr/local/bin/createKMSlist.sh":
+              content: !Sub |
+                #!/bin/bash
+                export AWS_DEFAULT_REGION=${AWS::Region}
+                aws ec2 describe-instances --output text --filters Name=instance-state-name,Values=running Name=tag:ov-cluster-member,Values=kms --query 'Reservations[*].Instances[*].{id:InstanceId,ip:PrivateIpAddress}' > /opt/openvidu/kms_list.txt              
+              mode: "000755"
+              owner: "root"
+              group: "root"
+    Properties:
+      ImageId: !FindInMap [OVAMIMAP, !Ref 'AWS::Region', AMI]
+      InstanceType: !Ref AwsInstanceTypeOV
+      KeyName: !Ref KeyName
+      IamInstanceProfile: !Ref OpenviduInstancesProfile
+      SubnetId: !Ref OpenViduSubnet1
+      SecurityGroupIds:
+        - !GetAtt 'OpenViduSecurityGroup.GroupId'
+      Tags:
+        - Key: Name
+          Value: 'OpenVidu Server'
+        - Key: 'ov-cluster-member'
+          Value: 'server'
+      UserData:
+        "Fn::Base64": 
+          !Sub |
+            #!/bin/bash -xe
+
+            cfn-init --region ${AWS::Region} --stack ${AWS::StackId} --resource OpenViduServer
+
+            /usr/local/bin/feedGroupVars.sh || { echo "[Openvidu] Parameters incorrect/insufficient"; exit 1; }
+
+            if [ "${WhichCert}" == "owncert" ]; then
+              /usr/local/bin/buildCerts.sh || { echo "[Openvidu] error with the certificate files"; exit 1; }
+            fi
+
+            cd /usr/src/openvidu
+
+            cat>play.yaml<<EOF
+            - hosts: all
+              roles:
+                - nginx
+                - openvidu
+                - elastic
+                - system-shutdown
+                - coturn
+            EOF
+
+            ansible-playbook -i "localhost," -c local play.yaml
+
+            # Wait for the app
+            /usr/local/bin/check_app_ready.sh
+
+            # sending the finish call
+            /usr/local/bin/cfn-signal -e $? --stack ${AWS::StackId} --resource WaitCondition --region ${AWS::Region}
+
+            # Last things to do
+            /usr/local/bin/getSecurityGroupId.sh
+            /usr/local/bin/createKMSlist.sh
+          
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeType: io1
+            Iops: 200
+            DeleteOnTermination: true
+            VolumeSize: 50
+
+  MediaServer:
+    Type: AWS::EC2::Instance
+    Metadata:
+      Comment: Media Server
+    Properties:
+      ImageId: !FindInMap [KMSAMIMAP, !Ref 'AWS::Region', AMI]
+      InstanceType: !Ref AwsInstanceTypeKMS
+      KeyName: !Ref KeyName
+      IamInstanceProfile: !Ref OpenviduInstancesProfile
+      SubnetId: !Ref OpenViduSubnet1
+      SecurityGroupIds:
+        - !GetAtt 'KMSSecurityGroup.GroupId'
+      Tags:
+        - Key: Name
+          Value: 'Kurento Media Server'
+        - Key: 'ov-cluster-member'
+          Value: 'kms'
+      UserData:
+        "Fn::Base64": 
+          !Sub |
+            #!/bin/bash -xe
+
+            cd /usr/src/openvidu
+
+            git checkout master
+
+            export AWS_DEFAULT_REGION=${AWS::Region}
+            OPENVIDU_IP=$(aws ec2 describe-instances --query 'Reservations[].Instances[].[PublicIpAddress]' --output text --filters Name=instance-state-name,Values=running Name=tag:ov-cluster-member,Values=server)
+
+            cp group_vars/all.cf group_vars/all
+
+            sed -i "s/OPENVIDU_INSTANCE_PUBLIC_IP/$OPENVIDU_IP/" group_vars/all
+            sed -i "s/MY_SECRET/${OpenViduSecret}/" group_vars/all
+            sed -i "s/KURENTO_MIN_PORT/40000/" group_vars/all
+            sed -i "s/KURENTO_MAX_PORT/65535/" group_vars/all
+
+            # Running in MarketPlace
+            sed -i "s/install_software: true/install_software: false/" roles/kms/vars/main.yml
+            sed -i "s/install_software: true/install_software: false/" roles/file-server/vars/main.yml
+
+            cat>play.yaml<<EOF
+            - hosts: all
+              roles:
+                - kms
+                - file-server
+            EOF
+
+            ansible-playbook -i "localhost," -c local play.yaml 
+          
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeType: io1
+            Iops: 200
+            DeleteOnTermination: true
+            VolumeSize: 50
+      
+  KMSSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      VpcId: !Ref OpenViduVPC
+      GroupDescription: SSH, Proxy and KMS WebRTC Ports
+      SecurityGroupIngress:
+        - IpProtocol: udp
+          FromPort: 40000
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 40000
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: !Join [ "/", [ !GetAtt OpenViduServer.PrivateIp, "32" ] ]
+        - IpProtocol: tcp
+          FromPort: 8888
+          ToPort: 8888
+          CidrIp: !Join [ "/", [ !GetAtt OpenViduServer.PrivateIp, "32" ] ]
+
+  OpenViduSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: SSH, Proxy and OpenVidu WebRTC Ports
+      VpcId: !Ref OpenViduVPC      
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 4443
+          ToPort: 4443
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 3478
+          ToPort: 3478
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+  
+  WaitCondition:
+    Type: AWS::CloudFormation::WaitCondition
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT20M
+        Count: 1
+
+  MyEIP:
+    Type: AWS::EC2::EIPAssociation
+    Condition: NoSelfSigned
+    Properties:
+      InstanceId: !Ref OpenViduServer
+      EIP: !Ref PublicElasticIP
+
+Outputs:
+  OpenViduInspector:
+    Description: "Use this URL to connect OpenVidu with user and password"
+    Value: !Join 
+        - ''
+        - - 'https://'
+          - !GetAtt OpenViduServer.PublicDnsName 
+          - '/inspector'
+
+  OpenViduInspectorLE:
+    Description: "Use this URL to connect to OpenVidu with user and password if you're using Let's Encrypt"
+    Value: !Join
+        - ''
+        - - 'https://'
+          - !Ref MyDomainName
+          - '/inspector'
+    Condition: NoSelfSigned
+  
+  Kibana:
+    Description: "Check out graph and performance of your OpenVidu installation"
+    Value: !Join
+        - ''
+        - - 'https://'
+          - !GetAtt OpenViduServer.PublicDnsName
+          - '/kibana'
+
+  KibanaLE:
+    Description: "Check out graph and performance of your OpenVidu installation"
+    Value: !Join
+        - ''
+        - - 'https://'
+          - !Ref MyDomainName
+          - '/kibana'
+    Condition: NoSelfSigned
