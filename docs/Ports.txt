@@ -1,3 +1,17 @@
 OpenVidu Pro:
-- Master node: 4443 TCP, 3478 TCP. 
-- Media nodes: 40000-65535 TCP y UDP y 8888 TCP (From OpenVidu Server)
+
+- Master node: 
+    22   TCP SSH for remote administration
+    80   TCP HTTP for Let's Encrypt
+    443  TCP HTTPS for SSL connections
+    3478 TCP TURN Server
+    4443 TCP OpenVidu Server
+    40000-65535 TCP for TURN connections
+    40000-65535 UDP for TURN connections
+
+- Media nodes: 
+    22   TCP SSH for remote administration
+    80   TCP HTTP for Let's Encrypt
+    8888 TCP for KMS (only from Master node allowed)
+    40000-65535 TCP for Media Server connections
+    40000-65535 UDP for Media Server connections
