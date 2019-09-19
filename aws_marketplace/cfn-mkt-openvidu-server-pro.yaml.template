@@ -111,7 +111,7 @@ Parameters:
     Description: >-
       Lowest incoming port to be open
     Type: Number
-    Default: 1024
+    Default: 40000
 
   MaxOpenPort:
     Description: >-
@@ -515,7 +515,7 @@ Resources:
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref InternetGateway
 
-  DescribeInstancesRole:
+  OpenViduManageEC2Role:
     Type: 'AWS::IAM::Role'
     Properties:
       AssumeRolePolicyDocument:
@@ -529,7 +529,7 @@ Resources:
               - 'sts:AssumeRole'
       Path: /
       Policies:
-        - PolicyName: DescribeInstacePolicy
+        - PolicyName: OpenViduManageEC2Policy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -537,16 +537,17 @@ Resources:
                 Action:
                   - 'ec2:DescribeInstances'
                 Resource: '*'
-      RoleName: DescribeInstancesRole
+      RoleName: !Join [ "-", [ OpenViduManageEC2Role, !Ref 'AWS::Region'] ]
 
   OpenviduInstancesProfile:
     Type: 'AWS::IAM::InstanceProfile'
     Properties:
+      InstanceProfileName: "OpenViduInstanceProfile"
       Path: /
       Roles:
-        - DescribeInstancesRole
+        - !Join [ "-", [ OpenViduManageEC2Role, !Ref 'AWS::Region'] ]
     DependsOn:
-      - DescribeInstancesRole
+      - OpenViduManageEC2Role
 
   KurentoLaunchConfiguration:
     Type: 'AWS::AutoScaling::LaunchConfiguration'
@@ -758,6 +759,15 @@ Resources:
           FromPort: 80
           IpProtocol: tcp
           ToPort: 80
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 1
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: udp
+          FromPort: 1
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
 
   OpenViduSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
@@ -793,12 +803,21 @@ Resources:
           FromPort: !Ref MinOpenPort
           ToPort: !Ref MaxOpenPort
           CidrIp: !Ref TCPRange
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 1
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: udp
+          FromPort: 1
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
   
   WaitCondition:
     Type: AWS::CloudFormation::WaitCondition
     CreationPolicy:
       ResourceSignal:
-        Timeout: PT20M
+        Timeout: PT40M
         Count: 1
 
   MyEIP:

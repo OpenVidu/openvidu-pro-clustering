@@ -404,7 +404,7 @@ Resources:
                   - 'ec2:CreateTags'
                   - 'iam:PassRole'
                 Resource: '*'
-      RoleName: OpenViduManageEC2Role
+      RoleName: !Join [ "-", [ OpenViduManageEC2Role, !Ref 'AWS::Region'] ]
 
   OpenviduInstancesProfile:
     Type: 'AWS::IAM::InstanceProfile'
@@ -412,7 +412,7 @@ Resources:
       InstanceProfileName: "OpenViduInstanceProfile"
       Path: /
       Roles:
-        - OpenViduManageEC2Role
+        - !Join [ "-", [ OpenViduManageEC2Role, !Ref 'AWS::Region'] ]
     DependsOn:
       - OpenViduManageEC2Role  
 
@@ -643,6 +643,15 @@ Resources:
           FromPort: 8888
           ToPort: 8888
           CidrIp: !Join [ "/", [ !GetAtt OpenViduServer.PrivateIp, "32" ] ]
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 1
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: udp
+          FromPort: 1
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
 
   OpenViduSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
@@ -650,6 +659,14 @@ Resources:
       GroupDescription: SSH, Proxy and OpenVidu WebRTC Ports
       VpcId: !Ref OpenViduVPC      
       SecurityGroupIngress:
+        - IpProtocol: udp
+          FromPort: 40000
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 40000
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
         - IpProtocol: tcp
           FromPort: 4443
           ToPort: 4443
@@ -669,6 +686,15 @@ Resources:
         - IpProtocol: tcp
           FromPort: 443
           ToPort: 443
+          CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 1
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: udp
+          FromPort: 1
+          ToPort: 65535
           CidrIp: 0.0.0.0/0
   
   WaitCondition:
