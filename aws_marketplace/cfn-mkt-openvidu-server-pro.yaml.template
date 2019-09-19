@@ -9,7 +9,7 @@ Parameters:
     ConstraintDescription: "must be the name of an existing EC2 KeyPair."
   
   KurentoAvailabilityZone:
-    Type: String
+    Type: AWS::EC2::AvailabilityZone::Name
     Description: must be the name of an existing AWS Availability Zone
     Default: eu-west-1a
 
@@ -30,9 +30,6 @@ Parameters:
     - m5.large
     - m5.xlarge
     - m5.2xlarge
-    - c3.large
-    - c3.xlarge
-    - c3.2xlarge
     - c4.large
     - c4.xlarge
     - c4.2xlarge
@@ -58,9 +55,6 @@ Parameters:
     - m5.large
     - m5.xlarge
     - m5.2xlarge
-    - c3.large
-    - c3.xlarge
-    - c3.2xlarge
     - c4.large
     - c4.xlarge
     - c4.2xlarge
@@ -104,12 +98,12 @@ Parameters:
     Default: true
 
   KibanaUser:
-    Description: Username for Kibana Dashboard
+    Description: "Username for Kibana Dashboard"
     Type: String
     Default: kibanaadmin
 
   KibanaPassword:
-    Description: Password for Kibana Dashboard
+    Description: "Password for Kibana Dashboard"
     Type: String
     NoEcho: true
 
@@ -290,14 +284,22 @@ Parameters:
     Default: "sessionCreated,sessionDestroyed,participantJoined,participantLeft,webrtcConnectionCreated,webrtcConnectionDestroyed,recordingStatusChanged"
 
   OpenViduCidrBlock:
-    Description: Dedicated VPC for OpenVidu cluster
+    Description: "Dedicated VPC for OpenVidu cluster"
     Type: String
     Default: 172.16.0.0/16
+    AllowedPattern: >-
+      ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
+    ConstraintDescription: >-
+      Must be in CIDR notation
 
   OpenViduSubnet:
-    Description: Subnet for OpenVidu cluster
+    Description: "Subnet for OpenVidu cluster"
     Type: String
     Default: 172.16.0.0/24
+    AllowedPattern: >-
+      ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
+    ConstraintDescription: >-
+      Must be in CIDR notation
 
   OpenviduClusterLoadStrategy:
     Description: >
@@ -380,7 +382,83 @@ Metadata:
         Label:
           default: Clustering options
         Parameters:
-        - KurentoAsgSize  
+        - KurentoAsgSize
+
+    ParameterLabels:
+      KeyName:
+        default: "Key Name"
+      KurentoAvailabilityZone:
+        default: "Kurento Availability Zone"
+      AwsInstanceTypeOV:
+        default: "Instance Type For Openvidu Server"
+      AwsInstanceTypeKMS:
+        default: "Instance Type For Kurento Media Server"
+      KurentoAsgSize:
+        default: "Kurento Auto Scaling Group Size"
+      MyDomainName: 
+        default: "FQDN"
+      PublicElasticIP:
+        default: "Public Elastic IP"
+      OpenViduSecret:
+        default: "OpenVidu Secret" 
+      OpenviduCDREnable:
+        default: "OpenVidu Server Call Detail Record"
+      KibanaUser:
+        default: "Kibana Username"
+      KibanaPassword:
+        default: "Kibana Password"
+      MinOpenPort:
+        default: "Minimum Open Port"
+      MaxOpenPort:
+        default: "Maximum Open Port"
+      WebUICidr:
+        default: "CIDR For Web User Interface"
+      HTTPAccess:
+        default: "CIDR For HTTP Access"
+      HTTPSAccess:
+        default: "CIDR For HTTPS Access"
+      CoturnPort:
+        default: "CIDR For Coturn Access"
+      SSHCidr: 
+        default: "CIDR For SSH Access"
+      UDPRange:
+        default: "CIDR For Port range UDP"
+      TCPRange:
+        default: "CIDR For Port range TCP"
+      WhichCert:
+        default: "Choose The Certificate"
+      LetsEncryptEmail:
+        default: "Let's Encrypt Email"
+      OwnCertCRT:
+        default: "CRT File"
+      OwnCertKEY: 
+        default: "KEY File"
+      FreeHTTPAccesToRecordingVideos:
+        default: "Video Recording Access"
+      OpenviduRecordingNotification:
+        default: "Recording Notifications"
+      OpenviduStreamsVideoMaxRecvBandwidth: 
+        default: "Openvidu Streams Video Max Recv Bandwidth"
+      OpenviduStreamsVideoMinRecvBandwidth:
+        default: "Openvidu Streams Video Min Recv Bandwidth"
+      OpenviduStreamsVideoMaxSendBandwidth: 
+        default: "Openvidu Streams Video Max Send Bandwidth"
+      OpenviduStreamsVideoMinSendBandwidth:
+        default: "Openvidu Streams Video Min Send Bandwidth"
+      OpenViduWebhook:
+        default: "OpenVidu Webhook"
+      OpenViduWebhookEndpoint:
+        default: "OpenVidu Webhook Endpoint"
+      OpenViduWebhookHeaders:
+        default: "OpenVidu Webhook Headers"
+      OpenViduWebhookEvents:
+        default: "OpenVidu Webhook Events"
+      OpenViduCidrBlock:
+        default: "OpenVidu Network"
+      OpenViduSubnet:
+        default: "OpenVidu Subnet"
+      OpenviduClusterLoadStrategy:
+        default: "Openvidu Cluster Load Strategy"
 
 Conditions: 
   NoSelfSigned:
@@ -407,7 +485,7 @@ Resources:
       CidrBlock: !Ref OpenViduSubnet
       VpcId: !Ref OpenViduVPC
       AvailabilityZone: !Ref KurentoAvailabilityZone
-      MapPublicIpOnLaunch: 'true'
+      MapPublicIpOnLaunch: true
 
   InternetGateway:
     Type: 'AWS::EC2::InternetGateway'
@@ -484,7 +562,7 @@ Resources:
       BlockDeviceMappings: 
         - DeviceName: "/dev/sda1"
           Ebs: 
-            VolumeSize: "50"
+            VolumeSize: 50
             VolumeType: "io1"
             Iops: 200
       UserData:
@@ -534,10 +612,10 @@ Resources:
       Tags:
         - Key: Name
           Value: 'Kurento Media Server'
-          PropagateAtLaunch: 'true'
+          PropagateAtLaunch: true
         - Key: 'ov-cluster-member'
           Value: 'kms'
-          PropagateAtLaunch: 'true'
+          PropagateAtLaunch: true
 
   OpenViduServer:
     Type: AWS::EC2::Instance
@@ -673,13 +751,13 @@ Resources:
           ToPort: !Ref MaxOpenPort
           CidrIp: !Ref TCPRange
         - CidrIp: !Ref SSHCidr
-          FromPort: '22'
+          FromPort: 22
           IpProtocol: tcp
-          ToPort: '22'
+          ToPort: 22
         - CidrIp: 0.0.0.0/0
-          FromPort: '80'
+          FromPort: 80
           IpProtocol: tcp
-          ToPort: '80'
+          ToPort: 80
 
   OpenViduSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'

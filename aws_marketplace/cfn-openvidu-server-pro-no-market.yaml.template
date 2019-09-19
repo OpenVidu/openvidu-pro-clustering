@@ -191,7 +191,7 @@ Parameters:
     AllowedPattern: >-
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
     ConstraintDescription: >-
-      Must be in CIDR notation. 
+      Must be in CIDR notation
 
   OpenViduSubnet:
     Description: "Subnet for OpenVidu cluster"
@@ -200,7 +200,7 @@ Parameters:
     AllowedPattern: >-
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
     ConstraintDescription: >-
-      Must be in CIDR notation.
+      Must be in CIDR notation
 
   OpenviduClusterLoadStrategy:
     Description: >
@@ -265,7 +265,63 @@ Metadata:
         Parameters:
         - OpenViduCidrBlock
         - OpenViduSubnet
-        - KurentoAvailabilityZone  
+        - KurentoAvailabilityZone
+
+    ParameterLabels:
+      KeyName:
+        default: "Key Name"
+      KurentoAvailabilityZone:
+        default: "Kurento Availability Zone"
+      AwsInstanceTypeOV:
+        default: "Instance Type For Openvidu Server"
+      AwsInstanceTypeKMS:
+        default: "Instance Type For Kurento Media Server"
+      MyDomainName: 
+        default: "FQDN"
+      PublicElasticIP:
+        default: "Public Elastic IP"
+      OpenViduSecret:
+        default: "OpenVidu Secret" 
+      OpenviduCDREnable:
+        default: "OpenVidu Server Call Detail Record"
+      KibanaUser:
+        default: "Kibana Username"
+      KibanaPassword:
+        default: "Kibana Password"
+      WhichCert:
+        default: "Choose The Certificate"
+      LetsEncryptEmail:
+        default: "Let's Encrypt Email"
+      OwnCertCRT:
+        default: "CRT File"
+      OwnCertKEY: 
+        default: "KEY File"
+      FreeHTTPAccesToRecordingVideos:
+        default: "Video Recording Access"
+      OpenviduRecordingNotification:
+        default: "Recording Notifications"
+      OpenviduStreamsVideoMaxRecvBandwidth: 
+        default: "Openvidu Streams Video Max Recv Bandwidth"
+      OpenviduStreamsVideoMinRecvBandwidth:
+        default: "Openvidu Streams Video Min Recv Bandwidth"
+      OpenviduStreamsVideoMaxSendBandwidth: 
+        default: "Openvidu Streams Video Max Send Bandwidth"
+      OpenviduStreamsVideoMinSendBandwidth:
+        default: "Openvidu Streams Video Min Send Bandwidth"
+      OpenViduWebhook:
+        default: "OpenVidu Webhook"
+      OpenViduWebhookEndpoint:
+        default: "OpenVidu Webhook Endpoint"
+      OpenViduWebhookHeaders:
+        default: "OpenVidu Webhook Headers"
+      OpenViduWebhookEvents:
+        default: "OpenVidu Webhook Events"
+      OpenViduCidrBlock:
+        default: "OpenVidu Network"
+      OpenViduSubnet:
+        default: "OpenVidu Subnet"
+      OpenviduClusterLoadStrategy:
+        default: "Openvidu Cluster Load Strategy"
 
 Conditions: 
   NoSelfSigned:

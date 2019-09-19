@@ -94,7 +94,7 @@ Resources:
               owner: "root"
               group: "root"
             "/usr/local/bin/installDocker.sh":
-              content: !Sub |
+              content: |
                 #!/bin/bash
                 set -eu -o pipefail
                 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
