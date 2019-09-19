@@ -550,8 +550,7 @@ Resources:
 
             # Last things to do
             /usr/local/bin/getSecurityGroupId.sh
-            /usr/local/bin/createKMSlist.sh
-          
+            /usr/local/bin/openvidu-autodiscover.sh
       BlockDeviceMappings:
         - DeviceName: /dev/sda1
           Ebs:
