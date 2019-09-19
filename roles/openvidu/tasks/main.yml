@@ -71,6 +71,12 @@
     state: "directory"
     mode: "0777"
 
+- name: creating instances directory
+  file:
+    path: "/opt/openvidu/instances"
+    state: "directory"
+    mode: "0777"
+
 - name: registering who i am
   copy:
     src: "openvidu-cluster-member"
