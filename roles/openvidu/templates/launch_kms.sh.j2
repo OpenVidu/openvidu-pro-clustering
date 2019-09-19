@@ -79,17 +79,4 @@ aws ec2 run-instances \
     --iam-instance-profile Name=OpenViduInstanceProfile \
     --security-group-ids ${SECURITY_GROUP} > ${OUTPUT} 2> ${ERROUTPUT}
 
-KMS_IP=$(cat ${OUTPUT} | jq --raw-output ' .Instances[] | .NetworkInterfaces[0] | .PrivateIpAddress')
-KMS_ID=$(cat ${OUTPUT} | jq --raw-output ' .Instances[] | .InstanceId')
-
-JSON_OUTPUT=$(jq -n \
-  --arg id "${KMS_ID}" \
-  --arg ip "${KMS_IP}" \
-  '{ id: $id, ip: $ip }')
-
-echo ${JSON_OUTPUT} > /opt/openvidu/instances/kms_list.json
-
-rm ${TMPFILE}
-rm ${OUTPUT}
-
-echo ${KMS_IP}
+/usr/local/bin/openvidu-autodiscover.sh
