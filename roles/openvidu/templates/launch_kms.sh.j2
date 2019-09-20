@@ -87,4 +87,6 @@ aws ec2 run-instances \
     --iam-instance-profile Name=OpenViduInstanceProfile \
     --security-group-ids ${SECURITY_GROUP} > ${OUTPUT} 2> ${ERROUTPUT}
 
+aws ec2 wait instance-running --instance-ids $(cat ${OUTPUT} | jq --raw-output ' .Instances[] | .InstanceId')
+
 /usr/local/bin/openvidu-autodiscover.sh
