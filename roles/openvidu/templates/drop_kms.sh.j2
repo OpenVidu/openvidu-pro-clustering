@@ -8,7 +8,7 @@ IP=$1
 
 # TODO: We have to decide which parameter this script will recived. 
 #AWS_INSTANCE_ID=$(grep ${IP} /opt/openvidu/kms_list.txt | awk '{ print $1 }')
-AWS_INSTANCE_ID=$(cat /opt/openvidu/kms_list.json | jq '.[] | select(.[].ip == "${IP}") | .[].id'
+AWS_INSTANCE_ID=$(cat /opt/openvidu/instances/kms_list.json | jq --arg ip $IP '.[] | select(.[].ip == $ip) | .[].id' | tr -d '"')
 
 aws ec2 terminate-instances --instance-ids ${AWS_INSTANCE_ID}
 
