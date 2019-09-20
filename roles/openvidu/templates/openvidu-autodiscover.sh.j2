@@ -5,6 +5,12 @@ export AWS_DEFAULT_REGION={{ aws_default_region }}
 
 MEDIA_INVENTORY="/opt/openvidu/instances/kms_list.json"
 
+# If the file does not exit, create it
+if [ ! -f "${MEDIA_INVENTORY}" ]
+then
+  touch ${MEDIA_INVENTORY}
+fi
+
 # Check if I can write in the output file
 if [ ! -w "${MEDIA_INVENTORY}" ]
 then
