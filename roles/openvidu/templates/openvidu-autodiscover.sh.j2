@@ -1,0 +1,18 @@
+#!/bin/bash -x
+set -eu -o pipefail
+
+export AWS_DEFAULT_REGION={{ aws_default_region }}
+
+MEDIA_INVENTORY="/opt/openvidu/instances/kms_list.json"
+
+# Check if I can write in the output file
+if [ ! -w "${MEDIA_INVENTORY}" ]
+then
+  echo "Don't have write permission (WritePermissionDenied) on file ${MEDIA_INVENTORY}" >&2
+  exit 1
+fi
+
+aws ec2 describe-instances \
+  --output json \
+  --filters Name=instance-state-name,Values=running Name=tag:ov-cluster-member,Values=kms \
+  --query 'Reservations[*].Instances[*].{id:InstanceId,ip:PrivateIpAddress}' > ${MEDIA_INVENTORY}
