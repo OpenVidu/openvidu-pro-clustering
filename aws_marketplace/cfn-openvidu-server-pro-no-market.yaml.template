@@ -485,23 +485,6 @@ Resources:
               mode: "000755"
               owner: "root"
               group: "root"
-            "/usr/local/bin/getSecurityGroupId.sh":
-              content: !Sub |
-                #!/bin/bash
-                export AWS_DEFAULT_REGION=${AWS::Region}
-                SECGRPID=$(aws ec2 describe-instances --output text --filters Name=instance-state-name,Values=running Name=tag:ov-cluster-member,Values=kms --query 'Reservations[].Instances[].NetworkInterfaces[].Groups[].GroupId[]')
-                sed -i "s/SEC_GROUP_ID/$SECGRPID/" /usr/local/bin/launch_kms.sh 
-              mode: "000755"
-              owner: "root"
-              group: "root"
-            "/usr/local/bin/openvidu-autodiscover.sh":
-              content: !Sub |
-                #!/bin/bash
-                export AWS_DEFAULT_REGION=${AWS::Region}
-                aws ec2 describe-instances --output json --filters Name=instance-state-name,Values=running Name=tag:ov-cluster-member,Values=kms --query 'Reservations[*].Instances[*].{id:InstanceId,ip:PrivateIpAddress}' >> /opt/openvidu/instances/kms_list.json
-              mode: "000755"
-              owner: "root"
-              group: "root"
     Properties:
       ImageId: !FindInMap [OVAMIMAP, !Ref 'AWS::Region', AMI]
       InstanceType: !Ref AwsInstanceTypeOV
