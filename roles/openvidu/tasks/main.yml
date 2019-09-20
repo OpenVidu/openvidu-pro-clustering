@@ -47,8 +47,20 @@
 
 - name: copying remove media server script
   template:
-    src: "remove_kms.sh.j2"
+    src: "drop_kms.sh.j2"
     dest: "/usr/local/bin/remove_kms.sh"
+    mode: "0755"
+
+- name: copying get security group for media server script
+  template:
+    src: "getSecurityGroupId.sh.j2"
+    dest: "/usr/local/bin/getSecurityGroupId.sh"
+    mode: "0755"
+
+- name: copying auto discover media servers script
+  template:
+    src: "openvidu-autodiscover.sh.j2"
+    dest: "/usr/local/bin/openvidu-autodiscover.sh"
     mode: "0755"
 
 - name: copying openvidu application.properties
