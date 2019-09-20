@@ -48,7 +48,7 @@
 - name: copying remove media server script
   template:
     src: "drop_kms.sh.j2"
-    dest: "/usr/local/bin/remove_kms.sh"
+    dest: "/usr/local/bin/drop_kms.sh"
     mode: "0755"
 
 - name: copying get security group for media server script
