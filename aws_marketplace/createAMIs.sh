@@ -93,8 +93,9 @@ aws cloudformation delete-stack --stack-name openvidu-${DATESTAMP}
 # Wait for the instance
 aws ec2 wait image-available --image-ids ${OV_RAW_AMI_ID}
 
-echo "OV  -> " ${OV_RAW_AMI_ID}
-echo "KMS -> " ${KMS_RAW_AMI_ID}
+# Updating the template
+sed "s/OV_AMI_ID/${OV_RAW_AMI_ID}/" cfn-openvidu-server-pro-no-market.yaml.template > cfn-openvidu-server-pro-no-market.yaml
+sed -i "s/KMS_AMI_ID/${KMS_RAW_AMI_ID}/g" cfn-openvidu-server-pro-no-market.yaml
 
 rm $TEMPJSON
 rm cfn-mkt-kms-ami.yaml
