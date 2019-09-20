@@ -11,3 +11,5 @@ IP=$1
 AWS_INSTANCE_ID=$(cat /opt/openvidu/kms_list.json | jq '.[] | select(.[].ip == "${IP}") | .[].id'
 
 aws ec2 terminate-instances --instance-ids ${AWS_INSTANCE_ID}
+
+/usr/local/bin/openvidu-autodiscover.sh
