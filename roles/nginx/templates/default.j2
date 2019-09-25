@@ -46,6 +46,11 @@ server {
 
     root /var/www/html;
 
+    location /layouts/custom {
+        rewrite ^/layouts/custom/(.*)$ /custom-layout/$1 break;
+        root /opt/openvidu;
+    }
+    
     location /inspector {
         rewrite ^/inspector/(.*)$ /$1 break;
         proxy_pass http://inspector/;

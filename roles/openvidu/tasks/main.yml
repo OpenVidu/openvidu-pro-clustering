@@ -93,3 +93,9 @@
   copy:
     src: "openvidu-cluster-member"
     dest: "/opt/openvidu"
+
+- name: creating custom-layout directory
+  file:
+    path: /opt/openvidu/custom-layout
+    state: directory
+    mode: 0755
