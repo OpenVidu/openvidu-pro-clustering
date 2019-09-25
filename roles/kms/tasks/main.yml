@@ -83,7 +83,7 @@
     - "kurento-media-server-dbg"
   notify: restart kms
   ignore_errors: yes
-
+  when: install_software|bool
 
 - name: preconfiguring Kurento Media Server
   template:
