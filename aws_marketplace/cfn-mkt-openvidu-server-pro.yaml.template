@@ -316,11 +316,11 @@ Parameters:
 Mappings:
   OVAMIMAP:
     us-east-1:
-      AMI: OV_AMI
+      AMI: OV_AMI_ID
 
   KMSAMIMAP:
     us-east-1:
-      AMI: KMS_AMI
+      AMI: KMS_AMI_ID
 
 Metadata:
   AWS::CloudFormation::Interface:
