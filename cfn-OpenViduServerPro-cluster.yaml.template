@@ -9,7 +9,7 @@ Parameters:
     ConstraintDescription: "must be the name of an existing EC2 KeyPair."
   
   KurentoAvailabilityZone:
-    Type: String
+    Type: AWS::EC2::AvailabilityZone::Name
     Description: must be the name of an existing AWS Availability Zone
     Default: eu-west-1a
 
@@ -301,11 +301,19 @@ Parameters:
     Description: Dedicated VPC for OpenVidu cluster
     Type: String
     Default: 172.16.0.0/16
+    AllowedPattern: >-
+      ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
+    ConstraintDescription: >-
+      Must be a valid net in CIDR notation. Like 172.16.0.0/16
 
   OpenViduSubnet:
     Description: Subnet for OpenVidu cluster
     Type: String
     Default: 172.16.0.0/24
+    AllowedPattern: >-
+      ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
+    ConstraintDescription: >-
+      Must be a valid net in CIDR notation. Like 172.16.0.0/16
 
   OpenviduClusterLoadStrategy:
     Description: >
