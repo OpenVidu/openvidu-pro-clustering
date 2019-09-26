@@ -9,6 +9,7 @@ if [ ${TARGET} == "market" ]; then
   export AWS_DEFAULT_REGION=us-east-1
 fi
 
+export AWS_DEFAULT_REGION=eu-west-1
 DATESTAMP=$(date +%s)
 TEMPJSON=$(mktemp -t cloudformation-XXX --suffix .json)
 
