@@ -96,7 +96,7 @@ aws cloudformation delete-stack --stack-name openvidu-${DATESTAMP}
 aws ec2 wait image-available --image-ids ${OV_RAW_AMI_ID}
 
 # Updating the template
-if [ ${TARGET} == "market" ]; then
+if [ ${CF_OVP_TARGET} == "market" ]; then
   sed "s/OV_AMI_ID/${OV_RAW_AMI_ID}/" cfn-mkt-openvidu-server-pro.yaml.template > cfn-openvidu-server-pro--${OPENVIDU_PRO_VERSION}.yaml
   sed -i "s/KMS_AMI_ID/${KMS_RAW_AMI_ID}/g" cfn-openvidu-server-pro-market-${OPENVIDU_PRO_VERSION}.yaml
 else
