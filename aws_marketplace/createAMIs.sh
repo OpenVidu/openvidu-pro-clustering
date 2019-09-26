@@ -1,14 +1,14 @@
 #!/bin/bash -x
 set -eu -o pipefail
 
-TARGET=${TARGET:-nomarket}
+CF_OVP_TARGET=${CF_OVP_TARGET:-nomarket}
 
-if [ ${TARGET} == "market" ]; then
+if [ ${CF_OVP_TARGET} == "market" ]; then
   export AWS_ACCESS_KEY_ID=${NAEVA_AWS_ACCESS_KEY_ID}
   export AWS_SECRET_ACCESS_KEY=${NAEVA_AWS_SECRET_ACCESS_KEY}
   export AWS_DEFAULT_REGION=us-east-1
 else
-  export AWS_DEFAULT_REGION=eu-west-1  
+    export AWS_DEFAULT_REGION=eu-west-1  
 fi
 
 DATESTAMP=$(date +%s)
@@ -21,7 +21,7 @@ sed "s/OPENVIDU_VERSION/${OPENVIDU_PRO_VERSION}/" cfn-mkt-ov-ami.yaml.template  
 ## KMS AMI
 
 # Copy template to S3
-if [ ${TARGET} == "market" ]; then
+if [ ${CF_OVP_TARGET} == "market" ]; then
   aws s3 cp cfn-mkt-kms-ami.yaml s3://naeva-openvidu-pro
   TEMPLATE_URL=https://s3-eu-west-1.amazonaws.com/naeva-openvidu-pro/cfn-mkt-kms-ami.yaml
 else
@@ -54,7 +54,7 @@ aws cloudformation delete-stack --stack-name kms-${DATESTAMP}
 ## OpenVidu AMI
 
 # Copy template to S3
-if [ ${TARGET} == "market" ]; then
+if [ ${CF_OVP_TARGET} == "market" ]; then
   aws s3 cp cfn-mkt-ov-ami.yaml s3://naeva-openvidu-pro
   TEMPLATE_URL=https://s3-eu-west-1.amazonaws.com/naeva-openvidu-pro/cfn-mkt-ov-ami.yaml
 else
