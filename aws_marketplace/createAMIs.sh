@@ -97,8 +97,8 @@ aws ec2 wait image-available --image-ids ${OV_RAW_AMI_ID}
 
 # Updating the template
 if [ ${CF_OVP_TARGET} == "market" ]; then
-  sed "s/OV_AMI_ID/${OV_RAW_AMI_ID}/" cfn-mkt-openvidu-server-pro.yaml.template > cfn-openvidu-server-pro--${OPENVIDU_PRO_VERSION}.yaml
-  sed -i "s/KMS_AMI_ID/${KMS_RAW_AMI_ID}/g" cfn-openvidu-server-pro-market-${OPENVIDU_PRO_VERSION}.yaml
+  sed "s/OV_AMI_ID/${OV_RAW_AMI_ID}/" cfn-mkt-openvidu-server-pro.yaml.template > cfn-mkt-openvidu-server-pro-${OPENVIDU_PRO_VERSION}.yaml
+  sed -i "s/KMS_AMI_ID/${KMS_RAW_AMI_ID}/g" cfn-mkt-openvidu-server-pro-${OPENVIDU_PRO_VERSION}.yaml
 else
   sed "s/OV_AMI_ID/${OV_RAW_AMI_ID}/" cfn-openvidu-server-pro-no-market.yaml.template > cfn-openvidu-server-pro-no-market-${OPENVIDU_PRO_VERSION}.yaml
   sed -i "s/KMS_AMI_ID/${KMS_RAW_AMI_ID}/g" cfn-openvidu-server-pro-no-market-${OPENVIDU_PRO_VERSION}.yaml
