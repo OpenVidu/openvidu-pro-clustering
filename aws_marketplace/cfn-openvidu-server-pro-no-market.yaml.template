@@ -532,8 +532,8 @@ Resources:
             /usr/local/bin/cfn-signal -e $? --stack ${AWS::StackId} --resource WaitCondition --region ${AWS::Region}
 
             # Last things to do
-            /usr/local/bin/getSecurityGroupId.sh
-            /usr/local/bin/openvidu-autodiscover.sh
+            /opt/openvidu/cluster/openvidu_get_security_group_id.sh
+            
       BlockDeviceMappings:
         - DeviceName: /dev/sda1
           Ebs:
