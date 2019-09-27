@@ -65,8 +65,8 @@
 
 - name: copying get security group for media server script
   template:
-    src: "openvidu_get_security_group_id.sh.sh.j2"
-    dest: "/opt/openvidu/cluster/openvidu_get_security_group_id.sh.sh"
+    src: "openvidu_get_security_group_id.sh.j2"
+    dest: "/opt/openvidu/cluster/openvidu_get_security_group_id.sh"
     mode: "0755"
 
 - name: copying auto discover media servers script
