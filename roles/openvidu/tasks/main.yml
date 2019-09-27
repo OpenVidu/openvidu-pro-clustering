@@ -39,28 +39,40 @@
     dest: "/usr/local/bin"
     mode: "u+rwx"
 
+- name: creating cluster directory
+  file:
+    path: "/opt/openvidu/cluster"
+    state: "directory"
+    mode: "0777"
+
+- name: creating cluster output directory
+  file:
+    path: "/opt/openvidu/cluster/output"
+    state: "directory"
+    mode: "0777"
+
 - name: copying launch media server script
   template:
-    src: "launch_kms.sh.j2"
-    dest: "/usr/local/bin/launch_kms.sh"
+    src: "openvidu_launch_kms.sh.j2"
+    dest: "/opt/openvidu/cluster/openvidu_launch_kms.sh"
     mode: "0755"
 
 - name: copying remove media server script
   template:
-    src: "drop_kms.sh.j2"
-    dest: "/usr/local/bin/drop_kms.sh"
+    src: "openvidu_drop_kms.sh.j2"
+    dest: "/opt/openvidu/cluster/openvidu_drop_kms.sh"
     mode: "0755"
 
 - name: copying get security group for media server script
   template:
-    src: "getSecurityGroupId.sh.j2"
-    dest: "/usr/local/bin/getSecurityGroupId.sh"
+    src: "openvidu_get_security_group_id.sh.sh.j2"
+    dest: "/opt/openvidu/cluster/openvidu_get_security_group_id.sh.sh"
     mode: "0755"
 
 - name: copying auto discover media servers script
   template:
-    src: "openvidu-autodiscover.sh.j2"
-    dest: "/usr/local/bin/openvidu-autodiscover.sh"
+    src: "openvidu_autodiscover.sh.j2"
+    dest: "/usr/local/bin/openvidu_autodiscover.sh"
     mode: "0755"
 
 - name: copying openvidu application.properties
@@ -80,12 +92,6 @@
 - name: creating recording directory
   file:
     path: "/opt/openvidu/recordings"
-    state: "directory"
-    mode: "0777"
-
-- name: creating instances directory
-  file:
-    path: "/opt/openvidu/instances"
     state: "directory"
     mode: "0777"
 

@@ -69,14 +69,6 @@ EOF
 ansible-playbook -i "localhost," -c local play.yaml 
 FDF
 
-# Check if I can write in the output file
-MEDIA_INVENTORY="/opt/openvidu/instances/kms_list.json"
-if [ ! -w "${MEDIA_INVENTORY}" ]
-then
-  echo "Don't have write permission (WritePermissionDenied) on file ${MEDIA_INVENTORY}" >&2
-  exit 1
-fi
-
 aws ec2 run-instances \
     --image-id ${IMAGE_ID} --count 1 \
     --instance-type ${INSTANCE_TYPE} \
@@ -89,4 +81,12 @@ aws ec2 run-instances \
 
 aws ec2 wait instance-running --instance-ids $(cat ${OUTPUT} | jq --raw-output ' .Instances[] | .InstanceId')
 
-/usr/local/bin/openvidu-autodiscover.sh
+# Generating the output
+KMS_IP=$(cat ${OUTPUT} | jq --raw-output ' .Instances[] | .NetworkInterfaces[0] | .PrivateIpAddress')
+KMS_ID=$(cat ${OUTPUT} | jq --raw-output ' .Instances[] | .InstanceId')
+
+jq -n \
+  --arg id "${KMS_ID}" \
+  --arg ip "${KMS_IP}" \
+  '{ id: $id, ip: $ip }'
+

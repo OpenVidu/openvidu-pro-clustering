@@ -1,0 +1,9 @@
+#!/bin/bash -x
+set -e -o pipefail
+
+export AWS_DEFAULT_REGION={{ aws_default_region }}
+
+ID=$1
+[ -z "${ID}" ] && { echo "Must provide instance ID"; exit 1; }
+
+aws ec2 terminate-instances --instance-ids ${ID} --output json 

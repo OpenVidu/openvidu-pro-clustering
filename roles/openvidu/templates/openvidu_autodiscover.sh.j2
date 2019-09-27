@@ -1,0 +1,9 @@
+#!/bin/bash -x
+set -eu -o pipefail
+
+export AWS_DEFAULT_REGION={{ aws_default_region }}
+
+aws ec2 describe-instances \
+  --output json \
+  --filters Name=instance-state-name,Values=running Name=tag:ov-cluster-member,Values=kms \
+  --query 'Reservations[*].Instances[*].{id:InstanceId,ip:PrivateIpAddress}' 
