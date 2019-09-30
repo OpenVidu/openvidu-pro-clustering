@@ -5,7 +5,7 @@ export AWS_DEFAULT_REGION={{ aws_default_region }}
 OUTPUT=$(mktemp -t openvidu-autodiscover-XXX --suffix .json)
 
 aws ec2 describe-instances \
-  --output json \
+  --output text \
   --filters Name=instance-state-name,Values=running Name=tag:ov-cluster-member,Values=kms \
   --query 'Reservations[*].Instances[*].{id:InstanceId,ip:PrivateIpAddress}' > ${OUTPUT}
 
