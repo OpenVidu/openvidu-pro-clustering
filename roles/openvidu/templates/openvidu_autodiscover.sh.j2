@@ -9,4 +9,4 @@ aws ec2 describe-instances \
   --filters Name=instance-state-name,Values=running Name=tag:ov-cluster-member,Values=kms \
   --query 'Reservations[*].Instances[*].{id:InstanceId,ip:PrivateIpAddress}' > ${OUTPUT}
 
-cat ${OUTPUT} | jq --raw-input 'split("\n") | map(split("\t")) | .[0:-1] | map( { "id": .[0], "ip": .[1] } )'
+cat ${OUTPUT} | jq --raw-input --slurp 'split("\n") | map(split("\t")) | .[0:-1] | map( { "id": .[0], "ip": .[1] } )'
