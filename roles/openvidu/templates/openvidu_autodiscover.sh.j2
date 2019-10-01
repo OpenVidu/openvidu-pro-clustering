@@ -1,5 +1,9 @@
-#!/bin/bash
+#!/bin/bash 
 set -eu -o pipefail
+
+# Set debug mode
+DEBUG=${DEBUG:-false}
+[ "$DEBUG" == "true" ] && set -x
 
 export AWS_DEFAULT_REGION={{ aws_default_region }}
 OUTPUT=$(mktemp -t openvidu-autodiscover-XXX --suffix .json)
