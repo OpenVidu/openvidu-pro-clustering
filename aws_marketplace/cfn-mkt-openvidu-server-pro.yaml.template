@@ -787,6 +787,10 @@ Resources:
           FromPort: 3478
           ToPort: 3478
           CidrIp: !Ref CoturnPort
+        - IpProtocol: udp
+          FromPort: 3478
+          ToPort: 3478
+          CidrIp: !Ref CoturnPort
         - IpProtocol: tcp
           FromPort: 22
           ToPort: 22
