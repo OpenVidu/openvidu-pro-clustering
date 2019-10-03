@@ -51,29 +51,6 @@ if [ "${HEADERS}" != "WEBHOOK_HEADERS" ]; then
 	fi
 fi
 
-{% if run_ec2 == true %}
-export AWS_DEFAULT_REGION={{ aws_default_region }}
-KMS_IPs=$(aws ec2 describe-instances --query 'Reservations[].Instances[].[PrivateIpAddress]' --output text --filters Name=instance-state-name,Values=running Name=tag:ov-cluster-member,Values=kms)
-{% else %}
-KMS_IPs=$(echo {{ kms_ips }} | tr , ' ')
-{% endif %}
-KMS_ENDPOINTS=$(for IP in $KMS_IPs
-do
-  echo $IP | awk '{ print "\"ws://" $1 ":8888/kurento\"" }'
-done
-)
-KMS_ENDPOINTS_LINE=$(echo $KMS_ENDPOINTS | tr ' ' ,)
-sed -i "s#kms.uris=.*#kms.uris=[${KMS_ENDPOINTS_LINE}]#" ${OV_PROPERTIES}
-
-# Wait for KMS
-for IP in ${KMS_IPs}
-do
-	while ! nc -z $IP 8888; do
-		echo "Waiting for Kurento Media Server (${IP}) to be available"
-    	sleep 10
-    done
-done
-
 pushd /opt/openvidu
 exec java -jar -Dspring.config.additional-location=${OV_PROPERTIES} /opt/openvidu/openvidu-server.jar
 
