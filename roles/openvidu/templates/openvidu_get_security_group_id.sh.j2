@@ -8,4 +8,4 @@ SECGRPID=$(aws ec2 describe-instances \
              --filters Name=instance-state-name,Values=running Name=tag:ov-cluster-member,Values=kms \
              --query 'Reservations[].Instances[].NetworkInterfaces[].Groups[].GroupId[]')
 
-sed -i "s/SEC_GROUP_ID/${SECGRPID}/" /opt/openvidu/cluster/openvidu_launch_kms.sh 
+sed -i "s/SEC_GROUP_ID/${SECGRPID}/" /opt/openvidu/cluster/{{ openvidu_pro_cluster_environment }}/openvidu_launch_kms.sh 
