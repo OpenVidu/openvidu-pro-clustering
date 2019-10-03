@@ -97,6 +97,11 @@ openvidu_webhook_headers:
 # Leave blank if all events.
 openvidu_webhook_events: WEBHOOK_EVENTS
 
+# Parameter "openvidu.pro.cluster.environment"
+# Which environment are you using
+# Possibles values: aws, on_premises
+openvidu_pro_cluster_environment: OPENVIDU_PRO_CLUSTER_ENVIRONMENT
+
 ######################################
 # OpenVidu PRO specific configuration 
 ######################################

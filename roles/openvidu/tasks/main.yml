@@ -41,9 +41,10 @@
 
 - name: creating cluster directory
   file:
-    path: "/opt/openvidu/cluster"
+    path: "/opt/openvidu/cluster/{{ openvidu_pro_cluster_environment }}"
     state: "directory"
     mode: "0777"
+  when: openvidu_pro_cluster_environment != "on_premises"
 
 - name: creating cluster output directory
   file:
@@ -54,26 +55,30 @@
 - name: copying launch media server script
   template:
     src: "openvidu_launch_kms.sh.j2"
-    dest: "/opt/openvidu/cluster/openvidu_launch_kms.sh"
+    dest: "/opt/openvidu/cluster/{{ openvidu_pro_cluster_environment }}/openvidu_launch_kms.sh"
     mode: "0755"
+  when: openvidu_pro_cluster_environment != "on_premises"
 
 - name: copying remove media server script
   template:
-    src: "openvidu_drop_kms.sh.j2"
-    dest: "/opt/openvidu/cluster/openvidu_drop_kms.sh"
+    src: "openvidu_drop.sh.j2"
+    dest: "/opt/openvidu/cluster/{{ openvidu_pro_cluster_environment }}/openvidu_drop.sh"
     mode: "0755"
+  when: openvidu_pro_cluster_environment != "on_premises"
 
 - name: copying get security group for media server script
   template:
     src: "openvidu_get_security_group_id.sh.j2"
-    dest: "/opt/openvidu/cluster/openvidu_get_security_group_id.sh"
+    dest: "/opt/openvidu/cluster/{{ openvidu_pro_cluster_environment }}/openvidu_get_security_group_id.sh"
     mode: "0755"
+  when: openvidu_pro_cluster_environment != "on_premises"
 
 - name: copying auto discover media servers script
   template:
     src: "openvidu_autodiscover.sh.j2"
-    dest: "/usr/local/bin/openvidu_autodiscover.sh"
+    dest: "/opt/openvidu/cluster/{{ openvidu_pro_cluster_environment }}/openvidu_autodiscover.sh"
     mode: "0755"
+  when: openvidu_pro_cluster_environment != "on_premises"
 
 - name: copying openvidu application.properties
   template:
