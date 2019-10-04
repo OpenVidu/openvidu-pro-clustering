@@ -5,7 +5,7 @@ set -e -o pipefail
 DEBUG=${DEBUG:-false}
 [ "$DEBUG" == "true" ] && set -x
 
-export AWS_DEFAULT_REGION={{ aws_default_region }}
+source /opt/openvidu/cluster/openvidu.rc 
 
 ID=$1
 [ -z "${ID}" ] && { echo "Must provide instance ID"; exit 1; }

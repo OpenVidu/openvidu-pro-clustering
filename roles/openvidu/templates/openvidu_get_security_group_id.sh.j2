@@ -1,13 +1,12 @@
 #!/bin/bash -x
 set -eu -o pipefail
 
-export AWS_DEFAULT_REGION={{ aws_default_region }}
+source /opt/openvidu/cluster/openvidu.rc 
 
-# TODO: No KMS deployed by default, so get SECGRPID from the security group.
 SECGRPID=$(aws ec2 describe-security-groups \
                --output text \
                --filters Name=tag:aws:cloudformation:logical-id,Values=KMSSecurityGroup \
                --query 'SecurityGroups[].GroupId[]'
 )
 
-sed -i "s/SEC_GROUP_ID/${SECGRPID}/" /opt/openvidu/cluster/{{ openvidu_pro_cluster_environment }}/openvidu_launch_kms.sh 
+sed -i "s/SEC_GROUP_ID/${SECGRPID}/" /opt/openvidu/cluster/{{ openvidu_pro_cluster_environment }}/openvidu.rc
