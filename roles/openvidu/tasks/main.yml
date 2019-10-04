@@ -80,6 +80,13 @@
     mode: "0755"
   when: openvidu_pro_cluster_environment != "on_premises"
 
+- name: copying configuration file
+  template:
+    src: "openvidu.rc.j2"
+    dest: "/opt/openvidu/cluster/openvidu.rc"
+    mode: "0644"
+  when: openvidu_pro_cluster_environment != "on_premises"
+
 - name: copying openvidu application.properties
   template:
     src: "application.properties.j2"
