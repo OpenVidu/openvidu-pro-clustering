@@ -123,7 +123,7 @@ openvidu_pro_cluster_load_strategy: OPENVIDUCLUSTERLOADSTRATEGY
 # How many media servers do you want to start with the deployment.
 # If set to zero no media servers will be lauched.
 # Type: number >= 0
-openvidu_pro_cluster_media-nodes: MEDIA_NODES_START_NUMBER
+openvidu_pro_cluster_media_nodes: MEDIA_NODES_START_NUMBER
 
 ##########################
 # Instances IPs and names
