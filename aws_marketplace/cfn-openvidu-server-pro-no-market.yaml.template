@@ -91,6 +91,11 @@ Parameters:
     Type: String
     Default: true
 
+  MediaNodesStartNumber:
+    Description: "How many media server do you want to launch by default"
+    Type: Number
+    Default: 1
+
   KibanaUser:
     Description: "Username for Kibana Dashboard"
     Type: String
@@ -142,22 +147,22 @@ Parameters:
   
   OpenviduStreamsVideoMaxRecvBandwidth: 
     Description: "Maximum video bandwidth sent from clients to OpenVidu Server, in kbps. 0 means unconstrained."
-    Type: String
+    Type: Number
     Default: 0
     
   OpenviduStreamsVideoMinRecvBandwidth:
     Description: "Minimum video bandwidth sent from clients to OpenVidu Server, in kbps. 0 means unconstrained."
-    Type: String
+    Type: Number
     Default: 0
 
   OpenviduStreamsVideoMaxSendBandwidth: 
     Description: "Maximum video bandwidth sent from OpenVidu Server to clients, in kbps. 0 means unconstrained."
-    Type: String
+    Type: Number
     Default: 0
     
   OpenviduStreamsVideoMinSendBandwidth:
     Description: "Minimum video bandwidth sent from OpenVidu Server to clients, in kbps. 0 means unconstrained."
-    Type: String
+    Type: Number
     Default: 0
 
   OpenViduWebhook:
@@ -284,6 +289,8 @@ Metadata:
         default: "OpenVidu Secret" 
       OpenviduCDREnable:
         default: "OpenVidu Server Call Detail Record"
+      MediaNodesStartNumber:
+        default: "Media Nodes start number"
       KibanaUser:
         default: "Kibana Username"
       KibanaPassword:
@@ -462,6 +469,7 @@ Resources:
                 sed -i "s/TURN_MIN_PORT/40000/" group_vars/all
                 sed -i "s/TURN_MAX_PORT/65535/" group_vars/all
                 sed -i "s/OPENVIDU_PRO_CLUSTER_ENVIRONMENT/aws/" group_vars/all
+                sed -i "s/MEDIA_NODES_START_NUMBER/MediaNodesStartNumber" group_vars/all
 
                 # Running in MarketPlace
                 sed -i "s/install_software: true/install_software: false/" roles/coturn/vars/main.yml
@@ -536,63 +544,6 @@ Resources:
             # Last things to do
             /opt/openvidu/cluster/aws/openvidu_get_security_group_id.sh
             
-      BlockDeviceMappings:
-        - DeviceName: /dev/sda1
-          Ebs:
-            VolumeType: io1
-            Iops: 200
-            DeleteOnTermination: true
-            VolumeSize: 50
-
-  MediaServer:
-    Type: AWS::EC2::Instance
-    Metadata:
-      Comment: Media Server
-    Properties:
-      ImageId: !FindInMap [KMSAMIMAP, !Ref 'AWS::Region', AMI]
-      InstanceType: !Ref AwsInstanceTypeKMS
-      KeyName: !Ref KeyName
-      IamInstanceProfile: !Ref OpenviduInstancesProfile
-      SubnetId: !Ref OpenViduSubnet1
-      SecurityGroupIds:
-        - !GetAtt 'KMSSecurityGroup.GroupId'
-      Tags:
-        - Key: Name
-          Value: 'Kurento Media Server'
-        - Key: 'ov-cluster-member'
-          Value: 'kms'
-      UserData:
-        "Fn::Base64": 
-          !Sub |
-            #!/bin/bash -xe
-
-            cd /usr/src/openvidu
-
-            git checkout master
-
-            export AWS_DEFAULT_REGION=${AWS::Region}
-            OPENVIDU_IP=$(aws ec2 describe-instances --query 'Reservations[].Instances[].[PublicIpAddress]' --output text --filters Name=instance-state-name,Values=running Name=tag:ov-cluster-member,Values=server)
-
-            cp group_vars/all.cf group_vars/all
-
-            sed -i "s/OPENVIDU_INSTANCE_PUBLIC_IP/$OPENVIDU_IP/" group_vars/all
-            sed -i "s/MY_SECRET/${OpenViduSecret}/" group_vars/all
-            sed -i "s/KURENTO_MIN_PORT/40000/" group_vars/all
-            sed -i "s/KURENTO_MAX_PORT/65535/" group_vars/all
-
-            # Running in MarketPlace
-            sed -i "s/install_software: true/install_software: false/" roles/kms/vars/main.yml
-            sed -i "s/install_software: true/install_software: false/" roles/file-server/vars/main.yml
-
-            cat>play.yaml<<EOF
-            - hosts: all
-              roles:
-                - kms
-                - file-server
-            EOF
-
-            ansible-playbook -i "localhost," -c local play.yaml 
-          
       BlockDeviceMappings:
         - DeviceName: /dev/sda1
           Ebs:
