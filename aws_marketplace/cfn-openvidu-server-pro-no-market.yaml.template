@@ -250,6 +250,7 @@ Metadata:
         - OpenviduClusterLoadStrategy
         - FreeHTTPAccesToRecordingVideos
         - OpenviduRecordingNotification
+        - MediaNodesStartNumber
         - OpenviduStreamsVideoMaxRecvBandwidth
         - OpenviduStreamsVideoMinRecvBandwidth
         - OpenviduStreamsVideoMaxSendBandwidth
@@ -469,7 +470,7 @@ Resources:
                 sed -i "s/TURN_MIN_PORT/40000/" group_vars/all
                 sed -i "s/TURN_MAX_PORT/65535/" group_vars/all
                 sed -i "s/OPENVIDU_PRO_CLUSTER_ENVIRONMENT/aws/" group_vars/all
-                sed -i "s/MEDIA_NODES_START_NUMBER/MediaNodesStartNumber" group_vars/all
+                sed -i "s/MEDIA_NODES_START_NUMBER/${MediaNodesStartNumber}/" group_vars/all
 
                 # Running in MarketPlace
                 sed -i "s/install_software: true/install_software: false/" roles/coturn/vars/main.yml
