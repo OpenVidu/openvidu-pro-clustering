@@ -12,7 +12,7 @@ export AWS_DEFAULT_REGION=eu-west-1
 
 aws s3 cp ${TEMPLATE_FILENAME} s3://aws.openvidu.io/cfn-openvidu-server-pro-no-market-dev.yaml # --acl public-read
 
-CF_FILE="https://aws.openvidu.io/cfn-openvidu-server-pro-no-market-dev.yaml"
+CF_FILE="https://s3-eu-west-1.amazonaws.com/aws.openvidu.io/cfn-openvidu-server-pro-no-market-dev.yaml"
 
 cat > $TEMPJSON<<EOF
   [
