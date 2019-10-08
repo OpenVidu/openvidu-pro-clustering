@@ -70,8 +70,6 @@ if [ "$RES_KIBANA" != "200" ]; then
   exit 1
 fi
 
-read -n 1 -s -r -p "Press any key to continue"
-
 # Cleaning up
 aws cloudformation delete-stack --stack-name Openvidu-cluster-selfsigned-${DOMAIN_NAME}
 
