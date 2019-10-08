@@ -536,11 +536,11 @@ Resources:
 
             ansible-playbook -i "localhost," -c local play.yaml
 
-            # Wait for the app
-            /usr/local/bin/check_app_ready.sh
-
             # Getting security group id for media server lauching script
             /opt/openvidu/cluster/aws/openvidu_get_security_group_id.sh
+
+            # Wait for the app
+            /usr/local/bin/check_app_ready.sh
 
             # sending the finish call
             /usr/local/bin/cfn-signal -e $? --stack ${AWS::StackId} --resource WaitCondition --region ${AWS::Region}
