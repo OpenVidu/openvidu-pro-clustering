@@ -9,9 +9,9 @@ TEMPFILE=$(mktemp -t file-XXX --suffix .json)
 TEMPJSON=$(mktemp -t cloudformation-XXX --suffix .json)
 TEMPLATE_FILENAME=$(ls -1 cfn-openvidu-server-pro-no-market-*.yaml  )
 
-aws s3 cp $(TEMPLATE_FILENAME) s3://aws.openvidu.io/cfn-openvidu-server-pro-no-market-dev.yaml   # --acl public-read
+aws s3 cp ${TEMPLATE_FILENAME} s3://aws.openvidu.io/cfn-openvidu-server-pro-no-market-dev.yaml # --acl public-read
 
-CF_FILE="https://s3-eu-west-1.amazonaws.com/aws.openvidu.io/cfn-openvidu-server-pro-no-market.yaml"
+CF_FILE="https://aws.openvidu.io/cfn-openvidu-server-pro-no-market-dev.yaml"
 
 cat > $TEMPJSON<<EOF
   [
