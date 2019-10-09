@@ -69,9 +69,3 @@ if [ "$RES_KIBANA" != "200" ]; then
   echo "Kibana failed"
   exit 1
 fi
-
-# Cleaning up
-aws cloudformation delete-stack --stack-name Openvidu-cluster-selfsigned-${DOMAIN_NAME}
-
-# Wait for the stack to be completely removed
-aws cloudformation wait stack-delete-complete --stack-name Openvidu-cluster-selfsigned-${DOMAIN_NAME}
