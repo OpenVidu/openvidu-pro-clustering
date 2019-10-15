@@ -97,11 +97,6 @@ openvidu_webhook_headers:
 # Leave blank if all events.
 openvidu_webhook_events: WEBHOOK_EVENTS
 
-# Parameter "openvidu.pro.cluster.environment"
-# Which environment are you using
-# Possibles values: aws, on_premises
-openvidu_pro_cluster_environment: OPENVIDU_PRO_CLUSTER_ENVIRONMENT
-
 ######################################
 # OpenVidu PRO specific configuration 
 ######################################
@@ -124,6 +119,11 @@ openvidu_pro_cluster_load_strategy: OPENVIDUCLUSTERLOADSTRATEGY
 # If set to zero no media servers will be lauched.
 # Type: number >= 0
 openvidu_pro_cluster_media_nodes: MEDIA_NODES_START_NUMBER
+
+# Parameter "openvidu.pro.cluster.environment"
+# Which environment are you using
+# Possibles values: aws, on_premise
+openvidu_pro_cluster_environment: OPENVIDU_PRO_CLUSTER_ENVIRONMENT
 
 ##########################
 # Instances IPs and names
@@ -183,7 +183,7 @@ kibana_password: "MY_SECRET"
 # On premises config
 ##########################
 
-# Cloud provider like AWS or OpenStack set up
+# Cloud providers like AWS or OpenStack set up
 # ubuntu user without password. Put your own user
 # if you're using another provider or bare metal
 openvidu_user: ubuntu

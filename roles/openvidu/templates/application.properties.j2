@@ -18,7 +18,9 @@ openvidu.pro.cluster={{ openvidu_pro_cluster }}
 openvidu.pro.cluster.load.strategy={{ openvidu_pro_cluster_load_strategy }}
 
 openvidu.webhook={{ openvidu_webhook }}
+{% if openvidu_webhook_endpoint != "WEBHOOK_ENDPOINT" %}
 openvidu.webhook.endpoint={{ openvidu_webhook_endpoint }}
+{% endif %}
 
 openvidu.publicurl=
 MY_UID=
@@ -26,7 +28,13 @@ openvidu.recording.composed-url=
 
 kms.uris=[]
 
+{% if openvidu_pro_cluster_environment == "on_premise" %}
+openvidu.pro.cluster.mode=manual
+{% else %}
 openvidu.pro.cluster.mode=auto
+{% endif %}
 openvidu.pro.cluster.test=false
 openvidu.pro.cluster.environment={{ openvidu_pro_cluster_environment }}
+{% if openvidu_pro_cluster_media_nodes != "MEDIA_NODES_START_NUMBER" %}
 openvidu.pro.cluster.media-nodes={{ openvidu_pro_cluster_media_nodes }}
+{% endif %}

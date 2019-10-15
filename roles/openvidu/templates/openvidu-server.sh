@@ -8,7 +8,7 @@ OV_PROPERTIES="/opt/openvidu/application.properties"
 PUBLIC_HOSTNAME={{ domain_name }}
 {% else %}
 {% if run_ec2 == true %}
-PUBLIC_HOSTNAME=$(curl http://169.254.169.254/latest/meta-data/public-hostname)
+PUBLIC_HOSTNAME=$(curl http://169.254.169.254/latest/meta-data/local-hostname)
 {% else %}
 PUBLIC_HOSTNAME={{ openvidu_publicurl }}
 {% endif %}
@@ -23,6 +23,26 @@ do
   fi
   sleep 1
 done
+
+{% if openvidu_pro_cluster_environment == "on_premise" %}
+KMS_IPs=$(echo {{ kms_ips }} | tr , ' ')
+KMS_ENDPOINTS=$(for IP in $KMS_IPs
+do
+  echo $IP | awk '{ print "\"ws://" $1 ":8888/kurento\"" }'
+done
+)
+KMS_ENDPOINTS_LINE=$(echo $KMS_ENDPOINTS | tr ' ' ,)
+sed -i "s#kms.uris=.*#kms.uris=[${KMS_ENDPOINTS_LINE}]#" ${OV_PROPERTIES}
+
+# Wait for KMS
+for IP in ${KMS_IPs}
+do
+	while ! nc -z $IP 8888; do
+		echo "Waiting for Kurento Media Server (${IP}) to be available"
+    	sleep 10
+    done
+done
+{% endif %}
 
 sed -i "s#openvidu.publicurl=.*#openvidu.publicurl=https://${PUBLIC_HOSTNAME}:4443#" ${OV_PROPERTIES}
 sed -i "s/MY_UID=.*/MY_UID=$(id -u $USER)/" ${OV_PROPERTIES}

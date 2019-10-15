@@ -114,6 +114,17 @@ openvidu_pro_cluster: true
 # Can be: [streams, sessions, mediaObjects, cpu]
 openvidu_pro_cluster_load_strategy: streams
 
+# Parameter "openvidu.pro.cluster.media-nodes"
+# How many media servers do you want to start with the deployment.
+# If set to zero no media servers will be lauched.
+# Type: number >= 0
+openvidu_pro_cluster_media_nodes: 
+
+# Parameter "openvidu.pro.cluster.environment"
+# Which environment are you using
+# Possibles values: aws, on_premise
+openvidu_pro_cluster_environment:
+
 ##########################
 # Instances IPs and names
 ##########################
@@ -145,11 +156,11 @@ letsencrypt_email:
 # i.e. 1024 ~ 32255 for coturn and 32256 ~ 65535 for KMS
 
 # Turn port config
-turn_min_port: 1024
-turn_max_port: 32255
+turn_min_port: 40000
+turn_max_port: 65535
 
 # Kurento port config
-kurento_min_port: 32256
+kurento_min_port: 40000
 kurento_max_port: 65535
 
 ##########################
@@ -172,7 +183,7 @@ kibana_password: "MY_SECRET"
 # On premises config
 ##########################
 
-# Cloud provider like AWS or OpenStack set up
+# Cloud providers like AWS or OpenStack set up
 # ubuntu user without password. Put your own user
 # if you're using another provider or bare metal
 openvidu_user: ubuntu
