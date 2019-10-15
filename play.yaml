@@ -1,4 +1,4 @@
-- hosts: media-servers
+- hosts: media-nodes
   strategy: free
   serial: 5
   roles:
