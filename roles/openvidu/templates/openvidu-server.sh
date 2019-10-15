@@ -8,7 +8,7 @@ OV_PROPERTIES="/opt/openvidu/application.properties"
 PUBLIC_HOSTNAME={{ domain_name }}
 {% else %}
 {% if run_ec2 == true %}
-PUBLIC_HOSTNAME=$(curl http://169.254.169.254/latest/meta-data/local-hostname)
+PUBLIC_HOSTNAME=$(curl http://169.254.169.254/latest/meta-data/public-hostname)
 {% else %}
 PUBLIC_HOSTNAME={{ openvidu_publicurl }}
 {% endif %}
