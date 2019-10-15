@@ -8,7 +8,11 @@ if [ ${CF_OVP_TARGET} == "market" ]; then
   export AWS_SECRET_ACCESS_KEY=${NAEVA_AWS_SECRET_ACCESS_KEY}
   export AWS_DEFAULT_REGION=us-east-1
 else
-    export AWS_DEFAULT_REGION=eu-west-1  
+  export AWS_DEFAULT_REGION=eu-west-1  
+fi
+
+if [ "${OPENVIDU_PRO_IS_SNAPSHOT}" ]; then
+  OPENVIDU_PRO_VERSION=${OPENVIDU_PRO_VERSION}-SNAPSHOT
 fi
 
 DATESTAMP=$(date +%s)
