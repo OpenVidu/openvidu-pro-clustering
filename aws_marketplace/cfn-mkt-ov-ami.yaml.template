@@ -112,9 +112,14 @@ Resources:
                 mkdir -p /opt/openvidu
                 chmod 777 /opt/openvidu
                 
-                curl -o /opt/openvidu/openvidu-server.jar -u ${OpenViduProUsername}:${OpenViduProPassword} https://pro.openvidu.io/openvidu-server-pro-OPENVIDU_VERSION.jar
+                curl -o /opt/openvidu/openvidu-server.jar -u ${OpenViduProUsername}:${OpenViduProPassword} https://pro.openvidu.io/openvidu-server-pro-2.11.0-SNAPSHOT.jar
 
                 git clone https://github.com/OpenVidu/openvidu-pro-clustering.git /usr/src/openvidu
+                pushd /usr/src/openvidu
+                git checkout bmw
+
+                docker pull openvidu/openvidu-recording:2.9.0
+                popd
               mode: "000755"
               owner: "root"
               group: "root"

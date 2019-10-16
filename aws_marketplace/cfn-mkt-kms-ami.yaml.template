@@ -56,7 +56,7 @@ Resources:
               content: |
                 #!/bin/bash
                 set -eu -o pipefail
-                OV_VERSION=OPENVIDU_VERSION
+                OV_VERSION=2.11.0-SNAPSHOT
                 KMS_VERSION=$(curl --silent https://oudzlg0y3m.execute-api.eu-west-1.amazonaws.com/v1/ov_kms_matrix?ov=$OV_VERSION | jq --raw-output '.[0] | .kms' )
                 echo "deb [arch=amd64] http://ubuntu.openvidu.io/$KMS_VERSION xenial kms6" > /etc/apt/sources.list.d/kurento.list
                 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 5AFA7A83
@@ -136,6 +136,9 @@ Resources:
                 set -eu -o pipefail
 
                 git clone https://github.com/OpenVidu/openvidu-pro-clustering.git /usr/src/openvidu
+                pushd /usr/src/openvidu
+                git checkout bmw
+                popd
               mode: "000755"
               owner: "root"
               group: "root"
