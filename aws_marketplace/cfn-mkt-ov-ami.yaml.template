@@ -61,7 +61,7 @@ Resources:
                   apache2-utils \
                   python-passlib \
                   jq
-                
+
                 # install coturn
                 apt-get install -y coturn
 
@@ -72,11 +72,11 @@ Resources:
                 apt-get install -y software-properties-common
                 add-apt-repository -y ppa:certbot/certbot
                 apt-get update
-                apt-get install -y python-certbot-nginx 
+                apt-get install -y python-certbot-nginx
 
                 # installing ansible
                 apt-add-repository -y ppa:ansible/ansible
-                apt-get update 
+                apt-get update
                 apt-get install -y ansible
 
                 # installing elasticsearch and kibana
@@ -99,7 +99,7 @@ Resources:
                 set -eu -o pipefail
                 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
                 add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable"
-                apt-get update 
+                apt-get update
                 apt-get install -y docker-ce
               mode: "000755"
               owner: "root"
@@ -111,10 +111,11 @@ Resources:
 
                 mkdir -p /opt/openvidu
                 chmod 777 /opt/openvidu
-                
+
                 curl -o /opt/openvidu/openvidu-server.jar -u ${OpenViduProUsername}:${OpenViduProPassword} https://pro.openvidu.io/openvidu-server-pro-OPENVIDU_VERSION.jar
 
                 git clone https://github.com/OpenVidu/openvidu-pro-clustering.git /usr/src/openvidu
+                git checkout prueba-carlos
               mode: "000755"
               owner: "root"
               group: "root"
@@ -134,16 +135,16 @@ Resources:
             pip install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz
 
             cfn-init --region ${AWS::Region} --stack ${AWS::StackId} --resource OpenviduServerPro
-                        
+
             /usr/local/bin/installSoftware.sh || { echo "[Openvidu] error installing software"; exit 1; }
 
             /usr/local/bin/installDocker.sh || { echo "[Openvidu] error installing Docker"; exit 1; }
-            
+
             /usr/local/bin/getOpenVidu.sh || { echo "[Openvidu] error installing OpenVidu"; exit 1; }
 
             # sending the finish call
             /usr/local/bin/cfn-signal -e $? --stack ${AWS::StackId} --resource WaitCondition --region ${AWS::Region}
-            
+
             # Cleaning the house
             shred -u /var/log/cloud-init-output.log
             shred -u /etc/ssh/*_key /etc/ssh/*_key.pub

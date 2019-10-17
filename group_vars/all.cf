@@ -17,7 +17,7 @@ openvidu_pro_password: OPENVIDU_PRO_PASSWORD
 openvidu_version: OPENVIDU_VERSION
 
 # A comma separate list of IPs from the KMS instances
-# This IPs of media servers should be reachable from OpenVidu 
+# This IPs of media servers should be reachable from OpenVidu
 # to port 8888 AND not to be publicly accessible.
 # i.e. 192.168.0.5,192.168.0.6
 kms_ips: KURENTO_ENDPOINTS
@@ -50,9 +50,9 @@ openvidu_recording_public_access: FREEHTTPACCESTORECORDINGVIDEOS
 
 # Parameter "openvidu.recording.notification"
 # Which users should receive the recording events in the client side
-# (recordingStarted, recordingStopped). Can be all (every user connected to 
-# the session), publisher_moderator (users with role 'PUBLISHER' or 
-# 'MODERATOR'), moderator (only users with role 'MODERATOR') or none 
+# (recordingStarted, recordingStopped). Can be all (every user connected to
+# the session), publisher_moderator (users with role 'PUBLISHER' or
+# 'MODERATOR'), moderator (only users with role 'MODERATOR') or none
 # (no user will receive these events)
 openvidu_recording_notification: OPENVIDURECORDINGNOTIFICATION
 
@@ -88,17 +88,25 @@ openvidu_webhook_endpoint: "WEBHOOK_ENDPOINT"
 
 # Parameter "openvidu.webhook.headers"
 # List of headers that OpenVidu Server Webhook service will attach to HTTP POST messages
-# Example: 
+# Example:
 # openvidu_webhook_headers: "Authorization: Basic T1BFTlZJRFVBUFA6TVlfU0VDUkVU"
-openvidu_webhook_headers: 
+openvidu_webhook_headers:
 
 # Parameter "openvidu.webhook.events"
 # List of events that will be sent by OpenVidu Server Webhook service
 # Leave blank if all events.
 openvidu_webhook_events: WEBHOOK_EVENTS
 
+# Parameter "openvidu.recording.autostop-timeout"
+# Timeout in seconds for recordings to automatically stop (and the session
+# involved to be closed) when conditions are met: a session recording is
+# started but no user is publishing to it or a session is being recorded
+# and last user disconnects. If a user publishes within the timeout in either
+# case, the automatic stop of the recording is cancelled
+openvidu_recording_autostop_timeout: OPENVIDU_RECORDING_AUTOSTOP_TIMEOUT
+
 ######################################
-# OpenVidu PRO specific configuration 
+# OpenVidu PRO specific configuration
 ######################################
 
 # See https://openvidu.io/docs/reference-docs/openvidu-server-params#extra-configuration-parameters-for-openvidu-server-pro
@@ -110,7 +118,7 @@ openvidu_pro_cluster: KMS_RUN_CLUSTER
 
 # Parameter "openvidu.pro.cluster.load.strategy"
 # What parameter should be used to distribute the creation of new sessions
-# (and therefore distribution of load) among all available KMSs. 
+# (and therefore distribution of load) among all available KMSs.
 # Can be: [streams, sessions, mediaObjects, cpu]
 openvidu_pro_cluster_load_strategy: OPENVIDUCLUSTERLOADSTRATEGY
 
@@ -139,7 +147,7 @@ openvidu_public_ip: OPENVIDU_INSTANCE_PUBLIC_IP
 #    the instance (default)
 # 2. Let's encrypt (letsencrypt) Free SSL certificate provider
 # 3. Your own certificate (owncert) If you own a SSL certificate, use this one.
-#    You need to provide your certificate files (nginx.key and nginx.crt) and 
+#    You need to provide your certificate files (nginx.key and nginx.crt) and
 #    put then in roles/nginx/files folder.
 whichcert: selfsigned
 
