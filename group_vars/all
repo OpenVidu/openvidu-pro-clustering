@@ -108,7 +108,7 @@ openvidu_webhook_events:
 # Values: true | false
 openvidu_pro_cluster: true
 
-# Parameter "openvidu.pro.cluster.load.strategy"
+# Parameter "openvidu.pro.cluster.load-strategy"
 # What parameter should be used to distribute the creation of new sessions
 # (and therefore distribution of load) among all available KMSs. 
 # Can be: [streams, sessions, mediaObjects, cpu]
