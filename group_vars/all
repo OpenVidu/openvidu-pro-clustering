@@ -94,8 +94,8 @@ openvidu_webhook_headers:
 
 # Parameter "openvidu.webhook.events"
 # List of events that will be sent by OpenVidu Server Webhook service
-# Leave blank if all events.
-openvidu_webhook_events: 
+# openvidu_webhook_events: "sessionCreated,sessionDestroyed,participantJoined,participantLeft,webrtcConnectionCreated,webrtcConnectionDestroyed,recordingStatusChanged"
+openvidu_webhook_events:
 
 ######################################
 # OpenVidu PRO specific configuration 
