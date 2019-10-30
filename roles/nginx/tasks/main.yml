@@ -69,7 +69,7 @@
   when: whichcert == "owncert"
 
 - name: Creating custom certificate 
-  command: openssl req -new -nodes -x509 -subj "/CN={{ domain_name }} -days 365 -keyout /etc/nginx/ssl/nginx.key -out /etc/nginx/ssl/nginx.crt -extensions v3_ca
+  command: openssl req -new -nodes -x509 -subj "/CN={{ domain_name }}" -days 365 -keyout /etc/nginx/ssl/nginx.key -out /etc/nginx/ssl/nginx.crt -extensions v3_ca
   args:
     creates: /etc/nginx/ssl/nginx.crt
   when: whichcert == "customcert"
