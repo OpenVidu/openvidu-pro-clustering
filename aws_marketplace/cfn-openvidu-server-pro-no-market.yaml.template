@@ -114,6 +114,7 @@ Parameters:
     - selfsigned
     - letsencrypt
     - owncert
+    - customcert
   
   LetsEncryptEmail:
     Description: "Email necesary for Let's Encrypt notifications."
@@ -382,8 +383,8 @@ Resources:
                 
                 cd /usr/src/openvidu
                 
-                PIP=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
-                PublicHostname=$(curl http://169.254.169.254/latest/meta-data/local-hostname)
+                PIP=$(curl http://169.254.169.254/latest/meta-data/public-ipv4)
+                PublicHostname=$(curl http://169.254.169.254/latest/meta-data/public-hostname)
                 AWS_AMI_ID=KMS_AMI
 
                 cp group_vars/all.cf group_vars/all
@@ -601,7 +602,7 @@ Outputs:
     Value: !Join 
         - ''
         - - 'https://'
-          - !GetAtt OpenViduServer.PrivateDnsName 
+          - !GetAtt OpenViduServer.PublicDnsName 
           - '/inspector'
 
   OpenViduInspectorLE:
@@ -618,7 +619,7 @@ Outputs:
     Value: !Join
         - ''
         - - 'https://'
-          - !GetAtt OpenViduServer.PrivateDnsName
+          - !GetAtt OpenViduServer.PublicDnsName
           - '/kibana'
 
   KibanaLE:
