@@ -444,6 +444,7 @@ Resources:
             "/usr/local/bin/checkInternetConnection.sh":
               content: !Sub |
                 #!/bin/bash
+                cd /usr/src/openvidu
 
                 # Check Internet connection
                 ping -q -w 1 -c 1 `ip r | grep default | cut -d ' ' -f 3` > /dev/null \
