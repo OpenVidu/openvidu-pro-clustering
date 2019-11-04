@@ -114,6 +114,7 @@ Parameters:
     - selfsigned
     - letsencrypt
     - owncert
+    - customcert
 
   LetsEncryptEmail:
     Description: "Email necesary for Let's Encrypt notifications."
@@ -426,7 +427,7 @@ Resources:
                 sed -i "s/IMAGE_ID/$AWS_AMI_ID/" roles/openvidu/vars/main.yml
                 sed -i "s/INSTANCE_TYPE/${AwsInstanceTypeKMS}/" roles/openvidu/vars/main.yml
                 sed -i "s/KEY_NAME/${KeyName}/" roles/openvidu/vars/main.yml
-                sed -i "s/SUBNET_ID/${OpenViduSubnet1}/" roles/openvidu/vars/main.yml
+                sed -i "s/SUBNET_ID/${OpenViduSubnet}/" roles/openvidu/vars/main.yml
                 sed -i "s/OPENVIDU_SECRET/${OpenViduSecret}/" roles/openvidu/vars/main.yml
               mode: "000755"
               owner: "root"
@@ -446,10 +447,10 @@ Resources:
 
                 # Check Internet connection
                 ping -q -w 1 -c 1 `ip r | grep default | cut -d ' ' -f 3` > /dev/null \
-                  && internet_connection=true || internet_connection=false
+                  && no_internet=false || no_internet=true
 
-                # If there is no internet connection, Kibana will not be started
-                sed -i "s/NO_INTERNET/$internet_connection/" group_vars/all
+                # If there is no internet connection, Kibana will not import dashboards
+                sed -i "s/NO_INTERNET/$no_internet/" group_vars/all
               mode: "000755"
               owner: "root"
               group: "root"
@@ -458,7 +459,7 @@ Resources:
       InstanceType: !Ref AwsInstanceTypeOV
       KeyName: !Ref KeyName
       IamInstanceProfile: !Ref OpenviduInstancesProfile
-      SubnetId: !Ref OpenViduSubnet1
+      SubnetId: !Ref OpenViduSubnet
       SecurityGroupIds:
         - !GetAtt 'OpenViduSecurityGroup.GroupId'
       Tags:
