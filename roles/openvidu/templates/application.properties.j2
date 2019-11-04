@@ -28,6 +28,10 @@ openvidu.recording.composed-url=
 
 kms.uris=[]
 
+{% if no_internet == true }
+openvidu.pro.kibana.import-objects=false
+{% endif %}
+
 {% if openvidu_pro_cluster_environment == "on_premise" %}
 openvidu.pro.cluster.mode=manual
 {% else %}

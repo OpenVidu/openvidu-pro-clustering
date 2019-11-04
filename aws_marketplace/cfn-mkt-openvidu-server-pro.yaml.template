@@ -7,7 +7,7 @@ Parameters:
     Description: "Name of an existing EC2 KeyPair to enable SSH access to the instance."
     Type: AWS::EC2::KeyPair::KeyName
     ConstraintDescription: "must be the name of an existing EC2 KeyPair."
-  
+
   KurentoAvailabilityZone:
     Type: AWS::EC2::AvailabilityZone::Name
     Description: must be the name of an existing AWS Availability Zone
@@ -17,7 +17,7 @@ Parameters:
     Type: String
     Description: Specifies the EC2 instance type for your OpenVidu instance
     Default: t2.large
-    AllowedValues: 
+    AllowedValues:
     - t2.large
     - t2.xlarge
     - t2.2xlarge
@@ -42,7 +42,7 @@ Parameters:
     Type: String
     Description: Specifies the EC2 instance type for your Kurento instances
     Default: t2.large
-    AllowedValues: 
+    AllowedValues:
     - t2.large
     - t2.xlarge
     - t2.2xlarge
@@ -69,15 +69,15 @@ Parameters:
       Specifies the number of instances which will join the cluster. Defaults to 1.
     Default: '1'
 
-  MyDomainName: 
+  MyDomainName:
     Description: "Valid DNS record name like mycompany.com."
     Type: String
     Default: openvidu.mycompany.com
     AllowedPattern: >-
       ^(?:_?(?>[a-z\d][a-z\d-]{0,61}[a-z\d]|[a-z\d])\.)*(?:_?(?>[a-z\d][a-z\d-]{0,61}[a-z\d]|[a-z\d]))\.?$
     ConstraintDescription: >-
-      Must be a valid DNS name. Like myapp.example.com 
-  
+      Must be a valid DNS name. Like myapp.example.com
+
   PublicElasticIP:
     Description: "Valid AWS elastic IP for using with Let's Encrypt or OwnCertificate."
     Type: String
@@ -86,12 +86,12 @@ Parameters:
       ^([01]?\d{1,2}|2[0-4]\d|25[0-5])\.([01]?\d{1,2}|2[0-4]\d|25[0-5])\.([01]?\d{1,2}|2[0-4]\d|25[0-5])\.([01]?\d{1,2}|2[0-4]\d|25[0-5])$
     ConstraintDescription: >-
       Must be a valid IP address. A valid IP address must be in the form of xxx.xxx.xxx.xxx, where xxx is a number from 0-255.
-  
+
   OpenViduSecret:
     Description: "Secret to connect to your OpenVidu Server and Kibana Dashboard."
     Type: String
     NoEcho: true
-  
+
   OpenviduCDREnable:
     Description: "Whether to enable Call Detail Record or not"
     Type: String
@@ -118,7 +118,7 @@ Parameters:
       Highest incoming port to be open
     Type: Number
     Default: 65535
-  
+
   WebUICidr:
     Description: >-
       CIDR block that's permitted to port 4443 (OpenVidu PRO) of the instance,
@@ -130,7 +130,7 @@ Parameters:
     ConstraintDescription: >-
       Must be in CIDR notation. To specify one specifc IPv4 address, append /32.
       eg: 192.168.1.100/32 or a subnet group 192.168.1.0/24
-  
+
   HTTPAccess:
     Description: >-
       CIDR block that's permitted to port 80 (HTTP) of the instance,
@@ -177,7 +177,7 @@ Parameters:
     ConstraintDescription: >-
       Must be in CIDR notation. To specify one specifc IPv4 address, append /32.
       eg: 192.168.1.100/32 or a subnet group 192.168.1.0/24
-  
+
   UDPRange:
     Description: >-
       UDP Range that's permitted from port 1024 to 65535 for UDP of the instance,
@@ -188,7 +188,7 @@ Parameters:
     ConstraintDescription: >-
       Must be in CIDR notation. To specify one specifc IPv4 address, append /32.
       eg: 192.168.1.100/32 or a subnet group 192.168.1.0/24
-  
+
   TCPRange:
     Description: >-
       TCP Range that's permitted from port 1024 to 65535 for TCP of the instance,
@@ -199,8 +199,8 @@ Parameters:
     ConstraintDescription: >-
       Must be in CIDR notation. To specify one specifc IPv4 address, append /32.
       eg: 192.168.1.100/32 or a subnet group 192.168.1.0/24
-  
-  WhichCert: 
+
+  WhichCert:
     Description: "You can choose from the list below which certificate to use."
     Type: String
     Default: selfsigned
@@ -208,16 +208,16 @@ Parameters:
     - selfsigned
     - letsencrypt
     - owncert
-  
+
   LetsEncryptEmail:
     Description: "Email necesary for Let's Encrypt notifications."
     Type: String
-  
+
   OwnCertCRT:
     Description: "URL to the CRT file"
     Type: String
 
-  OwnCertKEY: 
+  OwnCertKEY:
     Description: "URL to the KEY file"
     Type: String
 
@@ -228,32 +228,32 @@ Parameters:
     AllowedValues:
     - true
     - false
-  
+
   OpenviduRecordingNotification:
     Description: "Which users should receive the recording events in the client side (recordingStarted, recordingStopped)."
     Type: String
     Default: "publisher_moderator"
-    AllowedValues: 
+    AllowedValues:
     - "all"
     - "publisher_moderator"
     - "moderator"
     - "none"
-  
-  OpenviduStreamsVideoMaxRecvBandwidth: 
+
+  OpenviduStreamsVideoMaxRecvBandwidth:
     Description: "Maximum video bandwidth sent from clients to OpenVidu Server, in kbps. 0 means unconstrained."
     Type: String
     Default: 0
-    
+
   OpenviduStreamsVideoMinRecvBandwidth:
     Description: "Minimum video bandwidth sent from clients to OpenVidu Server, in kbps. 0 means unconstrained."
     Type: String
     Default: 0
 
-  OpenviduStreamsVideoMaxSendBandwidth: 
+  OpenviduStreamsVideoMaxSendBandwidth:
     Description: "Maximum video bandwidth sent from OpenVidu Server to clients, in kbps. 0 means unconstrained."
     Type: String
     Default: 0
-    
+
   OpenviduStreamsVideoMinSendBandwidth:
     Description: "Minimum video bandwidth sent from OpenVidu Server to clients, in kbps. 0 means unconstrained."
     Type: String
@@ -303,7 +303,7 @@ Parameters:
 
   OpenviduClusterLoadStrategy:
     Description: >
-      What parameter should be used to distribute the creation of new sessions 
+      What parameter should be used to distribute the creation of new sessions
       (and therefore distribution of load) among all available KMSs. Can be: [streams, sessions, mediaObjects, cpu]
     Type: String
     Default: streams
@@ -378,7 +378,7 @@ Metadata:
         - OpenViduCidrBlock
         - OpenViduSubnet
         - KurentoAvailabilityZone
-      - 
+      -
         Label:
           default: Clustering options
         Parameters:
@@ -395,12 +395,12 @@ Metadata:
         default: "Instance Type For Kurento Media Server"
       KurentoAsgSize:
         default: "Kurento Auto Scaling Group Size"
-      MyDomainName: 
+      MyDomainName:
         default: "FQDN"
       PublicElasticIP:
         default: "Public Elastic IP"
       OpenViduSecret:
-        default: "OpenVidu Secret" 
+        default: "OpenVidu Secret"
       OpenviduCDREnable:
         default: "OpenVidu Server Call Detail Record"
       KibanaUser:
@@ -419,7 +419,7 @@ Metadata:
         default: "CIDR For HTTPS Access"
       CoturnPort:
         default: "CIDR For Coturn Access"
-      SSHCidr: 
+      SSHCidr:
         default: "CIDR For SSH Access"
       UDPRange:
         default: "CIDR For Port range UDP"
@@ -431,17 +431,17 @@ Metadata:
         default: "Let's Encrypt Email"
       OwnCertCRT:
         default: "CRT File"
-      OwnCertKEY: 
+      OwnCertKEY:
         default: "KEY File"
       FreeHTTPAccesToRecordingVideos:
         default: "Video Recording Access"
       OpenviduRecordingNotification:
         default: "Recording Notifications"
-      OpenviduStreamsVideoMaxRecvBandwidth: 
+      OpenviduStreamsVideoMaxRecvBandwidth:
         default: "Openvidu Streams Video Max Recv Bandwidth"
       OpenviduStreamsVideoMinRecvBandwidth:
         default: "Openvidu Streams Video Min Recv Bandwidth"
-      OpenviduStreamsVideoMaxSendBandwidth: 
+      OpenviduStreamsVideoMaxSendBandwidth:
         default: "Openvidu Streams Video Max Send Bandwidth"
       OpenviduStreamsVideoMinSendBandwidth:
         default: "Openvidu Streams Video Min Send Bandwidth"
@@ -460,7 +460,7 @@ Metadata:
       OpenviduClusterLoadStrategy:
         default: "Openvidu Cluster Load Strategy"
 
-Conditions: 
+Conditions:
   NoSelfSigned:
     'Fn::Not':
       - 'Fn::Equals':
@@ -510,7 +510,7 @@ Resources:
   InternetRoute:
     Type: AWS::EC2::Route
     DependsOn: AttachInternetGateway
-    Properties: 
+    Properties:
       RouteTableId: !Ref RouteTable
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref InternetGateway
@@ -560,9 +560,9 @@ Resources:
       IamInstanceProfile: !Ref OpenviduInstancesProfile
       SecurityGroups:
         - !Ref KMSSecurityGroup
-      BlockDeviceMappings: 
+      BlockDeviceMappings:
         - DeviceName: "/dev/sda1"
-          Ebs: 
+          Ebs:
             VolumeSize: 50
             VolumeType: "io1"
             Iops: 200
@@ -582,7 +582,7 @@ Resources:
           sed -i "s/OPENVIDU_INSTANCE_PUBLIC_IP/$OPENVIDU_IP/" group_vars/all
           sed -i "s/MY_SECRET/${OpenViduSecret}/" group_vars/all
           MIDDLE=$(( ( ${MinOpenPort} + ${MaxOpenPort} ) / 2 ))
-          MIDDLEPLUSONE=$(( $MIDDLE + 1 ))          
+          MIDDLEPLUSONE=$(( $MIDDLE + 1 ))
           sed -i "s/KURENTO_MIN_PORT/$MIDDLEPLUSONE/" group_vars/all
           sed -i "s/KURENTO_MAX_PORT/${MaxOpenPort}/" group_vars/all
 
@@ -597,7 +597,7 @@ Resources:
               - file-server
           EOF
 
-          ansible-playbook -i "localhost," -c local play.yaml 
+          ansible-playbook -i "localhost," -c local play.yaml
 
   KurentoAutoScalingGroup:
     Type: 'AWS::AutoScaling::AutoScalingGroup'
@@ -608,7 +608,7 @@ Resources:
       MinSize: !Ref KurentoAsgSize
       MaxSize: !Ref KurentoAsgSize
       DesiredCapacity: !Ref KurentoAsgSize
-      VPCZoneIdentifier: 
+      VPCZoneIdentifier:
         - !Ref OpenViduSubnet1
       Tags:
         - Key: Name
@@ -628,9 +628,9 @@ Resources:
             "/usr/local/bin/feedGroupVars.sh":
               content: !Sub |
                 #!/bin/bash -xe
-                
+
                 cd /usr/src/openvidu
-                
+
                 PIP=$(curl http://169.254.169.254/latest/meta-data/public-ipv4)
                 PublicHostname=$(curl http://169.254.169.254/latest/meta-data/public-hostname)
 
@@ -697,7 +697,7 @@ Resources:
         - Key: 'ov-cluster-member'
           Value: 'server'
       UserData:
-        "Fn::Base64": 
+        "Fn::Base64":
           !Sub |
             #!/bin/bash -xe
 
@@ -728,7 +728,7 @@ Resources:
 
             # sending the finish call
             /usr/local/bin/cfn-signal -e $? --stack ${AWS::StackId} --resource WaitCondition --region ${AWS::Region}
-          
+
       BlockDeviceMappings:
         - DeviceName: /dev/sda1
           Ebs:
@@ -736,7 +736,7 @@ Resources:
             Iops: 200
             DeleteOnTermination: true
             VolumeSize: 50
-      
+
   KMSSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
@@ -773,7 +773,7 @@ Resources:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
       GroupDescription: SSH, Proxy and OpenVidu WebRTC Ports
-      VpcId: !Ref OpenViduVPC      
+      VpcId: !Ref OpenViduVPC
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 4443
@@ -816,7 +816,7 @@ Resources:
           FromPort: 1
           ToPort: 65535
           CidrIp: 0.0.0.0/0
-  
+
   WaitCondition:
     Type: AWS::CloudFormation::WaitCondition
     CreationPolicy:
@@ -834,10 +834,10 @@ Resources:
 Outputs:
   OpenViduInspector:
     Description: "Use this URL to connect OpenVidu with user and password"
-    Value: !Join 
+    Value: !Join
         - ''
         - - 'https://'
-          - !GetAtt OpenViduServer.PublicDnsName 
+          - !GetAtt OpenViduServer.PublicDnsName
           - '/inspector'
 
   OpenViduInspectorLE:
@@ -848,7 +848,7 @@ Outputs:
           - !Ref MyDomainName
           - '/inspector'
     Condition: NoSelfSigned
-  
+
   Kibana:
     Description: "Check out graph and performance of your OpenVidu installation"
     Value: !Join

@@ -4,7 +4,7 @@
 
 OV_PROPERTIES="/opt/openvidu/application.properties"
 
-{% if whichcert == "letsencrypt" or whichcert == "owncert" %}
+{% if whichcert == "letsencrypt" or whichcert == "owncert" or whichcert == "customcert" %}
 PUBLIC_HOSTNAME={{ domain_name }}
 {% else %}
 {% if run_ec2 == true %}
@@ -16,7 +16,7 @@ PUBLIC_HOSTNAME={{ openvidu_publicurl }}
 
 # Wait for kibana
 while true
-do 
+do
   HTTP_STATUS=$(curl -I http://localhost:5601/app/kibana | head -n1 | awk '{print $2}')
   if [ $HTTP_STATUS == 200 ]; then
     break

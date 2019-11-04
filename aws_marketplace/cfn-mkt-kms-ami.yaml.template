@@ -44,10 +44,10 @@ Resources:
                   python-passlib \
                   jq \
                   awscli
-                
+
                 # installing ansible
                 apt-add-repository -y ppa:ansible/ansible
-                apt-get update 
+                apt-get update
                 apt-get install -y ansible
               mode: "000755"
               owner: "root"
@@ -124,7 +124,7 @@ Resources:
                     apt-get install --no-install-recommends --yes "$PACKAGE" \
                         || echo "Skip unexisting"
                 done
-                
+
                 apt-get -y install kurento-media-server
                 systemctl enable kurento-media-server
               mode: "000755"
@@ -157,14 +157,14 @@ Resources:
             cfn-init --region ${AWS::Region} --stack ${AWS::StackId} --resource KurentoMediaServer
 
             /usr/local/bin/installSoftware.sh || { echo "[Openvidu] error installing software"; exit 1; }
-                        
+
             /usr/local/bin/installKMS.sh || { echo "[Openvidu] error installing Kurento Media Server"; exit 1; }
-            
+
             /usr/local/bin/getSoftware.sh || { echo "[Openvidu] error getting software"; exit 1; }
 
             # sending the finish call
             /usr/local/bin/cfn-signal -e $? --stack ${AWS::StackId} --resource WaitCondition --region ${AWS::Region}
-            
+
             # Cleaning the house
             shred -v -u /var/log/cloud-init-output.log
             shred -v -u /etc/ssh/*_key /etc/ssh/*_key.pub

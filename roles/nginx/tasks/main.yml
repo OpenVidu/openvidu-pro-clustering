@@ -1,13 +1,13 @@
 ---
 - name: Install nginx
-  apt: 
-    name: nginx 
+  apt:
+    name: nginx
     state: latest
     update_cache: true
   when: install_software|bool
 
 - name: install letsencrypt
-  apt: 
+  apt:
     name: letsencrypt
     state: latest
   when: whichcert == "letsencrypt" and install_software|bool
@@ -19,18 +19,18 @@
   when: install_software|bool
 
 - name: Remove default nginx config
-  file: 
-    name: /etc/nginx/sites-enabled/default 
+  file:
+    name: /etc/nginx/sites-enabled/default
     state: absent
 
 - name: configuring nginx
-  copy: 
-    src: nginx.conf 
+  copy:
+    src: nginx.conf
     dest: /etc/nginx/nginx.conf
 
 - name: adding default proxy behaviour
-  copy: 
-    src: proxy.conf 
+  copy:
+    src: proxy.conf
     dest: /etc/nginx/sites-available/proxy.conf
 
 - name: Install nginx site for letsencrypt requests
@@ -47,7 +47,7 @@
   when: whichcert == "letsencrypt"
 
 - name: previous task to generate self signed certificate
-  file: 
+  file:
     path: /etc/nginx/ssl
     state: directory
     mode: 0755
@@ -60,13 +60,19 @@
   when: whichcert == "selfsigned"
 
 - name: copying user certificates
-  copy: 
+  copy:
     src: "{{ item }}"
     dest: /etc/nginx/ssl
   with_items:
     - nginx.key
     - nginx.crt
   when: whichcert == "owncert"
+
+- name: Creating custom certificate
+  command: openssl req -new -nodes -x509 -subj "/CN={{ domain_name }}" -days 365 -keyout /etc/nginx/ssl/nginx.key -out /etc/nginx/ssl/nginx.crt -extensions v3_ca
+  args:
+    creates: /etc/nginx/ssl/nginx.crt
+  when: whichcert == "customcert"
 
 - name: Generate dhparams
   shell: openssl dhparam -out /etc/nginx/dhparams.pem 2048
@@ -89,7 +95,7 @@
 
 - name: adding default server
   template:
-    src: templates/default.j2 
+    src: templates/default.j2
     dest: /etc/nginx/sites-enabled/default
   notify: restart nginx
 

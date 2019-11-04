@@ -26,7 +26,7 @@ server {
 
 server {
     listen 443 ssl default deferred;
-{% if whichcert == "letsencrypt" or whichcert == "owncert" %}
+{% if whichcert == "letsencrypt" or whichcert == "owncert" or whichcert == "customcert" %}
     server_name {{ domain_name }};
 {% else %}
     server_name {{ openvidu_publicurl }};
@@ -50,7 +50,7 @@ server {
         rewrite ^/layouts/custom/(.*)$ /custom-layout/$1 break;
         root /opt/openvidu;
     }
-    
+
     location /inspector {
         rewrite ^/inspector/(.*)$ /$1 break;
         proxy_pass http://inspector/;
