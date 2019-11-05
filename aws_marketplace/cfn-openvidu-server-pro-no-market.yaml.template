@@ -447,8 +447,7 @@ Resources:
                 cd /usr/src/openvidu
 
                 # Check Internet connection
-                ping -q -w 1 -c 1 `ip r | grep default | cut -d ' ' -f 3` > /dev/null \
-                  && no_internet=false || no_internet=true
+                ping -q -w 1 -c 1 8.8.8.8 > /dev/null && no_internet=false || no_internet=true
 
                 # If there is no internet connection, Kibana will not import dashboards
                 sed -i "s/NO_INTERNET/$no_internet/" group_vars/all
