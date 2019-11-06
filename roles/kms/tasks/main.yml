@@ -4,6 +4,14 @@
     name: jq
   when: install_software|bool
 
+- name: Permissions on recordings folder
+  file:
+    path: /opt/openvidu/recordings
+    state: directory
+    mode: '0755'
+    owner: kurento
+    group: kurento
+
 - name: adding kurento PGP key
   apt_key:
     keyserver: keyserver.ubuntu.com
@@ -89,14 +97,6 @@
   template:
     src: "WebRtcEndpoint.conf.ini.j2"
     dest: "/etc/kurento/modules/kurento/WebRtcEndpoint.conf.ini"
-
-- name: Permissions on recordings folder
-  file:
-    path: /opt/openvidu/recordings
-    state: directory
-    mode: '0755'
-    owner: kurento
-    group: kurento
 
 - name: preconfiguring Kurento Media Server
   template:
