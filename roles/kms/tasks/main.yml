@@ -5,14 +5,14 @@
   when: install_software|bool
 
 - name: adding kurento PGP key
-  apt_key: 
+  apt_key:
     keyserver: keyserver.ubuntu.com
     id: 234821A61B67740F89BFD669FC8A16625AFA7A83
     state: present
   when: install_software|bool
 
 - name: adding script for kurento repository
-  template: 
+  template:
     src: add-kms-repo.sh
     dest: /usr/local/bin/add-kms-repo.sh
     mode: 0755
@@ -31,7 +31,7 @@
 
 - name: add ubuntu 'dbgsym' repository sources
   apt_repository:
-    repo: "{{ item }}" 
+    repo: "{{ item }}"
     state: "present"
   loop:
     - "deb http://ddebs.ubuntu.com xenial main restricted universe multiverse"
@@ -90,12 +90,6 @@
     src: "WebRtcEndpoint.conf.ini.j2"
     dest: "/etc/kurento/modules/kurento/WebRtcEndpoint.conf.ini"
 
-- name: preconfiguring Kurento Media Server
-  template:
-    src: "BaseRtpEndpoint.conf.ini.j2"
-    dest: "/etc/kurento/modules/kurento/BaseRtpEndpoint.conf.ini"
-  notify: restart kms
-
 - name: Permissions on recordings folder
   file:
     path: /opt/openvidu/recordings
@@ -103,6 +97,12 @@
     mode: '0755'
     owner: kurento
     group: kurento
+
+- name: preconfiguring Kurento Media Server
+  template:
+    src: "BaseRtpEndpoint.conf.ini.j2"
+    dest: "/etc/kurento/modules/kurento/BaseRtpEndpoint.conf.ini"
+  notify: restart kms
 
 - name: registering who i am
   copy:
