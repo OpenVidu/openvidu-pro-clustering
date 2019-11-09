@@ -3,7 +3,7 @@
 # Wait for kibana
 while true
 do 
-  HTTP_STATUS=$(curl -I http://localhost:5601/app/kibana | head -n1 | awk '{print $2}')
+  HTTP_STATUS=$(curl -I http://kibana:5601/app/kibana | head -n1 | awk '{print $2}')
   if [ $HTTP_STATUS == 200 ]; then
     break
   fi
@@ -25,7 +25,8 @@ openvidu.streams.video.min-recv-bandwidth=${OPENVIDU_STREAMS_VIDEO_MIN_RECV_BAND
 openvidu.streams.video.max-send-bandwidth=${OPENVIDU_STREAMS_VIDEO_MAX_SEND_BANDWIDTH}
 openvidu.streams.video.min-send-bandwidth=${OPENVIDU_STREAMS_VIDEO_MIN_SEND_BANDWIDTH}
 
-openvidu.pro.kibana.host=http://localhost/kibana
+openvidu.pro.kibana.host=http://kibana/kibana
+openvidu.pro.elasticsearch.host=http://elasticsearch:9200
 
 openvidu.webhook=${OPENVIDU_WEBHOOK}
 

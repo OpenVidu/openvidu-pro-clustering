@@ -8,7 +8,7 @@ metadata:
 spec:
   containers:
     - name: openvidu-server
-      image: openvidu/openvidu-k8s:0.3
+      image: openvidu/openvidu-k8s:0.1
       env:
         - name: "DEBUG"
           value: "false"
@@ -21,7 +21,7 @@ spec:
         - name: "OPENVIDU_SECRET"
           value: "peopeo"
         - name: "OPENVIDU_PUBLICURL"
-          value: "https://ov.federnetes.com"
+          value: "https://minikube.openvidu.io"
 
         - name: "OPENVIDU_CDR"
           value: "true"
@@ -40,8 +40,6 @@ spec:
         - name: "OPENVIDU_STREAMS_VIDEO_MIN_SEND_BANDWIDTH"
           value: "0"
         
-        - name: "OPENVIDU_PRO_KIBANA_HOST"
-          value: "http://localhost/kibana"
         - name: "OPENVIDU_PRO_CLUSTER"
           value: "true"
         - name: "OPENVIDU_PRO_CLUSTER_LOAD_STRATEGY"
@@ -105,10 +103,10 @@ metadata:
 spec:  
   tls:
     - hosts:
-      - ov.federnetes.com
+      - minikube.openvidu.io
       secretName: tls-certificate
   rules:
-  - host: ov.federnetes.com
+  - host: minikube.openvidu.io
     http:
       paths:
       - path: /inspector(/|$)(.*)
@@ -127,10 +125,10 @@ metadata:
 spec:  
   tls:
     - hosts:
-      - ov.federnetes.com
+      - minikube.openvidu.io
       secretName: tls-certificate
   rules:
-  - host: ov.federnetes.com
+  - host: minikube.openvidu.io
     http:
       paths:
       - path: /elasticsearch
@@ -188,19 +186,19 @@ metadata:
   name: openvidu-ingress-kibana
   annotations:
     kubernetes.io/ingress.class: "nginx"
-    nginx.org/ssl-services: "openvidu"
+    nginx.org/ssl-services: "kibana"
     nginx.ingress.kubernetes.io/rewrite-target: /$2
     nginx.ingress.kubernetes.io/app-root: /
 spec:  
   tls:
     - hosts:
-      - ov.federnetes.com
+      - minikube.openvidu.io
       secretName: tls-certificate
   rules:
-  - host: ov.federnetes.com
+  - host: minikube.openvidu.io
     http:
       paths:
       - path: /kibana(/|$)(.*)
         backend:
-          serviceName: openvidu
+          serviceName: kibana
           servicePort: 5601

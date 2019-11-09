@@ -15,12 +15,6 @@ RUN apt-get update && apt-get install --yes \
     apt-transport-https \
     pwgen
 
-# Installing Elasticsearch and Kibana
-RUN curl -s https://artifacts.elastic.co/GPG-KEY-elasticsearch | apt-key add - && \
-    echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" > /etc/apt/sources.list.d/elastic-6.x.list && \
-    apt-get update && \
-    apt-get install -y elasticsearch kibana
-
 # Installing kubectl
 RUN curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
     echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | tee -a /etc/apt/sources.list.d/kubernetes.list && \

@@ -22,11 +22,8 @@ spec:
     podAntiAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
       - labelSelector:
-          matchExpressions:
-            - key: "app"
-              operator: In
-              values:
-              - kurento-media-server
+           matchLabels:
+            app: kurento-media-server
         topologyKey: "kubernetes.io/hostname"
   hostNetwork: true
   containers:
