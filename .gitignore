@@ -6,6 +6,6 @@ play2.yaml
 *.xlsx
 *tar.gz
 *taskcat*
-
 /TODO
 aws_marketplace/Precios_por_hora.txt
+openvidu-pro-password2.yaml
