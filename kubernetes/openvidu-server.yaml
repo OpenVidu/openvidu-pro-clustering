@@ -19,10 +19,9 @@ spec:
         - name: "OPENVIDU_PRO_CLUSTER_ENVIRONMENT"
           value: "kubernetes"
         - name: "OPENVIDU_SECRET"
-          value: "peopeo"
+          value: "MY_SECRET"
         - name: "OPENVIDU_PUBLICURL"
           value: "https://minikube.openvidu.io"
-
         - name: "OPENVIDU_CDR"
           value: "true"
         - name: "OPENVIDU_RECORDING"
@@ -39,7 +38,6 @@ spec:
           value: "0"
         - name: "OPENVIDU_STREAMS_VIDEO_MIN_SEND_BANDWIDTH"
           value: "0"
-        
         - name: "OPENVIDU_PRO_CLUSTER"
           value: "true"
         - name: "OPENVIDU_PRO_CLUSTER_LOAD_STRATEGY"
@@ -54,7 +52,6 @@ spec:
           value: "false"
         - name: "OPENVIDU_PRO_CLUSTER_MEDIA_NODES"
           value: "1"
-
       ports:
         - name: openvidu
           containerPort: 5443
@@ -101,10 +98,6 @@ metadata:
     nginx.ingress.kubernetes.io/app-root: /
     nginx.org/websocket-services: "openvidu"
 spec:  
-  tls:
-    - hosts:
-      - minikube.openvidu.io
-      secretName: tls-certificate
   rules:
   - host: minikube.openvidu.io
     http:
@@ -123,10 +116,6 @@ metadata:
     nginx.org/ssl-services: "openvidu"
     nginx.org/websocket-services: "openvidu"
 spec:  
-  tls:
-    - hosts:
-      - minikube.openvidu.io
-      secretName: tls-certificate
   rules:
   - host: minikube.openvidu.io
     http:
@@ -190,10 +179,6 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /$2
     nginx.ingress.kubernetes.io/app-root: /
 spec:  
-  tls:
-    - hosts:
-      - minikube.openvidu.io
-      secretName: tls-certificate
   rules:
   - host: minikube.openvidu.io
     http:

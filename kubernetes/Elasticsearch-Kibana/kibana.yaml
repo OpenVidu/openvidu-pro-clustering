@@ -30,14 +30,18 @@ spec:
     spec:
       containers:
       - name: kibana
-        image: docker.elastic.co/kibana/kibana:6.6.0
+        image: docker.elastic.co/kibana/kibana:6.8.4
         resources:
           limits:
             cpu: 1000m
           requests:
             cpu: 100m
         env:
-          - name: ELASTICSEARCH_URL
-            value: http://elasticsearch:9200
+          - name: "ELASTICSEARCH_URL"
+            value: "http://elasticsearch:9200"
+          - name: "SERVER_BASEPATH"
+            value: "/kibana"
+          - name: "SERVER_HOST"
+            value: "0.0.0.0"
         ports:
         - containerPort: 5601

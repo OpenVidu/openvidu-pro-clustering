@@ -7,8 +7,9 @@ DEBUG=${DEBUG:-false}
 
 POD_NAME=kms-$(pwgen -A -0 4 1)
 KMS_VERSION=$(curl --silent https://oudzlg0y3m.execute-api.eu-west-1.amazonaws.com/v1/ov_kms_matrix?ov=$OPENVIDU_VERSION | jq --raw-output '.[0] | .kms' )
+MANIFEST=$(mktemp -t openvidu-launch-kms-XXX --suffix .yaml)
 
-cat>kms.yaml<<EOF
+cat>${MANIFEST}<<EOF
 ---
 apiVersion: v1
 kind: Pod
@@ -38,7 +39,7 @@ spec:
       - containerPort: 8888
 EOF
 
-kubectl apply -f kms.yaml > /dev/null
+kubectl apply -f ${MANIFEST} > /dev/null
 
 KMS_IP=$(kubectl get pod ${POD_NAME} -o wide | tail -n1 | awk '{ print $6 }')
 
