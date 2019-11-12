@@ -325,7 +325,7 @@ Metadata:
 Conditions:
   NoSelfSigned:
     'Fn::Not':
-      'Fn::Or':
+      - 'Fn::Or':
         - 'Fn::Equals':
             - Ref: WhichCert
             - selfsigned
