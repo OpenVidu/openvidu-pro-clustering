@@ -389,8 +389,10 @@ Resources:
 
                 cd /usr/src/openvidu
 
-                PIP=$(curl http://169.254.169.254/latest/meta-data/public-ipv4)
-                PublicHostname=$(curl http://169.254.169.254/latest/meta-data/public-hostname)
+                if [ "${WhichCert}" != "customcert" ]; then
+                  PIP=$(curl http://169.254.169.254/latest/meta-data/public-ipv4) 
+                  PublicHostname=$(curl http://169.254.169.254/latest/meta-data/public-hostname) 
+                fi
                 AWS_AMI_ID=KMS_AMI_ID
 
                 cp group_vars/all.cf group_vars/all
