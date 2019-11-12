@@ -4,14 +4,6 @@
     name: jq
   when: install_software|bool
 
-- name: Permissions on recordings folder
-  file:
-    path: /opt/openvidu/recordings
-    state: directory
-    mode: '0755'
-    owner: kurento
-    group: kurento
-
 - name: adding kurento PGP key
   apt_key:
     keyserver: keyserver.ubuntu.com
@@ -34,7 +26,7 @@
   apt:
     name: "kurento-media-server"
     update_cache: yes
-  notify: start kms
+  notify: stop kurento
   when: install_software|bool
 
 - name: add ubuntu 'dbgsym' repository sources
@@ -89,7 +81,6 @@
     - "kms-elements-dbg"
     - "kms-filters-dbg"
     - "kurento-media-server-dbg"
-  notify: restart kms
   ignore_errors: yes
   when: install_software|bool
 
@@ -102,7 +93,15 @@
   template:
     src: "BaseRtpEndpoint.conf.ini.j2"
     dest: "/etc/kurento/modules/kurento/BaseRtpEndpoint.conf.ini"
-  notify: restart kms
+
+- name: Permissions on recordings folder
+  file:
+    path: /opt/openvidu/recordings
+    state: directory
+    mode: '0755'
+    owner: kurento
+    group: kurento
+  notify: start kms
 
 - name: registering who i am
   copy:
