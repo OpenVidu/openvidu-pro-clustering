@@ -22,6 +22,16 @@
   notify: restart redis
   when: install_software|bool
 
+- name: copying script to auto register DNS name
+  template:
+    src: "openvidu_route53_manager.sh.j2"
+    dest: "/usr/local/bin/openvidu_route53_manager.sh"
+    mode: "755"
+  when: whichcert == "customcert"
+
+- name: auto registering DNS name
+  shell: /usr/local/bin/openvidu_route53_manager.sh
+  
 - name: download OpenVidu JAR file
   get_url:
     url: https://pro.openvidu.io/openvidu-server-pro-{{ openvidu_version }}.jar
