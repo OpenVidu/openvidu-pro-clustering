@@ -361,7 +361,7 @@ Resources:
                   - 'ec2:CreateTags'
                   - 'ec2:DescribeSecurityGroups'
                   - 'iam:PassRole'
-                  - 'route53:ChangeResourceRecordSets',
+                  - 'route53:ChangeResourceRecordSets'
                   - 'route53:ListHostedZones'
                 Resource: '*'
       RoleName: !Join [ "-", [ OpenViduManageEC2Role, !Ref 'AWS::Region'] ]
