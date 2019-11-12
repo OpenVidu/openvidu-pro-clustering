@@ -4,7 +4,7 @@ set -eu -o pipefail
 export AWS_DEFAULT_REGION={{ aws_default_region }}
 TEMPFILE=$(mktemp -t file-XXX --suffix .json)
 
-AWS_PRIVATE_IP=$(curl http://169.254.169.254/latest/meta-data/private-ipv4)
+AWS_PRIVATE_IP=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
 
 cat >$TEMPFILE<<EOF
 {
@@ -13,7 +13,7 @@ cat >$TEMPFILE<<EOF
     {
       "Action": "UPSERT",
       "ResourceRecordSet": {
-        "Name": "{{ domain_name }}}.",
+        "Name": "{{ domain_name }}.",
         "Type": "A",
         "TTL": 60,
         "ResourceRecords": [
