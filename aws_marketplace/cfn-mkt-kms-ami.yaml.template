@@ -126,7 +126,6 @@ Resources:
                 done
 
                 apt-get -y install kurento-media-server
-                systemctl enable kurento-media-server
               mode: "000755"
               owner: "root"
               group: "root"
