@@ -31,6 +31,7 @@
 
 - name: auto registering DNS name
   shell: /usr/local/bin/openvidu_route53_manager.sh
+  when: whichcert == "customcert"
   
 - name: download OpenVidu JAR file
   get_url:
