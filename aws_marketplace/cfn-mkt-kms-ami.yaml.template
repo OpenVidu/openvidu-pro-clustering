@@ -5,9 +5,9 @@ Description: Kurento Media Server CloudFormation AMI template.
 Mappings:
   AMIMAP:
     eu-west-1:
-      AMI: ami-03ef731cc103c9f09
+      AMI: AMIEUWEST1
     us-east-1:
-      AMI: ami-04763b3055de4860b
+      AMI: AMIUSEAST1
 
 Resources:
   KurentoMediaServer:

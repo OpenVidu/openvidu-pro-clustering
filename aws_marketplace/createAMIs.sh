@@ -8,7 +8,7 @@ if [ ${CF_OVP_TARGET} == "market" ]; then
   export AWS_SECRET_ACCESS_KEY=${NAEVA_AWS_SECRET_ACCESS_KEY}
   export AWS_DEFAULT_REGION=us-east-1
 else
-  export AWS_DEFAULT_REGION=eu-west-1  
+  export AWS_DEFAULT_REGION=eu-west-1
 fi
 
 if [ "${OPENVIDU_PRO_IS_SNAPSHOT}" ]; then
@@ -18,9 +18,34 @@ fi
 DATESTAMP=$(date +%s)
 TEMPJSON=$(mktemp -t cloudformation-XXX --suffix .json)
 
-## Setting Openvidu Version
-sed "s/OPENVIDU_VERSION/${OPENVIDU_PRO_VERSION}/" cfn-mkt-kms-ami.yaml.template > cfn-mkt-kms-ami.yaml
-sed "s/OPENVIDU_VERSION/${OPENVIDU_PRO_VERSION}/" cfn-mkt-ov-ami.yaml.template  > cfn-mkt-ov-ami.yaml
+# Get Latest Ubuntu AMI id from specified region
+# Parameters
+# $1 Aws region
+getUbuntuAmiId() {
+    local AMI_ID=$(
+        aws --region ${1} ec2 describe-images \
+        --filters Name=name,Values=ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64* \
+        --query 'Images[*].[ImageId,CreationDate]' \
+        --output text  \
+        | sort -k2 -r  | head -n1 | cut -d$'\t' -f1
+    )
+    echo $AMI_ID
+}
+
+AMIEUWEST1=$(getUbuntuAmiId 'eu-west-1')
+AMIUSEAST1=$(getUbuntuAmiId 'us-east-1')
+
+# Copy templates to feed
+cp cfn-mkt-kms-ami.yaml.template cfn-mkt-kms-ami.yaml
+cp cfn-mkt-ov-ami.yaml.template cfn-mkt-ov-ami.yaml
+
+## Setting Openvidu Version and Ubuntu Latest AMIs
+sed -i "s/OPENVIDU_VERSION/${OPENVIDU_PRO_VERSION}/" cfn-mkt-kms-ami.yaml
+sed -i "s/OPENVIDU_VERSION/${OPENVIDU_PRO_VERSION}/" cfn-mkt-ov-ami.yaml
+sed -i "s/AMIEUWEST1/${AMIEUWEST1}/" cfn-mkt-kms-ami.yaml
+sed -i "s/AMIEUWEST1/${AMIEUWEST1}/" cfn-mkt-ov-ami.yaml
+sed -i "s/AMIUSEAST1/${AMIUSEAST1}/" cfn-mkt-kms-ami.yaml
+sed -i "s/AMIUSEAST1/${AMIUSEAST1}/" cfn-mkt-ov-ami.yaml
 
 ## KMS AMI
 
