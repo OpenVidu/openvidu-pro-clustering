@@ -132,3 +132,13 @@ pod/openvidu-server                                  1/1     Running   0        
 Now, access the OpenVidu Dashboard with a browser pointing to https://YOUR_DOMAIN/inspector/
 
 Fill up the password field with the `OPENVIDU_SECRET` value you setted up in the template.
+
+## Troubleshooting
+
+If you find any problem, please, do not hesitate to ask for help attaching the logs
+
+`kubectl logs openvidu-server`
+
+and any other information you think can be useful for us.
+
+openvidu@gmail.com
