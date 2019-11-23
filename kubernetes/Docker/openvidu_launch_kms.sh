@@ -35,6 +35,8 @@ spec:
         value: "74.125.140.127"
       - name: "KMS_STUN_PORT"
         value: "19302"
+      - name: "GST_DEBUG"
+        value: "${GST_DEBUG:-3},kmsiceniceagent:5,kmswebrtcsession:5,webrtcendpoint:4"
     ports:
       - containerPort: 8888
 EOF

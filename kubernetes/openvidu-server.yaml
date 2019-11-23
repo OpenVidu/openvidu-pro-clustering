@@ -8,7 +8,7 @@ metadata:
 spec:
   containers:
     - name: openvidu-server
-      image: openvidu/openvidu-k8s:0.1
+      image: openvidu/openvidu-k8s:1.0
       env:
         - name: "DEBUG"
           value: "false"
@@ -21,7 +21,7 @@ spec:
         - name: "OPENVIDU_SECRET"
           value: "MY_SECRET"
         - name: "OPENVIDU_PUBLICURL"
-          value: "https://minikube.openvidu.io"
+          value: "https://YOUR_DNS" # Change by your own domain
         - name: "OPENVIDU_CDR"
           value: "true"
         - name: "OPENVIDU_RECORDING"
@@ -75,12 +75,10 @@ spec:
   ports:
     - port: 4443
       targetPort: 5443
-      #nodePort: 4443
       protocol: TCP
       name: openvidu
     - port: 5601
       targetPort: 5601
-      #nodePort: 5601
       protocol: TCP
       name: kibana
   selector:
@@ -99,7 +97,7 @@ metadata:
     nginx.org/websocket-services: "openvidu"
 spec:  
   rules:
-  - host: minikube.openvidu.io
+  - host: your.domain # Change by your own domain
     http:
       paths:
       - path: /inspector(/|$)(.*)
@@ -117,7 +115,7 @@ metadata:
     nginx.org/websocket-services: "openvidu"
 spec:  
   rules:
-  - host: minikube.openvidu.io
+  - host: your.domain # Change by your own domain
     http:
       paths:
       - path: /elasticsearch
@@ -180,7 +178,7 @@ metadata:
     nginx.ingress.kubernetes.io/app-root: /
 spec:  
   rules:
-  - host: minikube.openvidu.io
+  - host: your.domain # Change by your own domain
     http:
       paths:
       - path: /kibana(/|$)(.*)
