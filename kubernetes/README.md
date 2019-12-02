@@ -14,6 +14,8 @@ Change to this directory
 
 You'll need access to a Kubernetes cluster. We've been working with Kubernetes 1.15 and 1.16 but it should work with any cluster version higher than 1.10.
 
+We also support Minikube. Give enough resources to the virtual machine in order to OpenVidu and frinds (ELK) to run.
+
 Also, you'll need `kubectl` command in your **PATH**. To install it, follow [this](https://kubernetes.io/docs/tasks/tools/install-kubectl/) guide.
 
 ### Helm and Ingress
@@ -30,7 +32,9 @@ https://kubernetes.github.io/ingress-nginx/deploy/
 
 In AWS, the ingress controller will create a LoadBalancer, configure your DNS provider to point to this URL.
 
-In GCE, the ingress controller will create a public IP you can use with https://nip.io. 
+In GCE, the ingress controller will create a public IP you can use with https://nip.io.
+
+In minikube you can create a DNS entry pointing to the virtual machine or just simply update the `/etc/hosts` file. This is useful for testing in your local network. Alternativelly, you can use https://nip.io.
 
 ### Storage
 
@@ -72,6 +76,10 @@ EOF
 $ kubectl apply -f storage-class.yaml
 ```
 
+* Minikube
+
+Minikube provides default storage class.
+
 ## Security
 
 OpenVidu needs to launch and drop Media nodes in your Kubernetes cluster. We need to grant permissions to perform this actions. Run this command to allow OpenVidu to launch and drop Media nodes.
@@ -109,6 +117,8 @@ All the configuration section is in `openvidu-server.yaml` file. More informatio
 OpenVidu Pro needs ingress to work. Ingress will configure a LoadBalancer in your cluster, you should create an entry in you DNS provider pointing to this value. This is because ingress uses DNS names to identify the HTTP requests and associates it with the service. 
 
 Saying that, replace the values in the ingress manifest inside the `openvidu-server.yaml` file with your own FQDN.
+
+Also, don't forget to change the username we've give you to obtain OpenVidu.
 
 Once you've performed all the changes and you're happy with the configuration, run this command:
 
