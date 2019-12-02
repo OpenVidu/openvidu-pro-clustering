@@ -8,12 +8,12 @@ metadata:
 spec:
   containers:
     - name: openvidu-server
-      image: openvidu/openvidu-k8s:1.0
+      image: openvidu/openvidu-k8s:1.0-dev
       env:
         - name: "DEBUG"
           value: "false"
         - name: "OPENVIDU_PRO_USERNAME"
-          value: "admin"
+          value: "YOUR_USERNAME" # Change by the username we provided to you
         - name: "OPENVIDU_VERSION"
           value: "2.12.0-SNAPSHOT-slash"
         - name: "OPENVIDU_PRO_CLUSTER_ENVIRONMENT"
@@ -21,7 +21,7 @@ spec:
         - name: "OPENVIDU_SECRET"
           value: "MY_SECRET"
         - name: "OPENVIDU_PUBLICURL"
-          value: "https://YOUR_DNS" # Change by your own domain
+          value: "https://YOUR_DOMAIN" # Change by your own domain
         - name: "OPENVIDU_CDR"
           value: "true"
         - name: "OPENVIDU_RECORDING"
@@ -97,7 +97,7 @@ metadata:
     nginx.org/websocket-services: "openvidu"
 spec:  
   rules:
-  - host: your.domain # Change by your own domain
+  - host: YOUR_DOMAIN # Change by your own domain
     http:
       paths:
       - path: /inspector(/|$)(.*)
@@ -115,7 +115,7 @@ metadata:
     nginx.org/websocket-services: "openvidu"
 spec:  
   rules:
-  - host: your.domain # Change by your own domain
+  - host: YOUR_DOMAIN # Change by your own domain
     http:
       paths:
       - path: /elasticsearch
@@ -178,7 +178,7 @@ metadata:
     nginx.ingress.kubernetes.io/app-root: /
 spec:  
   rules:
-  - host: your.domain # Change by your own domain
+  - host: YOUR_DOMAIN # Change by your own domain
     http:
       paths:
       - path: /kibana(/|$)(.*)
