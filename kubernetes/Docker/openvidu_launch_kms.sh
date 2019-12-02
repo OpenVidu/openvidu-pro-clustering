@@ -29,12 +29,12 @@ spec:
   hostNetwork: true
   containers:
   - name: kms
-    image: kurento/kurento-media-server:${KMS_VERSION}
+    image: kurento/kurento-media-server-dev:${KMS_VERSION}
     env:
-      - name: "KMS_STUN_IP"
-        value: "74.125.140.127"
-      - name: "KMS_STUN_PORT"
-        value: "19302"
+      - name: "KMS_EXTERNAL_ADDRESS"
+        value: "auto"
+      - name: "KMS_NETWORK_INTERFACES"
+        value: "docker0"
       - name: "GST_DEBUG"
         value: "${GST_DEBUG:-3},kmsiceniceagent:5,kmswebrtcsession:5,webrtcendpoint:4"
     ports:
