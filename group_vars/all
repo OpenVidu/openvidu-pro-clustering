@@ -3,8 +3,8 @@
 ###########################
 # Credentials needed to download the jar file from https://pro.openvidu.io
 # Please contact openvidu@gmail.com to request one
-openvidu_pro_username: 
-openvidu_pro_password: 
+openvidu_pro_username:
+openvidu_pro_password:
 
 ###########################################
 # OpenVidu Server configuration parameters
@@ -14,13 +14,13 @@ openvidu_pro_password:
 
 # Which OpenVidu version to use
 # Check out https://github.com/OpenVidu/openvidu/releases
-openvidu_version: 
+openvidu_version:
 
 # A comma separate list of IPs from the KMS instances
-# This IPs of media servers should be reachable from OpenVidu 
+# This IPs of media servers should be reachable from OpenVidu
 # to port 8888 AND not to be publicly accessible.
 # i.e. 192.168.0.5,192.168.0.6
-kms_ips: 
+kms_ips:
 
 # Parameter "openvidu.secret"
 # Use this to connect to OpenVidu endpoint
@@ -31,13 +31,13 @@ openvidu_secret: "MY_SECRET"
 # We use this value to access OpenVidu Inspector and Kibana Dashboard
 # Use only the domain name, without port or scheme.
 # i. e. openvidu.example.com
-openvidu_publicurl: 
+openvidu_publicurl:
 
 # Parameter "openvidu.cdr"
 # Call Detail Record enabled
 # Whether to enable Call Detail Record or not
 # Values: true | false
-openvidu_cdr: 
+openvidu_cdr:
 
 # Parameter "openvidu.recording.public-access"
 # if true any client can connect to
@@ -50,9 +50,9 @@ openvidu_recording_public_access: true
 
 # Parameter "openvidu.recording.notification"
 # Which users should receive the recording events in the client side
-# (recordingStarted, recordingStopped). Can be all (every user connected to 
-# the session), publisher_moderator (users with role 'PUBLISHER' or 
-# 'MODERATOR'), moderator (only users with role 'MODERATOR') or none 
+# (recordingStarted, recordingStopped). Can be all (every user connected to
+# the session), publisher_moderator (users with role 'PUBLISHER' or
+# 'MODERATOR'), moderator (only users with role 'MODERATOR') or none
 # (no user will receive these events)
 openvidu_recording_notification: all
 
@@ -84,13 +84,13 @@ openvidu_webhook: false
 # Parameter "openvidu.webhook.endpoint"
 # HTTP endpoint where OpenVidu Server will send Webhook HTTP POST messages
 # Must be a valid URL: http(s)://ENDPOINT
-openvidu_webhook_endpoint: 
+openvidu_webhook_endpoint:
 
 # Parameter "openvidu.webhook.headers"
 # List of headers that OpenVidu Server Webhook service will attach to HTTP POST messages
-# Example: 
+# Example:
 # openvidu_webhook_headers: "Authorization: Basic T1BFTlZJRFVBUFA6TVlfU0VDUkVU"
-openvidu_webhook_headers: 
+openvidu_webhook_headers:
 
 # Parameter "openvidu.webhook.events"
 # List of events that will be sent by OpenVidu Server Webhook service
@@ -98,7 +98,7 @@ openvidu_webhook_headers:
 openvidu_webhook_events:
 
 ######################################
-# OpenVidu PRO specific configuration 
+# OpenVidu PRO specific configuration
 ######################################
 
 # See https://openvidu.io/docs/reference-docs/openvidu-server-params#extra-configuration-parameters-for-openvidu-server-pro
@@ -110,7 +110,7 @@ openvidu_pro_cluster: true
 
 # Parameter "openvidu.pro.cluster.load-strategy"
 # What parameter should be used to distribute the creation of new sessions
-# (and therefore distribution of load) among all available KMSs. 
+# (and therefore distribution of load) among all available KMSs.
 # Can be: [streams, sessions, mediaObjects, cpu]
 openvidu_pro_cluster_load_strategy: streams
 
@@ -118,7 +118,7 @@ openvidu_pro_cluster_load_strategy: streams
 # How many media servers do you want to start with the deployment.
 # If set to zero no media servers will be lauched.
 # Type: number >= 0
-openvidu_pro_cluster_media_nodes: 
+openvidu_pro_cluster_media_nodes:
 
 # Parameter "openvidu.pro.cluster.environment"
 # Which environment are you using
@@ -131,7 +131,7 @@ openvidu_pro_cluster_environment:
 
 # Should be the same than in the inventory file
 # We use this value for proxying
-openvidu_public_ip: 
+openvidu_public_ip:
 
 # Certificate type
 # You can choose:
@@ -139,7 +139,7 @@ openvidu_public_ip:
 #    the instance (default)
 # 2. Let's encrypt (letsencrypt) Free SSL certificate provider
 # 3. Your own certificate (owncert) If you own a SSL certificate, use this one.
-#    You need to provide your certificate files (nginx.key and nginx.crt) and 
+#    You need to provide your certificate files (nginx.key and nginx.crt) and
 #    put then in roles/nginx/files folder.
 whichcert: selfsigned
 
@@ -148,7 +148,7 @@ whichcert: selfsigned
 domain_name: cluster.openvidu.io
 
 # Let's Encrypt email to receive notifications
-letsencrypt_email: 
+letsencrypt_email:
 
 # Port configuration
 # We divide port range in two, half for Coturn Server and the other half
@@ -170,6 +170,7 @@ kurento_max_port: 65535
 # If you're working outside AWS ignore this section
 run_ec2: false
 aws_default_region: AWS_DEFAULT_REGION
+no_internet: false
 
 ##########################
 # Kibana Configuration
