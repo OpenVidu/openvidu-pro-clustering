@@ -1,7 +1,0 @@
-TODO
-
-*) cambiar el hostPath de elasticsearch por un volume de persistencia.
-*) Usar pod en lugar de StatefulSet OK
-*) como usamos pods usar el nombre como identificador único OK
-*) sacar ELK del pod OK
-*) Marcar nodos como NO kms allowed OK
