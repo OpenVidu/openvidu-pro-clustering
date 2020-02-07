@@ -2,17 +2,18 @@
 - name: installing jq
   apt:
     name: jq
+    update_cache: yes
   when: install_software|bool
 
 - name: adding kurento PGP key
-  apt_key: 
+  apt_key:
     keyserver: keyserver.ubuntu.com
     id: 234821A61B67740F89BFD669FC8A16625AFA7A83
     state: present
   when: install_software|bool
 
 - name: adding script for kurento repository
-  template: 
+  template:
     src: add-kms-repo.sh
     dest: /usr/local/bin/add-kms-repo.sh
     mode: 0755

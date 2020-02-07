@@ -1,36 +1,36 @@
 ---
 - name: Install nginx
-  apt: 
-    name: nginx 
+  apt:
+    name: nginx
     state: latest
     update_cache: true
   when: install_software|bool
 
 - name: install letsencrypt
-  apt: 
+  apt:
     name: letsencrypt
     state: latest
   when: whichcert == "letsencrypt" and install_software|bool
 
 - name: install apache2-utils
   apt:
-    name: ['apache2-utils', 'python-passlib']
+    name: ['apache2-utils', 'python3-passlib']
     state: latest
   when: install_software|bool
 
 - name: Remove default nginx config
-  file: 
-    name: /etc/nginx/sites-enabled/default 
+  file:
+    name: /etc/nginx/sites-enabled/default
     state: absent
 
 - name: configuring nginx
-  copy: 
-    src: nginx.conf 
+  copy:
+    src: nginx.conf
     dest: /etc/nginx/nginx.conf
 
 - name: adding default proxy behaviour
-  copy: 
-    src: proxy.conf 
+  copy:
+    src: proxy.conf
     dest: /etc/nginx/sites-available/proxy.conf
 
 - name: Install nginx site for letsencrypt requests
@@ -47,7 +47,7 @@
   when: whichcert == "letsencrypt"
 
 - name: previous task to generate self signed certificate
-  file: 
+  file:
     path: /etc/nginx/ssl
     state: directory
     mode: 0755
@@ -60,7 +60,7 @@
   when: whichcert == "selfsigned"
 
 - name: copying user certificates
-  copy: 
+  copy:
     src: "{{ item }}"
     dest: /etc/nginx/ssl
   with_items:
@@ -89,7 +89,7 @@
 
 - name: adding default server
   template:
-    src: templates/default.j2 
+    src: templates/default.j2
     dest: /etc/nginx/sites-enabled/default
   notify: restart nginx
 
