@@ -25,7 +25,7 @@ do
 done
 
 {% if openvidu_pro_cluster_environment == "on_premise" %}
-KMS_IPs=$(echo {{ kms_ips }} | tr , ' ')
+KMS_IPs=$(echo {{ kms_private_ips }} | tr , ' ')
 KMS_ENDPOINTS=$(for IP in $KMS_IPs
 do
   echo $IP | awk '{ print "\"ws://" $1 ":8888/kurento\"" }'

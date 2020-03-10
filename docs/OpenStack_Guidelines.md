@@ -75,7 +75,7 @@ openstack volume create \
   --image "Ubuntu Xenial" \
   --size 100 \
   --availability-zone nova \
-  media-server-$volume 
+  media-server-$volume
 done
 ```
 
@@ -137,7 +137,7 @@ exit 0
 
 ## Updating security group
 
-Now we're going to restrict access to port 8888 of media servers to OpenVidu server. 
+Now we're going to restrict access to port 8888 of media servers to OpenVidu server.
 
 First, we need to locate which private IP our OpenVidu server is using.
 
@@ -180,7 +180,7 @@ And in the `group_vars/all` use the private IPs of the media servers in this lin
 ```
 # A comma separate list of IPs from the KMS instances
 # i.e. 192.168.0.5,192.168.0.6
-kms_ips: 
+kms_private_ips:
 ```
 
 

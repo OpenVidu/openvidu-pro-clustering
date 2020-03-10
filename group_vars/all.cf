@@ -1,4 +1,10 @@
 ###########################################
+# OpenVidu License
+###########################################
+
+openvidu_license: OPENVIDU_LICENSE
+
+###########################################
 # OpenVidu Server configuration parameters
 ###########################################
 
@@ -12,7 +18,7 @@ openvidu_version: OPENVIDU_VERSION
 # This IPs of media servers should be reachable from OpenVidu
 # to port 8888 AND not to be publicly accessible.
 # i.e. 192.168.0.5,192.168.0.6
-kms_ips: KURENTO_ENDPOINTS
+kms_private_ips: KURENTO_ENDPOINTS
 
 # Parameter "openvidu.secret"
 # Use this to connect to OpenVidu endpoint

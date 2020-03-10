@@ -390,13 +390,16 @@ Resources:
                 cd /usr/src/openvidu
 
                 if [ "${WhichCert}" != "customcert" ]; then
-                  PIP=$(curl http://169.254.169.254/latest/meta-data/public-ipv4) 
-                  PublicHostname=$(curl http://169.254.169.254/latest/meta-data/public-hostname) 
+                  PIP=$(curl http://169.254.169.254/latest/meta-data/public-ipv4)
+                  PublicHostname=$(curl http://169.254.169.254/latest/meta-data/public-hostname)
                 fi
                 AWS_AMI_ID=KMS_AMI_ID
 
                 cp group_vars/all.cf group_vars/all
 
+                ################################
+                # OpenVidu Configuration       #
+                ################################
                 sed -i "s/OPENVIDU_INSTANCE_PUBLIC_IP/$PIP/" group_vars/all
                 sed -i "s/OPENVIDU_INSTANCE_PUBLIC_DOMAIN_NAME/$PublicHostname/" group_vars/all
                 sed -i "s/OPENVIDU_CDR/${OpenviduCDREnable}/" group_vars/all
@@ -425,13 +428,22 @@ Resources:
                 sed -i "s/OPENVIDU_PRO_CLUSTER_ENVIRONMENT/aws/" group_vars/all
                 sed -i "s/MEDIA_NODES_START_NUMBER/${MediaNodesStartNumber}/" group_vars/all
 
-                # Running in MarketPlace
+                ################################
+                # Running in MarketPlace       #
+                ################################
                 sed -i "s/install_software: true/install_software: false/" roles/coturn/vars/main.yml
                 sed -i "s/install_software: true/install_software: false/" roles/elastic/vars/main.yml
                 sed -i "s/install_software: true/install_software: false/" roles/nginx/vars/main.yml
                 sed -i "s/install_software: true/install_software: false/" roles/openvidu/vars/main.yml
 
-                # Launch kms on demand script
+                ################################
+                # Launch kms on demand script  #
+                ################################
+                # Remove on_premise vars and rename template
+                rm roles/openvidu/vars/main.yml
+                mv roles/openvidu/vars/main.yml.cf roles/openvidu/vars/main.yml
+
+                # Replace vars
                 sed -i "s/IMAGE_ID/$AWS_AMI_ID/" roles/openvidu/vars/main.yml
                 sed -i "s/INSTANCE_TYPE/${AwsInstanceTypeKMS}/" roles/openvidu/vars/main.yml
                 sed -i "s/KEY_NAME/${KeyName}/" roles/openvidu/vars/main.yml

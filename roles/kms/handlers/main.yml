@@ -1,16 +1,21 @@
 ---
+- name: stop kms
+  systemd:
+    name: kurento-media-server
+    state: stopped
+
 - name: restart kms
-  systemd: 
+  systemd:
     name: kurento-media-server
     state: restarted
 
 - name: start kms
-  systemd: 
+  systemd:
     name: kurento-media-server
-    state: started 
+    state: started
     enabled: true
 
 - name: stop kms
-  systemd: 
+  systemd:
     name: kurento-media-server
     state: stopped

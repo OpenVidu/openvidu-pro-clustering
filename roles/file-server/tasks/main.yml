@@ -1,7 +1,7 @@
 ---
 - name: Install nginx and additional software
-  apt: 
-    name: ['nginx', 'apache2-utils', 'python-passlib']
+  apt:
+    name: ['nginx', 'apache2-utils', 'python3-passlib']
     state: latest
     update_cache: true
   when: install_software|bool
@@ -16,12 +16,12 @@
     mode: 0640
 
 - name: configuring nginx
-  copy: 
+  copy:
     src: nginx.conf
     dest: /etc/nginx/nginx.conf
 
 - name: configuring nginx default site
-  template: 
+  template:
     src: default.j2
     dest: /etc/nginx/sites-enabled/default
   notify:

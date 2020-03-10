@@ -1,3 +1,4 @@
+openvidu.pro.license={{ openvidu_license }}
 openvidu.secret={{ openvidu_secret }}
 server.ssl.enabled=false
 server.port=5443
@@ -13,9 +14,10 @@ openvidu.streams.video.min-recv-bandwidth={{ openvidu_streams_video_min_recv_ban
 openvidu.streams.video.max-send-bandwidth={{ openvidu_streams_video_max_send_bandwidth }}
 openvidu.streams.video.min-send-bandwidth={{ openvidu_streams_video_min_send_bandwidth }}
 
-openvidu.pro.kibana.host=http://localhost/kibana
 openvidu.pro.cluster={{ openvidu_pro_cluster }}
 openvidu.pro.cluster.load-strategy={{ openvidu_pro_cluster_load_strategy }}
+
+coturn.ip={{ openvidu_public_ip }}
 
 openvidu.webhook={{ openvidu_webhook }}
 {% if openvidu_webhook_endpoint != "WEBHOOK_ENDPOINT" %}
@@ -28,10 +30,6 @@ openvidu.recording.composed-url=
 
 kms.uris=[]
 
-{% if no_internet == true %}
-openvidu.pro.kibana.import-objects=false
-{% endif %}
-
 {% if openvidu_pro_cluster_environment == "on_premise" %}
 openvidu.pro.cluster.mode=manual
 {% else %}
@@ -42,3 +40,7 @@ openvidu.pro.cluster.environment={{ openvidu_pro_cluster_environment }}
 {% if openvidu_pro_cluster_media_nodes != "MEDIA_NODES_START_NUMBER" %}
 openvidu.pro.cluster.media-nodes={{ openvidu_pro_cluster_media_nodes }}
 {% endif %}
+
+openvidu.pro.kibana.host=http://localhost/kibana
+openvidu.pro.elasticsearch.host=http://localhost:9200
+

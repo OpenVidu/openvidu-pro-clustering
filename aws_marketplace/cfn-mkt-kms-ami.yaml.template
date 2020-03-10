@@ -41,8 +41,9 @@ Resources:
                 apt-get update && apt-get install -y \
                   nginx \
                   apache2-utils \
-                  python-passlib \
+                  python3-passlib \
                   jq \
+                  curl \
                   awscli
 
                 # installing ansible

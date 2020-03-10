@@ -35,7 +35,7 @@
   apt:
     name: "kurento-media-server"
     update_cache: yes
-  notify: stop kurento
+  notify: stop kms
   when: install_software|bool
 
 - name: dbgsym key
@@ -51,6 +51,7 @@
   loop:
     - "deb http://ddebs.ubuntu.com {{ codename }} main restricted universe multiverse"
     - "deb http://ddebs.ubuntu.com {{ codename }}-updates main restricted universe multiverse"
+    - "deb http://ddebs.ubuntu.com {{ codename }}-proposed main restricted universe multiverse"
   ignore_errors: yes
 
 - name: installing Kurento Debug Symbols for Ubuntu bionic
@@ -93,10 +94,13 @@
   notify: restart kms
   ignore_errors: yes
 
-- name: preconfiguring Kurento Media Server
-  template:
-    src: "WebRtcEndpoint.conf.ini.j2"
-    dest: "/etc/kurento/modules/kurento/WebRtcEndpoint.conf.ini"
+- name: getting public ip
+  shell: curl ifconfig.co
+  register: kms_public_ip
+
+- name: storing public ip
+  set_fact:
+    kms_public_ip: "{{ kms_public_ip.stdout }}"
 
 - name: preconfiguring Kurento Media Server
   template:

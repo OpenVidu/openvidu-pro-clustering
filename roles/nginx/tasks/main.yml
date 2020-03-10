@@ -14,7 +14,7 @@
 
 - name: install apache2-utils
   apt:
-    name: ['apache2-utils', 'python-passlib']
+    name: ['apache2-utils', 'python3-passlib']
     state: latest
   when: install_software|bool
 
