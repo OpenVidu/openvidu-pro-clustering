@@ -91,13 +91,6 @@ else
   TEMPLATE_URL=https://s3-eu-west-1.amazonaws.com/aws.openvidu.io/cfn-mkt-ov-ami.yaml
 fi
 
-cat > $TEMPJSON<<EOF
-  [
-    {"ParameterKey":"OpenViduProUsername","ParameterValue":"${OPENVIDU_PRO_USERNAME}"},
-    {"ParameterKey":"OpenViduProPassword","ParameterValue":"${OPENVIDU_PRO_PASSWORD}"}
-  ]
-EOF
-
 aws cloudformation create-stack \
   --stack-name openvidu-${DATESTAMP} \
   --template-url ${TEMPLATE_URL} \

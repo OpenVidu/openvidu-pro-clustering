@@ -32,16 +32,16 @@
 - name: auto registering DNS name
   shell: /usr/local/bin/openvidu_route53_manager.sh
   when: whichcert == "customcert"
-  
-- name: download OpenVidu JAR file
-  get_url:
-    url: https://pro.openvidu.io/openvidu-server-pro-{{ openvidu_version }}.jar
-    dest: /opt/openvidu/openvidu-server.jar
-    mode: u+rwx
-    owner: "{{ openvidu_user }}"
-    group: "{{ openvidu_group }}"
-    username: "{{ openvidu_pro_username }}"
-    password: "{{ openvidu_pro_password }}"
+
+- name: copying script to download OpenVidu Pro Server
+  template:
+    src: "download_ov.sh.j2"
+    dest: "/usr/local/bin/download_ov.sh"
+    mode: "u+rwx"
+  when: install_software|bool
+
+- name: Download OpenVidu Pro Server
+  shell: /usr/local/bin/usr/local/bin/download_ov.sh
   when: install_software|bool
 
 - name: copying openvidu launch script

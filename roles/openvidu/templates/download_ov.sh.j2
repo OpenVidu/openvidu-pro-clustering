@@ -1,0 +1,12 @@
+#!/bin/bash
+
+OPENVIDU_SERVER_JAR=/opt/openvidu/openvidu-server.jar
+
+# Download OpenVidu.
+wget -O $OPENVIDU_SERVER_JAR \
+    https://pro-stripe.openvidu.io/openvidu-server-{{openvidu_version}}.jar \
+    --tries=0 --read-timeout=20
+
+# Permissions
+chmod u+rwx $OPENVIDU_SERVER_JAR
+chown {{openvidu_user}}:{{openvidu_group}} $OPENVIDU_SERVER_JAR

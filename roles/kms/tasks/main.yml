@@ -1,7 +1,16 @@
 ---
+- name: getting ubuntu codename
+  shell: lsb_release -cs
+  register: codename
+
+- name: storing ubuntu codename
+  set_fact:
+    codename: "{{ codename.stdout }}"
+
 - name: installing jq
   apt:
     name: jq
+    update_cache: yes
   when: install_software|bool
 
 - name: adding kurento PGP key
@@ -29,24 +38,22 @@
   notify: stop kurento
   when: install_software|bool
 
-- name: add ubuntu 'dbgsym' repository sources
-  apt_repository:
-    repo: "{{ item }}"
-    state: "present"
-  loop:
-    - "deb http://ddebs.ubuntu.com xenial main restricted universe multiverse"
-    - "deb http://ddebs.ubuntu.com xenial-updates main restricted universe multiverse"
-    - "deb http://ddebs.ubuntu.com xenial-proposed main restricted universe multiverse"
-  when: install_software|bool
-
 - name: dbgsym key
   apt_key:
     keyserver: keyserver.ubuntu.com
     id: F2EDC64DC5AEE1F6B9C621F0C8CAB6595FDFF622
     state: present
-  when: install_software|bool
-  
-- name: installing Kurento Debug Symbols
+
+- name: add ubuntu 'dbgsym' repository sources
+  apt_repository:
+    repo: "{{ item }}"
+    state: present
+  loop:
+    - "deb http://ddebs.ubuntu.com {{ codename }} main restricted universe multiverse"
+    - "deb http://ddebs.ubuntu.com {{ codename }}-updates main restricted universe multiverse"
+  ignore_errors: yes
+
+- name: installing Kurento Debug Symbols for Ubuntu bionic
   apt:
     name: "{{ item }}"
     state: "present"
@@ -83,8 +90,8 @@
     - "kms-elements-dbg"
     - "kms-filters-dbg"
     - "kurento-media-server-dbg"
+  notify: restart kms
   ignore_errors: yes
-  when: install_software|bool
 
 - name: preconfiguring Kurento Media Server
   template:

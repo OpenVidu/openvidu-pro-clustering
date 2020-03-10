@@ -112,7 +112,14 @@ Resources:
                 mkdir -p /opt/openvidu
                 chmod 777 /opt/openvidu
 
-                curl -o /opt/openvidu/openvidu-server.jar -u ${OpenViduProUsername}:${OpenViduProPassword} https://pro.openvidu.io/openvidu-server-pro-OPENVIDU_VERSION.jar
+                # Download OpenVidu.
+                wget -O /opt/openvidu/openvidu-server.jar \
+                    https://pro-stripe.openvidu.io/openvidu-server-OPENVIDU_VERSION.jar \
+                    --tries=0 --read-timeout=20
+
+                #Permissions
+                chmod u+rwx /opt/openvidu/openvidu-server.jar
+                chown ubuntu:ubuntu /opt/openvidu/openvidu-server.jar
 
                 git clone https://github.com/OpenVidu/openvidu-pro-clustering.git /usr/src/openvidu
                 pushd /usr/src/openvidu

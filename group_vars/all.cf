@@ -1,11 +1,3 @@
-###########################
-# OpenVidu PRO Credentials
-###########################
-# Credentials needed to download the jar file from https://pro.openvidu.io
-# Please contact openvidu@gmail.com to request one
-openvidu_pro_username: OPENVIDU_PRO_USERNAME
-openvidu_pro_password: OPENVIDU_PRO_PASSWORD
-
 ###########################################
 # OpenVidu Server configuration parameters
 ###########################################
