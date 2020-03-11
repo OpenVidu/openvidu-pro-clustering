@@ -376,7 +376,7 @@ Resources:
                   - 'route53:ChangeResourceRecordSets'
                   - 'route53:ListHostedZones'
                 Resource: '*'
-      RoleName: !Join [ "-", [ OpenViduManageEC2Role, !Ref 'AWS::Region', !Ref 'AWS::StackName' ] ]
+      RoleName: !Join [ "-", [ OVRole, !Ref 'AWS::Region', !Ref 'AWS::StackName' ] ]
 
   OpenviduInstancesProfile:
     Type: 'AWS::IAM::InstanceProfile'
@@ -384,7 +384,7 @@ Resources:
       InstanceProfileName: "OpenViduInstanceProfile"
       Path: /
       Roles:
-        - !Join [ "-", [ OpenViduManageEC2Role, !Ref 'AWS::Region', !Ref 'AWS::StackName' ] ]
+        - !Join [ "-", [ OVRole, !Ref 'AWS::Region', !Ref 'AWS::StackName' ] ]
     DependsOn:
       - OpenViduManageEC2Role
 
