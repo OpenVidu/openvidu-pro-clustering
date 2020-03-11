@@ -9,16 +9,6 @@ Mappings:
     us-east-1:
       AMI: AMIUSEAST1
 
-Parameters:
-  OpenViduProUsername:
-    Description: Username to download OpenVidu Pro
-    Type: String
-    NoEcho: true
-  OpenViduProPassword:
-    Description: AWS Password to download OpenVidu Pro
-    Type: String
-    NoEcho: true
-
 Resources:
   OpenviduServerPro:
     Type: 'AWS::EC2::Instance'
