@@ -31,6 +31,14 @@ openvidu_publicurl: OPENVIDU_INSTANCE_PUBLIC_DOMAIN_NAME
 # Values: true | false
 openvidu_cdr: OPENVIDU_CDR
 
+# Parameter "openvidu.recording.autostop-timeout"
+# Timeout in seconds for recordings to automatically stop (and the session involved to be closed)
+# when conditions are met: a session recording is started but no user is publishing to it or a session
+# is being recorded and last user disconnects. If a user publishes within the timeout in either case,
+# the automatic stop of the recording is cancelled
+# 0 means no timeout
+openvidu_recording_timeout: OPENVIDURECORDINGTIMEOUT
+
 # Parameter "openvidu.recording.public-access"
 # if true any client can connect to
 # https://OPENVIDU_SERVER_IP:OPENVIDU_PORT/recordings/any_session_file.mp4

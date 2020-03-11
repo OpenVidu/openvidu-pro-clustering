@@ -136,6 +136,11 @@ Parameters:
     - true
     - false
 
+  OpenViduRecordingTimeout:
+    Description: >
+      Timeout in seconds for recordings to automatically stop (and the session involved to be closed)
+    Type: String
+
   OpenviduRecordingNotification:
     Description: "Which users should receive the recording events in the client side (recordingStarted, recordingStopped)."
     Type: String
@@ -243,6 +248,7 @@ Metadata:
         - OpenViduSecret
         - OpenviduCDREnable
         - OpenviduClusterLoadStrategy
+        - OpenViduRecordingTimeout
         - FreeHTTPAccesToRecordingVideos
         - OpenviduRecordingNotification
         - MediaNodesStartNumber
@@ -298,6 +304,8 @@ Metadata:
         default: "CRT File"
       OwnCertKEY:
         default: "KEY File"
+      OpenViduRecordingTimeout:
+        default: "Recording Timeout"
       FreeHTTPAccesToRecordingVideos:
         default: "Video Recording Access"
       OpenviduRecordingNotification:
