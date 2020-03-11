@@ -27,7 +27,7 @@ getUbuntuAmiId() {
         --filters Name=name,Values=ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64* \
         --query 'Images[*].[ImageId,CreationDate]' \
         --output text  \
-        | sort -k2 -r  | head -n1 | cut -d$'\t' -f1
+        | sort -k2 -r  | head -n2 | sed -n '2p'| cut -d$'\t' -f1
     )
     echo $AMI_ID
 }
