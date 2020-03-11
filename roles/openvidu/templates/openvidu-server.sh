@@ -19,9 +19,10 @@ while true
 do
   HTTP_STATUS=$(curl -I http://localhost:9200/ | head -n1 | awk '{print $2}')
   if [ $HTTP_STATUS == 200 ]; then
+  	sleep 15
     break
   fi
-  sleep 15
+
 done
 
 # Wait for kibana
@@ -29,9 +30,9 @@ while true
 do
   HTTP_STATUS=$(curl -I http://localhost:5601/app/kibana | head -n1 | awk '{print $2}')
   if [ $HTTP_STATUS == 200 ]; then
-    break
+    sleep 15
+	break
   fi
-  sleep 15
 done
 
 {% if openvidu_pro_cluster_environment == "on_premise" %}
