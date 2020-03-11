@@ -81,6 +81,11 @@ Parameters:
     ConstraintDescription: >-
       Must be a valid IP address. A valid IP address must be in the form of xxx.xxx.xxx.xxx, where xxx is a number from 0-255.
 
+  OpenViduLicense:
+    Description: "Purchased OpenVidu License."
+    Type: String
+    NoEcho: true
+
   OpenViduSecret:
     Description: "Secret to connect to your OpenVidu Server and Kibana Dashboard."
     Type: String
@@ -222,6 +227,10 @@ Mappings:
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
+      - Label:
+          default: OpenVidu Pro License
+        Parameters:
+        - OpenViduLicense
       -
         Label:
           default: SSL Certificate Configuration
@@ -277,6 +286,8 @@ Metadata:
         default: "FQDN"
       PublicElasticIP:
         default: "Public Elastic IP"
+      OpenViduLicense:
+        default: "Purchased OpenVidu License"
       OpenViduSecret:
         default: "OpenVidu Secret"
       OpenviduCDREnable:
@@ -406,6 +417,7 @@ Resources:
                 sed -i "s/selfsigned/${WhichCert}/" group_vars/all
                 sed -i "s/DOMAIN_NAME/${MyDomainName}/" group_vars/all
                 sed -i "s/LETSENCRYPT_EMAIL/${LetsEncryptEmail}/" group_vars/all
+                sed -i "s/OPENVIDU_LICENSE/${OpenViduLicense}/" group_vars/all
                 sed -i "s/MY_SECRET/${OpenViduSecret}/" group_vars/all
                 sed -i "s/FREEHTTPACCESTORECORDINGVIDEOS/${FreeHTTPAccesToRecordingVideos}/" group_vars/all
                 sed -i "s/run_ec2: false/run_ec2: true/" group_vars/all
