@@ -21,7 +21,7 @@ do
   if [ $HTTP_STATUS == 200 ]; then
     break
   fi
-  sleep 1
+  sleep 15
 done
 
 # Wait for kibana
@@ -31,7 +31,7 @@ do
   if [ $HTTP_STATUS == 200 ]; then
     break
   fi
-  sleep 1
+  sleep 15
 done
 
 {% if openvidu_pro_cluster_environment == "on_premise" %}

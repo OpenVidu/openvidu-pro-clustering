@@ -635,7 +635,7 @@ Resources:
     Type: AWS::CloudFormation::WaitCondition
     CreationPolicy:
       ResourceSignal:
-        Timeout: PT20M
+        Timeout: PT25M
         Count: 1
 
   MyEIP:
