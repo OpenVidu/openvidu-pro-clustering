@@ -423,6 +423,7 @@ Resources:
                 sed -i "s/FREEHTTPACCESTORECORDINGVIDEOS/${FreeHTTPAccesToRecordingVideos}/" group_vars/all
                 sed -i "s/run_ec2: false/run_ec2: true/" group_vars/all
                 sed -i "s/KMS_RUN_CLUSTER/true/" group_vars/all
+                sed -i "s/OPENVIDURECORDINGTIMEOUT/${OpenViduRecordingTimeout}/" group_vars/all
                 sed -i "s/OPENVIDURECORDINGNOTIFICATION/${OpenviduRecordingNotification}/" group_vars/all
                 sed -i "s/OPENVIDUSTREAMSVIDEOMAX-RECV-BANDWIDTH/${OpenviduStreamsVideoMaxRecvBandwidth}/" group_vars/all
                 sed -i "s/OPENVIDUSTREAMSVIDEOMIN-RECV-BANDWIDTH/${OpenviduStreamsVideoMinRecvBandwidth}/" group_vars/all
