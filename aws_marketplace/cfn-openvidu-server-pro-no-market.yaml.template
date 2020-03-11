@@ -8,11 +8,6 @@ Parameters:
     Type: AWS::EC2::KeyPair::KeyName
     ConstraintDescription: "must be the name of an existing EC2 KeyPair."
 
-  KurentoAvailabilityZone:
-    Type: AWS::EC2::AvailabilityZone::Name
-    Description: must be the name of an existing AWS Availability Zone
-    Default: eu-west-1a
-
   AwsInstanceTypeOV:
     Type: String
     Description: Specifies the EC2 instance type for your OpenVidu instance
@@ -271,13 +266,10 @@ Metadata:
         Parameters:
         - OpenViduVPC
         - OpenViduSubnet
-        - KurentoAvailabilityZone
 
     ParameterLabels:
       KeyName:
         default: "Key Name"
-      KurentoAvailabilityZone:
-        default: "Kurento Availability Zone"
       AwsInstanceTypeOV:
         default: "Instance Type For Openvidu Server"
       AwsInstanceTypeKMS:
