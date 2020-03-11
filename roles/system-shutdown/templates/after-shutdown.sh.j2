@@ -1,8 +1,7 @@
 #!/bin/bash
 
 # In EC2 AWS, update the ip and hostname
-LOCAL_HOSTNAME=$(hostname -d)
-if [[ ${LOCAL_HOSTNAME} =~ .*\.amazonaws\.com ]]; then
+if [[ ! -z $(curl -s http://169.254.169.254/1.0/) ]];
     PUBLIC_IP=$(curl http://169.254.169.254/latest/meta-data/public-ipv4)
     PUBLIC_HOSTNAME=$(curl http://169.254.169.254/latest/meta-data/public-hostname)
 else
