@@ -8,12 +8,6 @@ openvidu_license: OPENVIDU_LICENSE
 # OpenVidu Server configuration parameters
 ###########################################
 
-# See https://openvidu.io/docs/reference-docs/openvidu-server-params
-
-# Which OpenVidu version to use
-# Check out https://github.com/OpenVidu/openvidu/releases
-openvidu_version: OPENVIDU_VERSION
-
 # A comma separate list of IPs from the KMS instances
 # This IPs of media servers should be reachable from OpenVidu
 # to port 8888 AND not to be publicly accessible.
@@ -177,13 +171,3 @@ no_internet: NO_INTERNET
 # Kibana dashboard configuration (Credentials)
 kibana_user: kibanaadmin
 kibana_password: "MY_SECRET"
-
-##########################
-# On premises config
-##########################
-
-# Cloud providers like AWS or OpenStack set up
-# ubuntu user without password. Put your own user
-# if you're using another provider or bare metal
-openvidu_user: ubuntu
-openvidu_group: ubuntu
