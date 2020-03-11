@@ -94,7 +94,6 @@ fi
 aws cloudformation create-stack \
   --stack-name openvidu-${DATESTAMP} \
   --template-url ${TEMPLATE_URL} \
-  --parameters file:///$TEMPJSON \
   --disable-rollback
 
 aws cloudformation wait stack-create-complete --stack-name openvidu-${DATESTAMP}
