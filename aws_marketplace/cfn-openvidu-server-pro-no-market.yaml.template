@@ -140,6 +140,7 @@ Parameters:
     Description: >
       Timeout in seconds for recordings to automatically stop (and the session involved to be closed)
     Type: String
+    Default: 120
 
   OpenviduRecordingNotification:
     Description: "Which users should receive the recording events in the client side (recordingStarted, recordingStopped)."
