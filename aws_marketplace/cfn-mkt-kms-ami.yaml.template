@@ -41,7 +41,7 @@ Resources:
                 apt-get update && apt-get install -y \
                   nginx \
                   apache2-utils \
-                  python3-passlib \
+                  python-passlib \
                   jq \
                   curl \
                   awscli

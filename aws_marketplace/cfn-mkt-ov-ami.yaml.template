@@ -49,7 +49,7 @@ Resources:
                   supervisor \
                   ec2-ami-tools \
                   apache2-utils \
-                  python3-passlib \
+                  python-passlib \
                   jq
 
                 # install coturn
