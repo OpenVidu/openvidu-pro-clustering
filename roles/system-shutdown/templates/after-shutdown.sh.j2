@@ -1,12 +1,15 @@
 #!/bin/bash
 
-{% if run_ec2 == true %}
-PUBLIC_IP=$(curl http://169.254.169.254/latest/meta-data/public-ipv4)
-PUBLIC_HOSTNAME=$(curl http://169.254.169.254/latest/meta-data/public-hostname)
-{% else %}
-PUBLIC_IP={{ openvidu_public_ip }}
-PUBLIC_HOSTNAME={{ openvidu_publicurl }}
-{% endif %}
+# In EC2 AWS, update the ip and hostname
+LOCAL_HOSTNAME=$(hostname -d)
+if [[ ${LOCAL_HOSTNAME} =~ .*\.amazonaws\.com ]]; then
+    PUBLIC_IP=$(curl http://169.254.169.254/latest/meta-data/public-ipv4)
+    PUBLIC_HOSTNAME=$(curl http://169.254.169.254/latest/meta-data/public-hostname)
+else
+    PUBLIC_IP={{ openvidu_public_ip }}
+    PUBLIC_HOSTNAME={{ openvidu_publicurl }}
+fi
+
 
 CLUSTER_MEMBER=$(cat /opt/openvidu/openvidu-cluster-member)
 
@@ -19,6 +22,16 @@ if [ "${CLUSTER_MEMBER}" == "server" ]; then
     cat /etc/turnserver.conf | grep -v external-ip >/tmp/turnserver.conf
     echo "external-ip=${PUBLIC_IP}" >> /tmp/turnserver.conf
     mv /tmp/turnserver.conf /etc/turnserver.conf
+
+    # Delete old lines of application.properties
+    sed -i '/openvidu.publicurl=/d' /opt/openvidu/application.properties
+    sed -i '/coturn.ip=/d' /opt/openvidu/application.properties
+    sed -i '/openvidu.recording.composed-url=/d' /opt/openvidu/application.properties
+
+    # Add new lines
+    echo openvidu.publicurl=https://${PUBLIC_HOSTNAME}:4443 >> /opt/openvidu/application.properties
+    echo coturn.ip=${PUBLIC_IP} >> /opt/openvidu/application.properties
+    echo openvidu.recording.composed-url=https://${PUBLIC_HOSTNAME}/inspector/ >> /opt/openvidu/application.properties
 
 cat >/etc/nginx/sites-enabled/kms-ov<<EOF
 server {
@@ -94,17 +107,17 @@ server {
     }
 }
 EOF
-    
+
     sleep 5
     systemctl start coturn
     systemctl start nginx
 else
+    KURENTO_PUBLIC_IP=$(curl ifconfig.co)
     systemctl stop kurento-media-server
 
     sleep 5
 
-    cat /etc/kurento/modules/kurento/WebRtcEndpoint.conf.ini | grep -v stunServerAddress > /tmp/WebRtcEndpoint.conf.ini
-    echo stunServerAddress=${PUBLIC_IP} >> /tmp/WebRtcEndpoint.conf.ini
+    echo externalAdress=${KURENTO_PUBLIC_IP} >> /tmp/WebRtcEndpoint.conf.ini
     mv /tmp/WebRtcEndpoint.conf.ini /etc/kurento/modules/kurento/WebRtcEndpoint.conf.ini
 
     sleep 5
