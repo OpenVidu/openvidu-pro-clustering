@@ -56,7 +56,7 @@
   ignore_errors: yes
   when: install_software|bool
 
-- name: installing Kurento Debug Symbols for Ubuntu bionic
+- name: installing Kurento Debug Symbols
   apt:
     name: "{{ item }}"
     state: "present"
