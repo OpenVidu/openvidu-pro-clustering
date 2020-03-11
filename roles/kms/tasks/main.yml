@@ -43,6 +43,7 @@
     keyserver: keyserver.ubuntu.com
     id: F2EDC64DC5AEE1F6B9C621F0C8CAB6595FDFF622
     state: present
+  when: install_software|bool
 
 - name: add ubuntu 'dbgsym' repository sources
   apt_repository:
@@ -53,6 +54,7 @@
     - "deb http://ddebs.ubuntu.com {{ codename }}-updates main restricted universe multiverse"
     - "deb http://ddebs.ubuntu.com {{ codename }}-proposed main restricted universe multiverse"
   ignore_errors: yes
+  when: install_software|bool
 
 - name: installing Kurento Debug Symbols for Ubuntu bionic
   apt:
@@ -93,6 +95,7 @@
     - "kurento-media-server-dbg"
   notify: restart kms
   ignore_errors: yes
+  when: install_software|bool
 
 - name: getting public ip
   shell: curl ifconfig.co

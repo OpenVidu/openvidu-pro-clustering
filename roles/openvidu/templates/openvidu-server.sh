@@ -14,6 +14,16 @@ PUBLIC_HOSTNAME={{ openvidu_publicurl }}
 {% endif %}
 {% endif %}
 
+# Wait for ElasticSearch
+while true
+do
+  HTTP_STATUS=$(curl -I http://localhost:9200/ | head -n1 | awk '{print $2}')
+  if [ $HTTP_STATUS == 200 ]; then
+    break
+  fi
+  sleep 1
+done
+
 # Wait for kibana
 while true
 do
