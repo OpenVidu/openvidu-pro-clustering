@@ -433,19 +433,19 @@ Resources:
                 sed -i "s/MEDIA_NODES_START_NUMBER/${MediaNodesStartNumber}/" group_vars/all
 
                 ################################
+                # Launch kms on demand script  #
+                ################################
+                # Remove on_premise vars and rename template
+                rm roles/openvidu/vars/main.yml
+                mv roles/openvidu/vars/main.yml.cf roles/openvidu/vars/main.yml
+
+                ################################
                 # Running in MarketPlace       #
                 ################################
                 sed -i "s/install_software: true/install_software: false/" roles/coturn/vars/main.yml
                 sed -i "s/install_software: true/install_software: false/" roles/elastic/vars/main.yml
                 sed -i "s/install_software: true/install_software: false/" roles/nginx/vars/main.yml
                 sed -i "s/install_software: true/install_software: false/" roles/openvidu/vars/main.yml
-
-                ################################
-                # Launch kms on demand script  #
-                ################################
-                # Remove on_premise vars and rename template
-                rm roles/openvidu/vars/main.yml
-                mv roles/openvidu/vars/main.yml.cf roles/openvidu/vars/main.yml
 
                 # Replace vars
                 sed -i "s/IMAGE_ID/$AWS_AMI_ID/" roles/openvidu/vars/main.yml
