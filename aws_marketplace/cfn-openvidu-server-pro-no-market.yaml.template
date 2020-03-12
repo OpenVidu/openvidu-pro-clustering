@@ -89,7 +89,10 @@ Parameters:
   OpenviduCDREnable:
     Description: "Whether to enable Call Detail Record or not"
     Type: String
-    Default: true
+    Default: false
+    AllowedValues:
+    - false
+    - true
 
   MediaNodesStartNumber:
     Description: "How many media server do you want to launch by default"
