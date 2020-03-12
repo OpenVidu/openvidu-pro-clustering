@@ -53,7 +53,7 @@ to change parameters of an OpenVidu Pro deployment is to change it directly with
     cd /opt/openvidu/
     ```
 
-    In this directory there is file called `application.properties`. You can use to edit this file a program called `nano`:
+    In this directory there is a file called `application.properties`. You can use it to edit this file a program called `nano`:
     To Update it:
 
     `sudo nano /opt/openvidu/application.properties`
@@ -68,7 +68,7 @@ to change parameters of an OpenVidu Pro deployment is to change it directly with
     sudo systemctl restart openvidu
     ```
 
-    To check that everythin is fine, just check the log by entering:
+    To check that everything is fine, just check the log by entering:
 
     ```
     journalctl -n 100 -u openvidu | cat
