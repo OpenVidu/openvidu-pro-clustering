@@ -21,19 +21,19 @@ TEMPJSON=$(mktemp -t cloudformation-XXX --suffix .json)
 # Get Latest Ubuntu AMI id from specified region
 # Parameters
 # $1 Aws region
-getUbuntuAmiId() {
-    local AMI_ID=$(
-        aws --region ${1} ec2 describe-images \
-        --filters Name=name,Values=ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64* \
-        --query 'Images[*].[ImageId,CreationDate]' \
-        --output text  \
-        | sort -k2 -r  | head -n2 | sed -n '2p'| cut -d$'\t' -f1
-    )
-    echo $AMI_ID
-}
+#getUbuntuAmiId() {
+#    local AMI_ID=$(
+#        aws --region ${1} ec2 describe-images \
+#        --filters Name=name,Values=ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64* \
+#        --query 'Images[*].[ImageId,CreationDate]' \
+#        --output text  \
+#        | sort -k2 -r  | head -n2 | sed -n '2p'| cut -d$'\t' -f1
+#    )
+#    echo $AMI_ID
+#}
 
-AMIEUWEST1=$(getUbuntuAmiId 'eu-west-1')
-AMIUSEAST1=$(getUbuntuAmiId 'us-east-1')
+AMIEUWEST1=ami-0f630a3f40b1eb0b8
+AMIUSEAST1=ami-08bc77a2c7eb2b1da
 
 # Copy templates to feed
 cp cfn-mkt-kms-ami.yaml.template cfn-mkt-kms-ami.yaml
