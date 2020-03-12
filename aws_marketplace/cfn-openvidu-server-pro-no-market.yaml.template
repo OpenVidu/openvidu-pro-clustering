@@ -255,7 +255,6 @@ Metadata:
         - OpenViduRecordingTimeout
         - FreeHTTPAccesToRecordingVideos
         - OpenviduRecordingNotification
-        - MediaNodesStartNumber
         - OpenviduStreamsVideoMaxRecvBandwidth
         - OpenviduStreamsVideoMinRecvBandwidth
         - OpenviduStreamsVideoMaxSendBandwidth
@@ -276,6 +275,11 @@ Metadata:
         Parameters:
         - OpenViduVPC
         - OpenViduSubnet
+      -
+        Label:
+          default: Clustering Options
+        Parameters:
+        - MediaNodesStartNumber
 
     ParameterLabels:
       KeyName:
