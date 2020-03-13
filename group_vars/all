@@ -2,10 +2,11 @@
 # OpenVidu License
 ###########################################
 
+# Parameter "openvidu.pro.license"
 openvidu_license:
 
 ###########################################
-# OpenVidu Server configuration parameters
+# OpenVidu Server CE configuration parameters
 ###########################################
 
 # See https://openvidu.io/docs/reference-docs/openvidu-server-params
@@ -100,14 +101,14 @@ openvidu_webhook_headers:
 
 # Parameter "openvidu.webhook.events"
 # List of events that will be sent by OpenVidu Server Webhook service
-# openvidu_webhook_events: "sessionCreated,sessionDestroyed,participantJoined,participantLeft,webrtcConnectionCreated,webrtcConnectionDestroyed,recordingStatusChanged"
+# openvidu_webhook_events: "sessionCreated,sessionDestroyed,participantJoined,participantLeft,webrtcConnectionCreated,webrtcConnectionDestroyed,recordingStatusChanged,filterEventDispatched,mediaNodeStatusChanged"
 openvidu_webhook_events:
 
-######################################
-# OpenVidu PRO specific configuration
-######################################
+###########################################
+# OpenVidu Server Pro configuration parameters
+###########################################
 
-# See https://openvidu.io/docs/reference-docs/openvidu-server-params#extra-configuration-parameters-for-openvidu-server-pro
+# See https://openvidu.io/docs/openvidu-pro/reference-docs/openvidu-server-pro-params
 
 # Parameter "openvidu.pro.cluster"
 # Is running in cluster?
