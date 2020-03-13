@@ -13,7 +13,7 @@ set -eu -o pipefail
 
 export AWS_ACCESS_KEY_ID=${NAEVA_AWS_ACCESS_KEY_ID}
 export AWS_SECRET_ACCESS_KEY=${NAEVA_AWS_SECRET_ACCESS_KEY}
-export AWS_REGION=eu-west-1
+export AWS_DEFAULT_REGION=eu-west-1
 
 TARGET_REGIONS="eu-north-1
                 eu-west-3
@@ -40,7 +40,7 @@ TARGET_REGIONS="eu-north-1
 echo "Kurento IDs"
 for REGION in ${TARGET_REGIONS}
 do
-	ID=$(aws ec2 copy-image --name ${KMS_AMI_NAME} --source-image-id ${KMS_AMI_ID} --source-region us-east-1 --region ${REGION})
+	ID=$(aws ec2 copy-image --name ${KMS_AMI_NAME} --source-image-id ${KMS_AMI_ID} --source-region ${AWS_DEFAULT_REGION} --region ${REGION})
     echo ${REGION}: $(echo ${ID} | awk '{ print $3 }')
 done
 
@@ -49,6 +49,6 @@ echo ""
 echo "OV IDs"
 for REGION in ${TARGET_REGIONS}
 do
-	ID=$(aws ec2 copy-image --name ${OV_AMI_NAME}  --source-image-id ${OV_AMI_ID}  --source-region us-east-1 --region ${REGION})
+	ID=$(aws ec2 copy-image --name ${OV_AMI_NAME}  --source-image-id ${OV_AMI_ID}  --source-region ${AWS_DEFAULT_REGION} --region ${REGION})
 	echo ${REGION}: $(echo ${ID} | awk '{ print $3 }')
 done
