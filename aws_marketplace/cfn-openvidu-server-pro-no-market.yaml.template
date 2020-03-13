@@ -388,7 +388,7 @@ Resources:
   OpenviduInstancesProfile:
     Type: 'AWS::IAM::InstanceProfile'
     Properties:
-      InstanceProfileName: "OpenViduInstanceProfile"
+      InstanceProfileName: !Join [ "-", [ OVProf, !Ref 'AWS::Region', !Ref 'AWS::StackName' ] ]
       Path: /
       Roles:
         - !Join [ "-", [ OVRole, !Ref 'AWS::Region', !Ref 'AWS::StackName' ] ]
