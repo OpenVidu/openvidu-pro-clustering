@@ -11,7 +11,7 @@ else
   export AWS_DEFAULT_REGION=eu-west-1
 fi
 
-if [ "${OPENVIDU_PRO_IS_SNAPSHOT}" ]; then
+if [ "${OPENVIDU_PRO_IS_SNAPSHOT}" == "true" ]; then
   OPENVIDU_PRO_VERSION=${OPENVIDU_PRO_VERSION}-SNAPSHOT
 fi
 
