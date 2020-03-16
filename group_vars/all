@@ -13,7 +13,7 @@ openvidu_license:
 
 # Which OpenVidu version to use
 # Check out https://github.com/OpenVidu/openvidu/releases
-openvidu_version:
+openvidu_version: 2.12.0
 
 # A comma separate list of private IPs from the KMS instances
 # This IPs of media servers should be reachable from OpenVidu
