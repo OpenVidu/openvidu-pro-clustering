@@ -416,7 +416,8 @@ Resources:
         config:
           files:
             "/usr/local/bin/feedGroupVars.sh":
-              content: !Sub |
+              content: !Sub
+              - |
                 #!/bin/bash -xe
 
                 cd /usr/src/openvidu
@@ -425,7 +426,7 @@ Resources:
                   PIP=$(curl http://169.254.169.254/latest/meta-data/public-ipv4)
                   PublicHostname=$(curl http://169.254.169.254/latest/meta-data/public-hostname)
                 fi
-                AWS_AMI_ID=KMS_AMI_ID
+                AWS_AMI_ID=${kmsAmi}
 
                 cp group_vars/all.cf group_vars/all
 
@@ -483,6 +484,8 @@ Resources:
                 sed -i "s/KEY_NAME/${KeyName}/" roles/openvidu/vars/main.yml
                 sed -i "s/SUBNET_ID/${OpenViduSubnet}/" roles/openvidu/vars/main.yml
                 sed -i "s/OPENVIDU_SECRET/${OpenViduSecret}/" roles/openvidu/vars/main.yml
+
+              - kmsAmi: !FindInMap [KMSAMIMAP, !Ref 'AWS::Region', AMI]
               mode: "000755"
               owner: "root"
               group: "root"
