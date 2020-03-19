@@ -63,7 +63,7 @@ These fields allow you to limit the IPs that will be able to connect to OpenVidu
 
 #### Kibana Dashboard Set the user and password for accessing Kibana dashboard.
 
-#### Other parameters 
+#### Other configuration
 
 Choose the size of your instance (see [OpenVidu performance FAQ](https://openvidu.io/docs/troubleshooting/#9-which-is-the-current-status-of-openvidu-on-scalability-and-fault-tolerance)) and a Key Pair ([create one if you don't have any](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#having-ec2-create-your-key-pair)).
 

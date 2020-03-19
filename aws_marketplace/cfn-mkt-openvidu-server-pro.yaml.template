@@ -304,14 +304,13 @@ Parameters:
   OpenviduClusterLoadStrategy:
     Description: >
       What parameter should be used to distribute the creation of new sessions
-      (and therefore distribution of load) among all available KMSs. Can be: [streams, sessions, mediaObjects, cpu]
+      (and therefore distribution of load) among all available KMSs. Can be: [streams, sessions, mediaObjects]
     Type: String
     Default: streams
     AllowedValues:
       - streams
       - sessions
       - mediaObjects
-      - cpu
 
 Mappings:
   OVAMIMAP:
