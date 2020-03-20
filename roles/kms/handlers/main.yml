@@ -14,8 +14,3 @@
     name: kurento-media-server
     state: started
     enabled: true
-
-- name: stop kms
-  systemd:
-    name: kurento-media-server
-    state: stopped
