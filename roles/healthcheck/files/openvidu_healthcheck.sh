@@ -6,6 +6,10 @@ MEMBER=$(cat /opt/openvidu/openvidu-cluster-member)
 
 if [ "$MEMBER" == "server" ]; then
 
+################################
+### OpenVidu Server Pro Node ###
+################################
+
 # Check Docker
 DOCKER=$(ps ax | grep [/]usr/bin/dockerd)
 if [ "x${DOCKER}" == "x" ]; then
@@ -51,6 +55,10 @@ else
 fi
 
 else
+
+##################
+### Media Node ###
+##################
 
 KMS=$(ps ax | grep [k]urento-media-server)
 if [ "x${KMS}" == "x" ]; then
