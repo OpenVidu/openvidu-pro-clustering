@@ -6,6 +6,7 @@ source /opt/openvidu/cluster/openvidu.rc
 SECGRPID=$(aws ec2 describe-security-groups \
                --output text \
                --filters Name=tag:aws:cloudformation:logical-id,Values=KMSSecurityGroup \
+                        "Name=tag:aws:cloudformation:stack-id,Values=${STACK_ID}" \
                --query 'SecurityGroups[].GroupId[]' | cut -d$'\t' -f1
 )
 
