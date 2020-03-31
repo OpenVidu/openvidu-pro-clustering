@@ -479,7 +479,7 @@ Resources:
                 sed -i "s/install_software: true/install_software: false/" roles/openvidu/vars/main.yml
 
                 # Replace vars
-                sed -i "s/STACK_ID/${AWS::StackId}/" roles/openvidu/vars/main.yml
+                sed -i "s/STACK_ID/${AWS::StackId//\//\\/}/" roles/openvidu/vars/main.yml
                 sed -i "s/IMAGE_ID/$AWS_AMI_ID/" roles/openvidu/vars/main.yml
                 sed -i "s/INSTANCE_TYPE/${AwsInstanceTypeKMS}/" roles/openvidu/vars/main.yml
                 sed -i "s/KEY_NAME/${KeyName}/" roles/openvidu/vars/main.yml
