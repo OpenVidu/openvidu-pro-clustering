@@ -12,3 +12,5 @@ aws_key_name: KEY_NAME
 subnet_id: SUBNET_ID
 openvidu_secret: OPENVIDU_SECRET
 aws_stack_id: STACK_ID
+aws_stack_name: STACK_NAME
+aws_stack_region: STACK_REGION
