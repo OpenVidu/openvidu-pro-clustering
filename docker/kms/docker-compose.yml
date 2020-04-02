@@ -1,0 +1,28 @@
+version: '3.1'
+
+services:
+
+    kms:
+        image: ${KMS_IMAGE}
+        restart: on-failure
+        network_mode: host
+        ulimits:
+            core: -1
+        environment:
+            - KMS_EXTERNAL_ADDRESS=${KMS_EXTERNAL_ADDRESS}
+            - KMS_MIN_PORT=${KMS_MIN_PORT}
+            - KMS_MAX_PORT=${KMS_MAX_PORT}
+            - GST_DEBUG=${KMS_DEBUG_LEVEL}
+        volumes:
+            - /opt/openvidu/recordings:/opt/openvidu/recordings
+        
+    nginx:
+        image: openvidu/openvidu-proxy:1.0.0-beta2
+        entrypoint: ["/bin/bash", "-c", "groupadd -g 999 kurento && useradd -m -d /var/lib/kurento -u 999 -g 999 kurento && htpasswd -c -b /etc/nginx/conf.d/kms.htpasswd OPENVIDUAPP ${OPENVIDU_SECRET} && service nginx restart && tail -f /var/log/nginx/*.log"]
+        restart: on-failure
+        network_mode: host
+        volumes:
+            - ./nginx_conf/nginx.conf:/etc/nginx/nginx.conf
+            - ./nginx_conf/kms-recorder.conf:/etc/nginx/sites_enabled/kms-recorder.conf
+            - /opt/openvidu/recordings:/opt/openvidu/recordings
+    
