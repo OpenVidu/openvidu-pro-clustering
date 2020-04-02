@@ -18,7 +18,7 @@ services:
         
     nginx:
         image: openvidu/openvidu-proxy:1.0.0-beta2
-        entrypoint: ["/bin/bash", "-c", "groupadd -g 999 kurento && useradd -m -d /var/lib/kurento -u 999 -g 999 kurento && htpasswd -c -b /etc/nginx/conf.d/kms.htpasswd OPENVIDUAPP ${OPENVIDU_SECRET} && service nginx restart && tail -f /var/log/nginx/*.log"]
+        entrypoint: ["/bin/bash", "-c", "htpasswd -c -b /etc/nginx/conf.d/kms.htpasswd OPENVIDUAPP ${OPENVIDU_SECRET} && service nginx restart && tail -f /var/log/nginx/*.log"]
         restart: on-failure
         network_mode: host
         volumes:
