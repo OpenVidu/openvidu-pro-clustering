@@ -23,6 +23,6 @@ services:
         network_mode: host
         volumes:
             - ./nginx_conf/nginx.conf:/etc/nginx/nginx.conf
-            - ./nginx_conf/kms-recorder.conf:/etc/nginx/sites_enabled/kms-recorder.conf
+            - ./nginx_conf/kms-recorder.conf:/etc/nginx/conf.d/default.conf
             - /opt/openvidu/recordings:/opt/openvidu/recordings
     
