@@ -56,10 +56,8 @@ Resources:
 
                 apt-get update && apt-get install -y \
                     docker-ce \
-                    docker-ce-cli \ 
+                    docker-ce-cli \
                     containerd.io
-
-                usermod -aG docker $USER
 
                 # Install docker-compose
                 curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
@@ -76,7 +74,7 @@ Resources:
                 mkdir -p /opt/openvidu/recordings
                 cd /usr/src/openvidu/docker/kms
 
-                docker-compose -d up
+                docker-compose up -d
               mode: "000755"
               owner: "root"
               group: "root"
@@ -104,17 +102,14 @@ Resources:
           !Sub |
             #!/bin/bash -x
             set -eu -o pipefail
-            apt-get update
-            apt-get install -y python-pip
-            pip install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz
 
             cfn-init --region ${AWS::Region} --stack ${AWS::StackId} --resource KurentoMediaServer
 
             /usr/local/bin/installSoftware.sh || { echo "[Openvidu] error installing software"; exit 1; }
 
-            /usr/local/bin/installKMS.sh || { echo "[Openvidu] error installing Kurento Media Server"; exit 1; }
-
             /usr/local/bin/getSoftware.sh || { echo "[Openvidu] error getting software"; exit 1; }
+
+            /usr/local/bin/installKMS.sh || { echo "[Openvidu] error installing Kurento Media Server"; exit 1; }
 
             # sending the finish call
             /usr/local/bin/cfn-signal -e $? --stack ${AWS::StackId} --resource WaitCondition --region ${AWS::Region}
