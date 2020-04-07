@@ -34,7 +34,7 @@ Resources:
               mode: "000400"
               owner: "root"
               group: "root"
-            "/usr/local/bin/installSoftware.sh":
+            "/usr/local/bin/installDockerAndDockerCompose.sh":
               content: |
                 #!/bin/bash
                 set -eu -o pipefail
@@ -66,19 +66,20 @@ Resources:
               mode: "000755"
               owner: "root"
               group: "root"
-            "/usr/local/bin/installKMS.sh":
+            "/usr/local/bin/runKMS.sh":
               content: |
                 #!/bin/bash
                 set -eu -o pipefail
 
                 mkdir -p /opt/openvidu/recordings
+                chmod 777 /opt/openvidu/recordings
                 cd /usr/src/openvidu/docker/kms
 
                 docker-compose up -d
               mode: "000755"
               owner: "root"
               group: "root"
-            "/usr/local/bin/getSoftware.sh":
+            "/usr/local/bin/getDockerCompose.sh":
               content: |
                 #!/bin/bash
                 set -eu -o pipefail
@@ -108,11 +109,11 @@ Resources:
 
             cfn-init --region ${AWS::Region} --stack ${AWS::StackId} --resource KurentoMediaServer
 
-            /usr/local/bin/installSoftware.sh || { echo "[Openvidu] error installing software"; exit 1; }
+            /usr/local/bin/installDockerAndDockerCompose.sh || { echo "[Openvidu] error installing software"; exit 1; }
 
-            /usr/local/bin/getSoftware.sh || { echo "[Openvidu] error getting software"; exit 1; }
+            /usr/local/bin/getDockerCompose.sh || { echo "[Openvidu] error getting Docker compose"; exit 1; }
 
-            /usr/local/bin/installKMS.sh || { echo "[Openvidu] error installing Kurento Media Server"; exit 1; }
+            /usr/local/bin/runKMS.sh || { echo "[Openvidu] error installing Kurento Media Server"; exit 1; }
 
             # sending the finish call
             /usr/local/bin/cfn-signal -e $? --stack ${AWS::StackId} --resource WaitCondition --region ${AWS::Region}

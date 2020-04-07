@@ -34,88 +34,48 @@ Resources:
               mode: "000400"
               owner: "root"
               group: "root"
-            "/usr/local/bin/installSoftware.sh":
+            "/usr/local/bin/installDockerAndDockerCompose.sh":
               content: |
                 #!/bin/bash
                 set -eu -o pipefail
-                # installing necessary software
-                apt-get update
-                apt-get install -y awscli \
-                  zip \
-                  unzip \
-                  openjdk-8-jdk \
-                  pwgen \
-                  nginx \
-                  supervisor \
-                  ec2-ami-tools \
-                  apache2-utils \
-                  python-passlib \
-                  jq
+                
+                # Install Docker
+                apt-get update && apt-get install -y \
+                    apt-transport-https \
+                    ca-certificates \
+                    curl \
+                    gnupg-agent \
+                    software-properties-common
 
-                # install coturn
-                apt-get install -y coturn
-
-                # install redis
-                apt-get install -y redis-server
-
-                # install let's encrypt
-                apt-get install -y software-properties-common
-                add-apt-repository -y ppa:certbot/certbot
-                apt-get update
-                apt-get install -y python-certbot-nginx
-
-                # installing ansible
-                apt-add-repository -y ppa:ansible/ansible
-                apt-get update
-                apt-get install -y ansible
-
-                # installing elasticsearch and kibana
-                wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | apt-key add -
-                echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" > /etc/apt/sources.list.d/elastic-7.x.list
-                apt-get update
-                apt-get install -y elasticsearch kibana
-                systemctl enable kibana
-                systemctl enable elasticsearch
-
-                # update aws cli
-                pip install --upgrade awscli
-
-              mode: "000755"
-              owner: "root"
-              group: "root"
-            "/usr/local/bin/installDocker.sh":
-              content: |
-                #!/bin/bash
-                set -eu -o pipefail
                 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-                add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable"
-                apt-get update
-                apt-get install -y docker-ce
+                apt-key fingerprint 0EBFCD88
+                add-apt-repository \
+                  "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+                  $(lsb_release -cs) \
+                  stable"
+
+                apt-get update && apt-get install -y \
+                    docker-ce \
+                    docker-ce-cli \
+                    containerd.io
+
+                # Install docker-compose
+                curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+                chmod +x /usr/local/bin/docker-compose
+                ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
               mode: "000755"
               owner: "root"
               group: "root"
-            "/usr/local/bin/getOpenVidu.sh":
+            "/usr/local/bin/getDockerCompose.sh":
               content: !Sub |
                 #!/bin/bash
                 set -eu -o pipefail
 
-                mkdir -p /opt/openvidu
-                chmod 777 /opt/openvidu
-
-                # Download OpenVidu.
-                wget -O /opt/openvidu/openvidu-server.jar \
-                    https://pro-stripe.openvidu.io/openvidu-server-pro-OPENVIDU_VERSION.jar \
-                    --tries=0 --read-timeout=20
-
-                #Permissions
-                chmod u+rwx /opt/openvidu/openvidu-server.jar
-                chown ubuntu:ubuntu /opt/openvidu/openvidu-server.jar
-
                 git clone https://github.com/OpenVidu/openvidu-pro-clustering.git /usr/src/openvidu
-                pushd /usr/src/openvidu
 
-                docker pull openvidu/openvidu-recording:2.9.0
-                popd
+                # Remove
+                cd /usr/src/openvidu
+                git checkout deploy-with-docker
               mode: "000755"
               owner: "root"
               group: "root"
@@ -136,11 +96,9 @@ Resources:
 
             cfn-init --region ${AWS::Region} --stack ${AWS::StackId} --resource OpenviduServerPro
 
-            /usr/local/bin/installSoftware.sh || { echo "[Openvidu] error installing software"; exit 1; }
+            /usr/local/bin/installDockerAndDockerCompose.sh || { echo "[Openvidu] error installing docker and compose"; exit 1; }
 
-            /usr/local/bin/installDocker.sh || { echo "[Openvidu] error installing Docker"; exit 1; }
-
-            /usr/local/bin/getOpenVidu.sh || { echo "[Openvidu] error installing OpenVidu"; exit 1; }
+            /usr/local/bin/getDockerCompose.sh || { echo "[Openvidu] error getting compose"; exit 1; }
 
             # sending the finish call
             /usr/local/bin/cfn-signal -e $? --stack ${AWS::StackId} --resource WaitCondition --region ${AWS::Region}
