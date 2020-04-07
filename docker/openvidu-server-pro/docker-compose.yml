@@ -36,8 +36,9 @@ services:
             - LOGGING_LEVEL_ROOT=${OV_CE_DEBUG_LEVEL:-INFO}
             - OPENVIDU_RECORDING=true
             - OPENVIDU_RECORDING_PATH=${OPENVIDU_RECORDING_FOLDER}
-            - OPENVIDU_PRO_KIBANA_HOST=http://kibana/kibana
-            - OPENVIDU_PRO_ELASTICSEARCH_HOST=http://elasticsearch:9200
+            - OPENVIDU_PRO_CLUSTER=true
+            - OPENVIDU_PRO_KIBANA_HOST=http://127.0.0.1/kibana
+            - OPENVIDU_PRO_ELASTICSEARCH_HOST=http://127.0.0.1:9200
 
     redis:
         image: redis:5.0.7
@@ -62,7 +63,7 @@ services:
         network_mode: host
         env_file:
             - .env
-        entrypoint: ["/bin/bash", "-c", "htpasswd -bc /etc/nginx/kibana.htpasswd kibanadmin prueba && /usr/local/bin/entrypoint.sh"]
+        entrypoint: ["/bin/bash", "-c", "htpasswd -bc /etc/nginx/kibana.htpasswd ${KIBANA_USER} ${KIBANA_PASSWORD} && /usr/local/bin/entrypoint.sh"]
         volumes:
             - ./nginx_conf/nginx.conf:/etc/nginx/nginx.conf
             - ./nginx_conf/default.conf:/custom_nginx_conf/default.conf
@@ -81,10 +82,10 @@ services:
             - discovery.type=single-node
         ports:
             - 9200:9200
-        
+
     kibana:
         image: docker.elastic.co/kibana/kibana:7.6.2
-        environment: 
+        environment:
             - SERVER_BASEPATH="/kibana"
         ports:
-            - 5601:5601   
+            - 5601:5601
