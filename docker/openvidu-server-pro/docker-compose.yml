@@ -34,7 +34,7 @@ services:
             - OPENVIDU_PRO_CLUSTER=true
             - OPENVIDU_PRO_KIBANA_HOST=http://127.0.0.1/kibana
             - OPENVIDU_PRO_ELASTICSEARCH_HOST=http://127.0.0.1:9200
-            - WAIT_KIBANA_URL=http://127.0.0.1/app/kibana
+            - WAIT_KIBANA_URL=http://127.0.0.1:5601/app/kibana
 
     redis:
         image: redis:5.0.7
