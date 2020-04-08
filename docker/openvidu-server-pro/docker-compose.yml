@@ -29,16 +29,12 @@ services:
         environment:
             - SERVER_SSL_ENABLED=false
             - SERVER_PORT=5443
-            - OPENVIDU_SECRET=${OPENVIDU_SECRET}
-            - OPENVIDU_PUBLICURL=
-            - COTURN_IP=${OPENVIDU_DOMAIN_OR_PUBLIC_IP}
             - COTURN_REDIS_IP=127.0.0.1
-            - LOGGING_LEVEL_ROOT=${OV_CE_DEBUG_LEVEL:-INFO}
             - OPENVIDU_RECORDING=true
-            - OPENVIDU_RECORDING_PATH=${OPENVIDU_RECORDING_FOLDER}
             - OPENVIDU_PRO_CLUSTER=true
             - OPENVIDU_PRO_KIBANA_HOST=http://127.0.0.1/kibana
             - OPENVIDU_PRO_ELASTICSEARCH_HOST=http://127.0.0.1:9200
+            - WAIT_KIBANA_URL=http://127.0.0.1/app/kibana
 
     redis:
         image: redis:5.0.7
@@ -71,9 +67,6 @@ services:
             - ./certificates:/etc/letsencrypt
             - ./owncert:/owncert
         environment:
-            - DOMAIN_OR_PUBLIC_IP=${OPENVIDU_DOMAIN_OR_PUBLIC_IP}
-            - CERTIFICATE_TYPE=${CERTIFICATE_TYPE}
-            - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
             - NGINX_CONF=custom
 
     elasticsearch:
