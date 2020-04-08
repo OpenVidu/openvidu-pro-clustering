@@ -9,10 +9,6 @@ services:
             - .env
         ulimits:
             core: -1
-        environment:
-            - KMS_MIN_PORT=${KMS_MIN_PORT}
-            - KMS_MAX_PORT=${KMS_MAX_PORT}
-            - GST_DEBUG=${KMS_DEBUG_LEVEL:-}
         volumes:
             - /opt/openvidu/recordings:/opt/openvidu/recordings
         
