@@ -2,7 +2,7 @@ version: '3.1'
 
 services:
     kms:
-        image: ${KMS_IMAGE}
+        image: kurento/kurento-media-server-dev:6.13.1
         restart: always
         network_mode: host
         env_file:
@@ -13,7 +13,7 @@ services:
             - /opt/openvidu/recordings:/opt/openvidu/recordings
 
     nginx:
-        image: openvidu/openvidu-proxy:1.0.0-beta2
+        image: openvidu/openvidu-proxy:1.0.0-beta3
         entrypoint: ["/bin/bash", "-c", "service nginx restart && tail -f /var/log/nginx/*.log"]
         restart: on-failure
         network_mode: host
