@@ -40,11 +40,11 @@ docker run --rm amazon/aws-cli:2.0.7 ec2 run-instances \
     --instance-type ${AWS_INSTANCE_TYPE} \
     --key-name ${AWS_KEY_NAME} \
     --subnet-id ${AWS_SUBNET_ID} \
-    --tag-specifications 'ResourceType=instance,Tags=[{Key="Name",Value="Kurento Media Server"},{Key="ov-cluster-member",Value="kms"}]' \
+    --tag-specifications "ResourceType=instance,Tags=[{Key='Name',Value='Kurento Media Server'},{Key='ov-cluster-member',Value='kms'},{Key='ov-stack-name',Value='${AWS_STACK_NAME}'},{Key='ov-stack-region',Value='${AWS_DEFAULT_REGION}'}]" \
     --iam-instance-profile Name="OpenViduInstanceProfile-${AWS_STACK_NAME}-${AWS_DEFAULT_REGION}" \
     --security-group-ids ${AWS_SECURITY_GROUP} > ${OUTPUT} 2> ${ERROUTPUT}
-
-docker run --rm  ec2 wait instance-running --instance-ids $(cat ${OUTPUT} | jq --raw-output ' .Instances[] | .InstanceId')
+    
+docker run --rm amazon/aws-cli:2.0.7 ec2 wait instance-running --instance-ids $(cat ${OUTPUT} | jq --raw-output ' .Instances[] | .InstanceId')
 
 # Generating the output
 KMS_IP=$(cat ${OUTPUT} | jq --raw-output ' .Instances[] | .NetworkInterfaces[0] | .PrivateIpAddress')
