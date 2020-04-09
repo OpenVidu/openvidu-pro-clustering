@@ -40,6 +40,9 @@ curl https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/deploy-w
     --output ${DOCKER_COMPOSE_FOLDER}/openvidu.sh
 
 # Add execution permissions
+chmod +x ${AWS_SCRIPTS}/openvidu_autodiscover.sh
+chmod +x ${AWS_SCRIPTS}/openvidu_drop.sh
+chmod +x ${AWS_SCRIPTS}/openvidu_launch_kms.sh
 chmod +x ${DOCKER_COMPOSE_FOLDER}/openvidu.sh
 
 # Create own certificated folder

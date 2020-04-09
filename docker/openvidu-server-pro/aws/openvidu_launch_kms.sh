@@ -35,7 +35,7 @@ exit_on_error () {
   esac
 }
 
-docker run --rm -it amazon/aws-cli:2.0.7 ec2 run-instances \
+docker run --rm amazon/aws-cli:2.0.7 ec2 run-instances \
     --image-id ${AWS_IMAGE_ID} --count 1 \
     --instance-type ${AWS_INSTANCE_TYPE} \
     --key-name ${AWS_KEY_NAME} \
@@ -44,7 +44,7 @@ docker run --rm -it amazon/aws-cli:2.0.7 ec2 run-instances \
     --iam-instance-profile Name="OpenViduInstanceProfile-${AWS_STACK_NAME}-${AWS_DEFAULT_REGION}" \
     --security-group-ids ${AWS_SECURITY_GROUP} > ${OUTPUT} 2> ${ERROUTPUT}
 
-aws ec2 wait instance-running --instance-ids $(cat ${OUTPUT} | jq --raw-output ' .Instances[] | .InstanceId')
+docker run --rm  ec2 wait instance-running --instance-ids $(cat ${OUTPUT} | jq --raw-output ' .Instances[] | .InstanceId')
 
 # Generating the output
 KMS_IP=$(cat ${OUTPUT} | jq --raw-output ' .Instances[] | .NetworkInterfaces[0] | .PrivateIpAddress')
@@ -54,4 +54,3 @@ jq -n \
   --arg id "${KMS_ID}" \
   --arg ip "${KMS_IP}" \
   '{ id: $id, ip: $ip }'
-
