@@ -36,13 +36,13 @@ exit_on_error () {
 }
 
 docker run --rm -it amazon/aws-cli:2.0.7 ec2 run-instances \
-    --image-id ${IMAGE_ID} --count 1 \
-    --instance-type ${INSTANCE_TYPE} \
-    --key-name ${KEY_NAME} \
-    --subnet-id ${SUBNET_ID} \
+    --image-id ${AWS_IMAGE_ID} --count 1 \
+    --instance-type ${AWS_INSTANCE_TYPE} \
+    --key-name ${AWS_KEY_NAME} \
+    --subnet-id ${AWS_SUBNET_ID} \
     --tag-specifications 'ResourceType=instance,Tags=[{Key="Name",Value="Kurento Media Server"},{Key="ov-cluster-member",Value="kms"}]' \
-    --iam-instance-profile Name="OpenViduInstanceProfile-${STACK_NAME}-${STACK_REGION}" \
-    --security-group-ids ${SECURITY_GROUP} > ${OUTPUT} 2> ${ERROUTPUT}
+    --iam-instance-profile Name="OpenViduInstanceProfile-${AWS_STACK_NAME}-${AWS_DEFAULT_REGION}" \
+    --security-group-ids ${AWS_SECURITY_GROUP} > ${OUTPUT} 2> ${ERROUTPUT}
 
 aws ec2 wait instance-running --instance-ids $(cat ${OUTPUT} | jq --raw-output ' .Instances[] | .InstanceId')
 
