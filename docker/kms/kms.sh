@@ -3,9 +3,9 @@
 usage() {
     printf "Usage: \n\t kms [command]"
     printf "\n\nAvailable Commands:"
-    printf "\n\tstart\t\tStart kms services"
-    printf "\n\tstop\t\tStop kms services"
-    printf "\n\trestart\t\tRestart kms stoped and running services"
+    printf "\n\tstart\t\tStart kms service"
+    printf "\n\tstop\t\tStop kms service"
+    printf "\n\trestart\t\tRestart kms service"
     printf "\n\tlogs\t\tShow kms logs"
     printf "\n\thelp\t\tShow help for kms command"
     printf "\n"

@@ -24,6 +24,7 @@ services:
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - ${OPENVIDU_RECORDING_FOLDER}:${OPENVIDU_RECORDING_FOLDER}
+            -./aws:/opt/openvidu/cluster/aws
         env_file:
             - .env
         environment:

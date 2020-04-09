@@ -70,12 +70,9 @@ Resources:
               content: !Sub |
                 #!/bin/bash
                 set -eu -o pipefail
-
-                git clone https://github.com/OpenVidu/openvidu-pro-clustering.git /usr/src/openvidu
-
-                # Remove
-                cd /usr/src/openvidu
-                git checkout deploy-with-docker
+                cd /usr/src
+                # Install openvidu-pro
+                curl https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/deploy-with-docker/docker/openvidu-server-pro/install_ov_pro.sh | bash
               mode: "000755"
               owner: "root"
               group: "root"

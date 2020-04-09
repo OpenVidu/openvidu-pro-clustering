@@ -70,11 +70,11 @@ Resources:
               content: |
                 #!/bin/bash
                 set -eu -o pipefail
-
+                # Create recording folder
                 mkdir -p /opt/openvidu/recordings
                 chmod 777 /opt/openvidu/recordings
-                cd /usr/src/openvidu/docker/kms
-
+                # Run KMS
+                cd /usr/src/kms
                 docker-compose up -d
               mode: "000755"
               owner: "root"
@@ -83,12 +83,9 @@ Resources:
               content: |
                 #!/bin/bash
                 set -eu -o pipefail
-
-                git clone https://github.com/OpenVidu/openvidu-pro-clustering.git /usr/src/openvidu
-
-                # Remove
-                cd /usr/src/openvidu
-                git checkout deploy-with-docker
+                cd /usr/src
+                # Install kms
+                curl https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/deploy-with-docker/docker/kms/install_kms.sh | bash
               mode: "000755"
               owner: "root"
               group: "root"

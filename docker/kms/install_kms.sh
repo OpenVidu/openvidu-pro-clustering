@@ -24,9 +24,9 @@ mkdir ${NGINX_CONF}
 
 # Download necessaries files
 curl https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/deploy-with-docker/docker/kms/nginx_conf/kms-recorder.conf \
-     --ouput ${NGINX_CONF}/kms-recorder.conf
+     --output ${NGINX_CONF}/kms-recorder.conf
 curl https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/deploy-with-docker/docker/kms/nginx_conf/nginx.conf \
-     --ouput ${NGINX_CONF}/nginx.conf
+     --output ${NGINX_CONF}/nginx.conf
 
 curl https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/deploy-with-docker/docker/kms/.env \
      --output ${DOCKER_COMPOSE_FOLDER}/.env
