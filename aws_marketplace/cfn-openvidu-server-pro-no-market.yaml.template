@@ -412,9 +412,9 @@ Resources:
               group: "root"
             "/usr/local/bin/buildCerts.sh":
               content: !Sub |
-                #!/bin/bash
+                #!/bin/bash -x
                 WORKINGDIR=/usr/src/openvidu
-                wget -O $WORKINGDIR/owncert/certificate.crt ${OwnCertCRT}
+                wget -O $WORKINGDIR/owncert/certificate.cert ${OwnCertCRT}
                 wget -O $WORKINGDIR/owncert/certificate.key ${OwnCertKEY}
               mode: "000755"
               owner: "root"
