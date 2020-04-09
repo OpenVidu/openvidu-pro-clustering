@@ -23,7 +23,7 @@ exit_on_error () {
 
     "UnauthorizedOperation")
       MSG_COD=$(cat ${ERROUTPUT} | awk -F: '{ print $3 }')
-      MSG_DEC=$(aws sts decode-authorization-message --encoded-message ${MSG_COD})
+      MSG_DEC=$(docker run --rm amazon/aws-cli:2.0.7 sts decode-authorization-message --encoded-message ${MSG_COD})
 
       echo -e "Unauthorized " $(cat ${MSG_DEC}) >&2
       exit 1
