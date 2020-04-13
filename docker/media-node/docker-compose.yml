@@ -11,6 +11,7 @@ services:
             core: -1
         volumes:
             - /opt/openvidu/recordings:/opt/openvidu/recordings
+            - /core:/core
 
     nginx:
         image: openvidu/openvidu-proxy:1.0.0-beta3

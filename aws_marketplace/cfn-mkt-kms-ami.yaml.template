@@ -73,6 +73,9 @@ Resources:
                 # Create recording folder
                 mkdir -p /opt/openvidu/recordings
                 chmod 777 /opt/openvidu/recordings
+                # Configure crash report
+                mkdir -p /core
+                echo "/core/core_%e_%p_%u_%t" | tee /proc/sys/kernel/core_pattern >/dev/null
                 # Run KMS
                 cd /opt/kms
                 docker-compose up -d
