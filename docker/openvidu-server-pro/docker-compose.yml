@@ -18,7 +18,7 @@ version: '3.1'
 services:
 
     openvidu-server:
-        image: openvidu/openvidu-server-pro:2.13.0-beta2
+        image: openvidu/openvidu-server-pro:2.13.0-beta3
         restart: on-failure
         network_mode: host
         volumes:
@@ -26,6 +26,7 @@ services:
             - ${OPENVIDU_RECORDING_PATH}:${OPENVIDU_RECORDING_PATH}
             - /opt/openvidu/custom-layout:/opt/openvidu/custom-layout
             - ./aws:/opt/openvidu/cluster/aws
+            - .env:${PWD}/.env
         env_file:
             - .env
         environment:
@@ -39,6 +40,7 @@ services:
             - OPENVIDU_PRO_KIBANA_HOST=http://127.0.0.1/kibana
             - OPENVIDU_PRO_ELASTICSEARCH_HOST=http://127.0.0.1:9200
             - WAIT_KIBANA_URL=http://127.0.0.1:5601/app/kibana
+            - DOTENV_PATH=${PWD}
 
     redis:
         image: redis:5.0.7

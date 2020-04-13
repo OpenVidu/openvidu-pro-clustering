@@ -31,7 +31,8 @@ case $1 in
   logs)
     docker-compose logs -f openvidu-server
     ;;
-
+    
+  *)
     usage
     ;;
 esac

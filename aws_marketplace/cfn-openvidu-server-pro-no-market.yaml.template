@@ -306,14 +306,12 @@ Resources:
             '/usr/local/bin/check_app_ready.sh':
               content: |
                 #!/bin/bash 
-                sleep 1m
-
                 while true; do 
                   HTTP_STATUS=$(curl -Ik http://localhost:5443/ | head -n1 | awk '{print $2}')
                   if [ $HTTP_STATUS == 200 ]; then
                     break
                   fi
-                  sleep 1
+                  sleep 5
                 done
               mode: "000755"
               owner: "root"
