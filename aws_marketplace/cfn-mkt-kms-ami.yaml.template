@@ -99,7 +99,7 @@ Resources:
                 # Installation path
                 cd /opt
                 # Install kms
-                curl https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/deploy-with-docker/docker/kms/install_kms.sh | bash
+                curl https://s3-eu-west-1.amazonaws.com/aws.openvidu.io/install_media_node_OPENVIDU_VERSION.sh | bash
               mode: "000755"
               owner: "root"
               group: "root"

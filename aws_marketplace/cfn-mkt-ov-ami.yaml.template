@@ -86,7 +86,7 @@ Resources:
                 # Installation path
                 cd /opt
                 # Install openvidu-pro
-                curl https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/deploy-with-docker/docker/openvidu-server-pro/install_ov_pro.sh | bash
+                curl https://s3-eu-west-1.amazonaws.com/aws.openvidu.io/install_openvidu_pro_OPENVIDU_VERSION.sh | bash
               mode: "000755"
               owner: "root"
               group: "root"
