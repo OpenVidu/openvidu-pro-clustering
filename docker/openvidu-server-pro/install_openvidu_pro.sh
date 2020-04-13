@@ -49,9 +49,19 @@ chmod +x ${DOCKER_COMPOSE_FOLDER}/openvidu.sh
 mkdir ${DOCKER_COMPOSE_FOLDER}/owncert
 
 # Ready to use
-printf "\n========================================"
-printf "\nOpenvidu PRO has successfully installed."
-printf '\nNow run "./openvidu.sh start" in folder "openvidu" for setup.'
-printf '\nRun "./openvidu.sh help" in folder for more information about "openvidu" command.'
-printf '\n"Check "readme.md" in folder "openvidu" for more details.\n\n'
+printf "\n"
+printf "\n   Openvidu PRO successfully installed."
+printf "\n"
+printf '\n   1. Go to openvidu folder:'
+printf '\n   $ cd openvidu'
+printf "\n"
+printf '\n   2. Configure OPENVIDU_DOMAIN_OR_PUBLIC_IP, OPENVIDU_SECRET, OPENVIDU_PRO_CLUSTER_MEDIA-NODES and KIBANA_PASSWORD in .env file:'
+printf "\n   $ nano .env" 
+printf "\n"
+printf '\n   3. Start OpenVidu'
+printf '\n   $ ./openvidu start'
+printf '\n'
+printf '\n   For more information, check readme.md'
+printf '\n'
+printf '\n'
 exit 0

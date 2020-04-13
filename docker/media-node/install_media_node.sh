@@ -40,7 +40,7 @@ chmod +x ${DOCKER_COMPOSE_FOLDER}/kms.sh
 
 # Ready to use
 printf "\n========================================"
-printf "\nKMS has successfully installed."
-printf '\nNow run "./kms.sh start" in folder "kms" for setup.'
-printf '\nRun "./kms.sh help" in folder for more information about "kms" command.'
+printf "\nMedia Node has successfully installed."
+printf '\nNow run "./media_node.sh start" in folder "media_node" for setup.'
+printf '\nRun "./media_node.sh help" in folder for more information about "media_node" command.'
 exit 0

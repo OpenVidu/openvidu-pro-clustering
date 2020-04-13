@@ -4,64 +4,64 @@ Description: Openvidu Pro CloudFormation template
 
 Parameters:
 
-  # OpenVidu Pro License
+  # Domain and SSL certificate configuration
+
+  WhichCert:
+    Description: >
+      [selfsigned] Self signed certificate. Not recommended for production use.
+      [owncert] Valid certificate purchased in a Internet services company.
+      [letsencrypt] Generate a new certificate using Let's Encrypt.
+    Type: String
+    AllowedValues:
+      - selfsigned
+      - owncert
+      - letsencrypt
+    Default: selfsigned
+
+  PublicElasticIP:
+    Description: "Previously created AWS Elastic IP to associate it to the OpenVidu EC2 instance. If certificate type is 'selfsigned' this value is optional. If certificate type is 'owncert' or 'letsencrypt' this value is mandatory. Example 13.33.145.23."
+    Type: String
+    AllowedPattern: ^([01]?\d{1,2}|2[0-4]\d|25[0-5])\.([01]?\d{1,2}|2[0-4]\d|25[0-5])\.([01]?\d{1,2}|2[0-4]\d|25[0-5])\.([01]?\d{1,2}|2[0-4]\d|25[0-5])$
+    Default: 1.0.2.0
+    ConstraintDescription: Must be a valid IP address. A valid IP address must be in the form of xxx.xxx.xxx.xxx, where xxx is a number from 0-255
+
+  MyDomainName:
+    Description: "Valid domain name pointing to previous IP. If certificate type is 'selfsigned' this value is optional. If certificate type is 'owncert' or 'letsencrypt' this value is mandatory. Example: openvidu.company.com"
+    Type: String
+    AllowedPattern: ^(?:_?(?>[a-z\d][a-z\d-]{0,61}[a-z\d]|[a-z\d])\.)*(?:_?(?>[a-z\d][a-z\d-]{0,61}[a-z\d]|[a-z\d]))\.?$
+    Default: openvidu.mycompany.com
+    ConstraintDescription: Must be a valid DNS name. Like myapp.example.com
+      
+  OwnCertCRT:
+    Description: "If certificate type is 'owncert' this is the URL where CRT file will be downloaded"
+    Type: String
+
+  OwnCertKEY:
+    Description: "If certificate type is 'owncert' this is the URL where KEY file will be downloaded"
+    Type: String
+
+  LetsEncryptEmail:
+    Description: "If cetificate type is 'letsencrypt', this email will be used for Let's Encrypt notifications"
+    Type: String
+
+
+  # OpenVidu Pro Configuration
 
   OpenViduLicense:
     Description: "Visit https://openvidu.io/account"
     Type: String
     NoEcho: true
 
-  # SSL certificate configuration
-
-  WhichCert:
-    Description: "You can choose from the list below which certificate mode to use"
-    Type: String
-    AllowedValues:
-      - selfsigned
-      - letsencrypt
-      - owncert
-    Default: selfsigned
-
-  LetsEncryptEmail:
-    Description: "Email necessary for Let's Encrypt notifications"
-    Type: String
-
-  MyDomainName:
-    Description: "Valid DNS record name like mycompany.com"
-    Type: String
-    AllowedPattern: ^(?:_?(?>[a-z\d][a-z\d-]{0,61}[a-z\d]|[a-z\d])\.)*(?:_?(?>[a-z\d][a-z\d-]{0,61}[a-z\d]|[a-z\d]))\.?$
-    Default: openvidu.mycompany.com
-    ConstraintDescription: Must be a valid DNS name. Like myapp.example.com
-
-  PublicElasticIP:
-    Description: "Valid AWS elastic IP for using with Let's Encrypt or OwnCertificate."
-    Type: String
-    AllowedPattern: ^([01]?\d{1,2}|2[0-4]\d|25[0-5])\.([01]?\d{1,2}|2[0-4]\d|25[0-5])\.([01]?\d{1,2}|2[0-4]\d|25[0-5])\.([01]?\d{1,2}|2[0-4]\d|25[0-5])$
-    Default: 1.0.2.0
-    ConstraintDescription: Must be a valid IP address. A valid IP address must be in the form of xxx.xxx.xxx.xxx, where xxx is a number from 0-255
-
-  OwnCertCRT:
-    Description: "URL to the CRT file"
-    Type: String
-
-  OwnCertKEY:
-    Description: "URL to the KEY file"
-    Type: String
-
-  # OpenVidu CE configuration
+  MediaNodesStartNumber:
+    Description: "How many Media Nodes do you want on startup"
+    Type: Number
+    Default: 1
 
   OpenViduSecret:
     Description: "Secret to connect to your OpenVidu Server Pro. No whitespaces or quotations allowed"
     Type: String
     AllowedPattern: ^((?!")(?! ).)*$
     NoEcho: true
-
-  # OpenVidu Pro configuration
-
-  MediaNodesStartNumber:
-    Description: "How many Media Nodes do you want on startup"
-    Type: Number
-    Default: 1
 
   # Kibana configuration
 
@@ -85,7 +85,7 @@ Parameters:
     Description: "Subnet for OpenVidu cluster"
     Type: AWS::EC2::Subnet::Id
 
-  # Other configuration
+  # EC2 Instance configuration
 
   AwsInstanceTypeOV:
     Description: "Specifies the EC2 instance type for your OpenVidu Server Pro Node"
@@ -142,6 +142,8 @@ Parameters:
     Type: 'AWS::EC2::KeyPair::KeyName'
     ConstraintDescription: "must be the name of an existing EC2 KeyPair"
 
+  # Other configuration
+
   WantToDeployDemos:
     Description: "Choose if you want to deploy OpenVidu call application. If true, then parameter openvidu.secret must be MY_SECRET for the demos to work out-of-the-box"
     Type: String
@@ -163,10 +165,6 @@ Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
       - Label:
-          default: OpenVidu Pro License
-        Parameters:
-          - OpenViduLicense
-      - Label:
           default: SSL certificate configuration
         Parameters:
           - WhichCert
@@ -176,13 +174,11 @@ Metadata:
           - OwnCertCRT
           - OwnCertKEY
       - Label:
-          default: OpenVidu CE configuration
+          default: OpenVidu configuration
         Parameters:
-          - OpenViduSecret
-      - Label:
-          default: OpenVidu Pro configuration
-        Parameters:
+          - OpenViduLicense
           - MediaNodesStartNumber
+          - OpenViduSecret
       - Label:
           default: Kibana configuration
         Parameters:
@@ -194,17 +190,17 @@ Metadata:
           - OpenViduVPC
           - OpenViduSubnet
       - Label:
+            default: EC2 Instance configuration
+        Parameters:
+            - AwsInstanceTypeOV
+            - AwsInstanceTypeKMS
+            - KeyName
+      - Label:
           default: Other configuration
         Parameters:
-          - AwsInstanceTypeOV
-          - AwsInstanceTypeKMS
-          - KeyName
           - WantToDeployDemos
 
     ParameterLabels:
-      # OpenVidu Pro License
-      OpenViduLicense:
-        default: "Your OpenVidu Pro License key"
       # SSL certificate configuration
       WhichCert:
         default: "Choose the certificate"
@@ -218,38 +214,13 @@ Metadata:
         default: "URL to the CRT file"
       OwnCertKEY:
         default: "URL to the key file"
-      # OpenVidu CE configuration
-      OpenViduSecret:
-        default: "openvidu.secret"
-      FreeHTTPAccesToRecordingVideos:
-        default: "openvidu.recording.public-access"
-      OpenviduRecordingNotification:
-        default: "openvidu.recording.notification"
-      OpenViduRecordingTimeOut:
-        default: "openvidu.recording.autostop-timeout"
-      OpenviduStreamsVideoMaxRecvBandwidth:
-        default: "openvidu.streams.video.max-recv-bandwidth"
-      OpenviduStreamsVideoMinRecvBandwidth:
-        default: "openvidu.streams.video.min-recv-bandwidth"
-      OpenviduStreamsVideoMaxSendBandwidth:
-        default: "openvidu.streams.video.max-send-bandwidth"
-      OpenviduStreamsVideoMinSendBandwidth:
-        default: "openvidu.streams.video.min-send-bandwidth"
-      OpenViduWebhook:
-        default: "openvidu.webhook"
-      OpenViduWebhookEndpoint:
-        default: "openvidu.webhook.endpoint"
-      OpenViduWebhookHeaders:
-        default: "openvidu.webhook.headers"
-      OpenViduWebhookEvents:
-        default: "openvidu.webhook.events"
-      OpenviduCDREnable:
-        default: "openvidu.cdr"
-      # OpenVidu Pro configuration
+      # OpenVidu configuration
+      OpenViduLicense:
+        default: "Your OpenVidu Pro License key"
       MediaNodesStartNumber:
         default: "openvidu.pro.cluster.media-nodes"
-      OpenviduClusterLoadStrategy:
-        default: "openvidu.pro.cluster.load-strategy"
+      OpenViduSecret:
+        default: "openvidu.secret"
       # Kibana configuration
       KibanaUser:
         default: "Kibana username"
@@ -260,11 +231,12 @@ Metadata:
         default: "OpenVidu VPC"
       OpenViduSubnet:
         default: "OpenVidu Subnet"
-      # Other configuration
+      # EC2 instance configuration
       AwsInstanceTypeOV:
         default: "Instance type for Openvidu Server Pro Node"
       AwsInstanceTypeKMS:
         default: "Instance type for Media Nodes"
+      # Other configuration
       KeyName:
         default: "Key name"
       WantToDeployDemos:
@@ -437,15 +409,12 @@ Resources:
           !Sub |
             #!/bin/bash -xe
 
-            # Get aws cli container
-            docker pull amazon/aws-cli:2.0.7
-
             cfn-init --region ${AWS::Region} --stack ${AWS::StackId} --resource OpenViduServer
 
             /usr/local/bin/feedGroupVars.sh || { echo "[Openvidu] Parameters incorrect/insufficient"; exit 1; }
 
             if [ "${WhichCert}" == "owncert" ]; then
-            /usr/local/bin/buildCerts.sh || { echo "[Openvidu] error with the certificate files"; exit 1; }
+              /usr/local/bin/buildCerts.sh || { echo "[Openvidu] error with the certificate files"; exit 1; }
             fi
 
             pushd /usr/src/openvidu
