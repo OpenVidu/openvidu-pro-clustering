@@ -74,7 +74,7 @@ Resources:
                 mkdir -p /opt/openvidu/recordings
                 chmod 777 /opt/openvidu/recordings
                 # Run KMS
-                cd /usr/src/kms
+                cd /opt/kms
                 docker-compose up -d
               mode: "000755"
               owner: "root"
