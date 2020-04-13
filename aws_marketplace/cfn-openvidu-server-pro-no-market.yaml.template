@@ -4,146 +4,64 @@ Description: Openvidu Pro CloudFormation template
 
 Parameters:
 
-  # OpenVidu Pro License
+  # Domain and SSL certificate configuration
+
+  WhichCert:
+    Description: >
+      [selfsigned] Self signed certificate. Not recommended for production use.
+      [owncert] Valid certificate purchased in a Internet services company.
+      [letsencrypt] Generate a new certificate using Let's Encrypt.
+    Type: String
+    AllowedValues:
+      - selfsigned
+      - owncert
+      - letsencrypt
+    Default: selfsigned
+
+  PublicElasticIP:
+    Description: "Previously created AWS Elastic IP to associate it to the OpenVidu EC2 instance. If certificate type is 'selfsigned' this value is optional. If certificate type is 'owncert' or 'letsencrypt' this value is mandatory. Example 13.33.145.23."
+    Type: String
+    AllowedPattern: ^([01]?\d{1,2}|2[0-4]\d|25[0-5])\.([01]?\d{1,2}|2[0-4]\d|25[0-5])\.([01]?\d{1,2}|2[0-4]\d|25[0-5])\.([01]?\d{1,2}|2[0-4]\d|25[0-5])$
+    Default: 1.0.2.0
+    ConstraintDescription: Must be a valid IP address. A valid IP address must be in the form of xxx.xxx.xxx.xxx, where xxx is a number from 0-255
+
+  MyDomainName:
+    Description: "Valid domain name pointing to previous IP. If certificate type is 'selfsigned' this value is optional. If certificate type is 'owncert' or 'letsencrypt' this value is mandatory. Example: openvidu.company.com"
+    Type: String
+    AllowedPattern: ^(?:_?(?>[a-z\d][a-z\d-]{0,61}[a-z\d]|[a-z\d])\.)*(?:_?(?>[a-z\d][a-z\d-]{0,61}[a-z\d]|[a-z\d]))\.?$
+    Default: openvidu.mycompany.com
+    ConstraintDescription: Must be a valid DNS name. Like myapp.example.com
+      
+  OwnCertCRT:
+    Description: "If certificate type is 'owncert' this is the URL where CRT file will be downloaded"
+    Type: String
+
+  OwnCertKEY:
+    Description: "If certificate type is 'owncert' this is the URL where KEY file will be downloaded"
+    Type: String
+
+  LetsEncryptEmail:
+    Description: "If cetificate type is 'letsencrypt', this email will be used for Let's Encrypt notifications"
+    Type: String
+
+
+  # OpenVidu Pro Configuration
 
   OpenViduLicense:
     Description: "Visit https://openvidu.io/account"
     Type: String
     NoEcho: true
 
-  # SSL certificate configuration
-
-  WhichCert:
-    Description: "You can choose from the list below which certificate mode to use"
-    Type: String
-    AllowedValues:
-      - selfsigned
-      - letsencrypt
-      - owncert
-    Default: selfsigned
-
-  LetsEncryptEmail:
-    Description: "Email necessary for Let's Encrypt notifications"
-    Type: String
-
-  MyDomainName:
-    Description: "Valid DNS record name like mycompany.com"
-    Type: String
-    AllowedPattern: ^(?:_?(?>[a-z\d][a-z\d-]{0,61}[a-z\d]|[a-z\d])\.)*(?:_?(?>[a-z\d][a-z\d-]{0,61}[a-z\d]|[a-z\d]))\.?$
-    Default: openvidu.mycompany.com
-    ConstraintDescription: Must be a valid DNS name. Like myapp.example.com
-
-  PublicElasticIP:
-    Description: "Valid AWS elastic IP for using with Let's Encrypt or OwnCertificate."
-    Type: String
-    AllowedPattern: ^([01]?\d{1,2}|2[0-4]\d|25[0-5])\.([01]?\d{1,2}|2[0-4]\d|25[0-5])\.([01]?\d{1,2}|2[0-4]\d|25[0-5])\.([01]?\d{1,2}|2[0-4]\d|25[0-5])$
-    Default: 1.0.2.0
-    ConstraintDescription: Must be a valid IP address. A valid IP address must be in the form of xxx.xxx.xxx.xxx, where xxx is a number from 0-255
-
-  OwnCertCRT:
-    Description: "URL to the CRT file"
-    Type: String
-
-  OwnCertKEY:
-    Description: "URL to the KEY file"
-    Type: String
-
-  # OpenVidu CE configuration
+  MediaNodesStartNumber:
+    Description: "How many Media Nodes do you want on startup"
+    Type: Number
+    Default: 1
 
   OpenViduSecret:
     Description: "Secret to connect to your OpenVidu Server Pro. No whitespaces or quotations allowed"
     Type: String
     AllowedPattern: ^((?!")(?! ).)*$
     NoEcho: true
-
-  FreeHTTPAccesToRecordingVideos:
-    Description: "Do you want your recordings to be access publicly?"
-    Type: String
-    AllowedValues:
-      - true
-      - false
-    Default: false
-
-  OpenviduRecordingNotification:
-    Description: "Which users should receive recording events in the client side"
-    Type: String
-    AllowedValues:
-      - all
-      - publisher_moderator
-      - moderator
-      - none
-    Default: publisher_moderator
-
-  OpenViduRecordingTimeOut:
-    Description: "Timeout in seconds for recordings to automatically stop"
-    Type: Number
-    Default: 120
-
-  OpenviduStreamsVideoMaxRecvBandwidth:
-    Description: "Maximum video bandwidth sent from clients to OpenVidu Server, in kbps. 0 means unconstrained"
-    Type: Number
-    Default: 1000
-
-  OpenviduStreamsVideoMinRecvBandwidth:
-    Description: "Minimum video bandwidth sent from clients to OpenVidu Server, in kbps. 0 means unconstrained"
-    Type: Number
-    Default: 300
-
-  OpenviduStreamsVideoMaxSendBandwidth:
-    Description: "Maximum video bandwidth sent from OpenVidu Server to clients, in kbps. 0 means unconstrained"
-    Type: Number
-    Default: 1000
-
-  OpenviduStreamsVideoMinSendBandwidth:
-    Description: "Minimum video bandwidth sent from OpenVidu Server to clients, in kbps. 0 means unconstrained"
-    Type: Number
-    Default: 300
-
-  OpenViduWebhook:
-    Description: "Whether to enable OpenVidu Server Webhook service or not"
-    Type: String
-    AllowedValues:
-      - false
-      - true
-    Default: false
-
-  OpenViduWebhookEndpoint:
-    Description: "HTTP endpoint where OpenVidu Server will send Webhook HTTP POST messages"
-    Type: String
-    Default: http://my.endpoint.com
-
-  OpenViduWebhookHeaders:
-    Description: "List of headers that OpenVidu Server Webhook service will attach to HTTP POST messages. JUST one header at the moment"
-    Type: String
-
-  OpenViduWebhookEvents:
-    Description: "Comma separated list of events that will be notified by OpenVidu Server Webhook service. Check out available events here: (OpenVidu CE: https://openvidu.io/docs/reference-docs/openvidu-server-cdr | OpenVidu Pro: https://openvidu.io/docs/openvidu-pro/reference-docs/openvidu-server-pro-cdr)"
-    Type: String
-    Default: "sessionCreated,sessionDestroyed,participantJoined,participantLeft,webrtcConnectionCreated,webrtcConnectionDestroyed,recordingStatusChanged,filterEventDispatched,mediaNodeStatusChanged"
-
-  OpenviduCDREnable:
-    Description: "Whether to enable OpenVidu Call Detail Record service or not"
-    Type: String
-    AllowedValues:
-      - false
-      - true
-    Default: false
-
-  # OpenVidu Pro configuration
-
-  MediaNodesStartNumber:
-    Description: "How many Media Nodes do you want on startup"
-    Type: Number
-    Default: 1
-
-  OpenviduClusterLoadStrategy:
-    Description: "What strategy should be used to distribute the creation of new sessions (and therefore distribution of load) among all available Media Nodes. Can be: [streams, sessions, mediaObjects]"
-    Type: String
-    Default: streams
-    AllowedValues:
-      - streams
-      - sessions
-      - mediaObjects
 
   # Kibana configuration
 
@@ -167,7 +85,7 @@ Parameters:
     Description: "Subnet for OpenVidu cluster"
     Type: AWS::EC2::Subnet::Id
 
-  # Other configuration
+  # EC2 Instance configuration
 
   AwsInstanceTypeOV:
     Description: "Specifies the EC2 instance type for your OpenVidu Server Pro Node"
@@ -224,6 +142,16 @@ Parameters:
     Type: 'AWS::EC2::KeyPair::KeyName'
     ConstraintDescription: "must be the name of an existing EC2 KeyPair"
 
+  # Other configuration
+
+  WantToDeployDemos:
+    Description: "Choose if you want to deploy OpenVidu call application. If true, then parameter openvidu.secret must be MY_SECRET for the demos to work out-of-the-box"
+    Type: String
+    AllowedValues:
+      - true
+      - false
+    Default: true
+
 Mappings:
   OVAMIMAP:
     eu-west-1:
@@ -237,10 +165,6 @@ Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
       - Label:
-          default: OpenVidu Pro License
-        Parameters:
-          - OpenViduLicense
-      - Label:
           default: SSL certificate configuration
         Parameters:
           - WhichCert
@@ -250,26 +174,11 @@ Metadata:
           - OwnCertCRT
           - OwnCertKEY
       - Label:
-          default: OpenVidu CE configuration (https://openvidu.io/docs/reference-docs/openvidu-server-params)
+          default: OpenVidu configuration
         Parameters:
-          - OpenViduSecret
-          - FreeHTTPAccesToRecordingVideos
-          - OpenviduRecordingNotification
-          - OpenViduRecordingTimeOut
-          - OpenviduStreamsVideoMaxRecvBandwidth
-          - OpenviduStreamsVideoMinRecvBandwidth
-          - OpenviduStreamsVideoMaxSendBandwidth
-          - OpenviduStreamsVideoMinSendBandwidth
-          - OpenViduWebhook
-          - OpenViduWebhookEndpoint
-          - OpenViduWebhookHeaders
-          - OpenViduWebhookEvents
-          - OpenviduCDREnable
-      - Label:
-          default: OpenVidu Pro configuration (https://openvidu.io/docs/openvidu-pro/reference-docs/openvidu-server-pro-params)
-        Parameters:
+          - OpenViduLicense
           - MediaNodesStartNumber
-          - OpenviduClusterLoadStrategy
+          - OpenViduSecret
       - Label:
           default: Kibana configuration
         Parameters:
@@ -281,16 +190,17 @@ Metadata:
           - OpenViduVPC
           - OpenViduSubnet
       - Label:
+            default: EC2 Instance configuration
+        Parameters:
+            - AwsInstanceTypeOV
+            - AwsInstanceTypeKMS
+            - KeyName
+      - Label:
           default: Other configuration
         Parameters:
-          - AwsInstanceTypeOV
-          - AwsInstanceTypeKMS
-          - KeyName
+          - WantToDeployDemos
 
     ParameterLabels:
-      # OpenVidu Pro License
-      OpenViduLicense:
-        default: "Your OpenVidu Pro License key"
       # SSL certificate configuration
       WhichCert:
         default: "Choose the certificate"
@@ -304,38 +214,13 @@ Metadata:
         default: "URL to the CRT file"
       OwnCertKEY:
         default: "URL to the key file"
-      # OpenVidu CE configuration
-      OpenViduSecret:
-        default: "openvidu.secret"
-      FreeHTTPAccesToRecordingVideos:
-        default: "openvidu.recording.public-access"
-      OpenviduRecordingNotification:
-        default: "openvidu.recording.notification"
-      OpenViduRecordingTimeOut:
-        default: "openvidu.recording.autostop-timeout"
-      OpenviduStreamsVideoMaxRecvBandwidth:
-        default: "openvidu.streams.video.max-recv-bandwidth"
-      OpenviduStreamsVideoMinRecvBandwidth:
-        default: "openvidu.streams.video.min-recv-bandwidth"
-      OpenviduStreamsVideoMaxSendBandwidth:
-        default: "openvidu.streams.video.max-send-bandwidth"
-      OpenviduStreamsVideoMinSendBandwidth:
-        default: "openvidu.streams.video.min-send-bandwidth"
-      OpenViduWebhook:
-        default: "openvidu.webhook"
-      OpenViduWebhookEndpoint:
-        default: "openvidu.webhook.endpoint"
-      OpenViduWebhookHeaders:
-        default: "openvidu.webhook.headers"
-      OpenViduWebhookEvents:
-        default: "openvidu.webhook.events"
-      OpenviduCDREnable:
-        default: "openvidu.cdr"
-      # OpenVidu Pro configuration
+      # OpenVidu configuration
+      OpenViduLicense:
+        default: "Your OpenVidu Pro License key"
       MediaNodesStartNumber:
         default: "openvidu.pro.cluster.media-nodes"
-      OpenviduClusterLoadStrategy:
-        default: "openvidu.pro.cluster.load-strategy"
+      OpenViduSecret:
+        default: "openvidu.secret"
       # Kibana configuration
       KibanaUser:
         default: "Kibana username"
@@ -346,13 +231,16 @@ Metadata:
         default: "OpenVidu VPC"
       OpenViduSubnet:
         default: "OpenVidu Subnet"
-      # Other configuration
+      # EC2 instance configuration
       AwsInstanceTypeOV:
         default: "Instance type for Openvidu Server Pro Node"
       AwsInstanceTypeKMS:
         default: "Instance type for Media Nodes"
+      # Other configuration
       KeyName:
         default: "Key name"
+      WantToDeployDemos:
+        default: "Deploy Demos"
 
 Conditions:
   NoSelfSigned:
@@ -415,102 +303,91 @@ Resources:
       AWS::CloudFormation::Init:
         config:
           files:
+            '/usr/local/bin/check_app_ready.sh':
+              content: |
+                #!/bin/bash 
+                sleep 1m
+
+                while true; do 
+                  HTTP_STATUS=$(curl -Ik http://localhost:5443/ | head -n1 | awk '{print $2}')
+                  if [ $HTTP_STATUS == 200 ]; then
+                    break
+                  fi
+                  sleep 1
+                done
+              mode: "000755"
+              owner: "root"
+              group: "root"
             "/usr/local/bin/feedGroupVars.sh":
               content: !Sub
               - |
                 #!/bin/bash -xe
 
-                cd /usr/src/openvidu
+                WORKINGDIR=/usr/src/openvidu
 
-                if [ "${WhichCert}" != "customcert" ]; then
-                  PIP=$(curl http://169.254.169.254/latest/meta-data/public-ipv4)
+                # Pro License
+                sed -i "s/OPENVIDU_PRO_LICENSE=/OPENVIDU_PRO_LICENSE=${OpenViduLicense}/" $WORKINGDIR/.env
+
+                # Replace secret
+                sed -i "s/OPENVIDU_SECRET=/OPENVIDU_SECRET=${OpenViduSecret}/" $WORKINGDIR/.env
+
+                # Replace domain name
+                if [[ "${WhichCert}" == "letsencrypt" || "${WhichCert}" == "owncert" ]]; then
+                  sed -i "s/OPENVIDU_DOMAIN_OR_PUBLIC_IP=/OPENVIDU_DOMAIN_OR_PUBLIC_IP=${MyDomainName}/" $WORKINGDIR/.env
+                else
                   PublicHostname=$(curl http://169.254.169.254/latest/meta-data/public-hostname)
+                  sed -i "s/OPENVIDU_DOMAIN_OR_PUBLIC_IP=/OPENVIDU_DOMAIN_OR_PUBLIC_IP=$PublicHostname/" $WORKINGDIR/.env
                 fi
-                AWS_AMI_ID=${kmsAmi}
 
-                cp group_vars/all.cf group_vars/all
+                # Openvidu Pro mode
+                sed -i "s/OPENVIDU_PRO_CLUSTER_MODE=manual/OPENVIDU_PRO_CLUSTER_MODE=auto/" $WORKINGDIR/.env
 
-                ################################
-                # OpenVidu Configuration       #
-                ################################
-                sed -i "s/OPENVIDU_INSTANCE_PUBLIC_IP/$PIP/" group_vars/all
-                sed -i "s/OPENVIDU_INSTANCE_PUBLIC_DOMAIN_NAME/$PublicHostname/" group_vars/all
-                sed -i "s/OPENVIDU_CDR/${OpenviduCDREnable}/" group_vars/all
-                sed -i "s/selfsigned/${WhichCert}/" group_vars/all
-                sed -i "s/DOMAIN_NAME/${MyDomainName}/" group_vars/all
-                sed -i "s/LETSENCRYPT_EMAIL/${LetsEncryptEmail}/" group_vars/all
-                sed -i "s/OPENVIDU_LICENSE/${OpenViduLicense}/" group_vars/all
-                sed -i "s/MY_SECRET/${OpenViduSecret}/" group_vars/all
-                sed -i "s/FREEHTTPACCESTORECORDINGVIDEOS/${FreeHTTPAccesToRecordingVideos}/" group_vars/all
-                sed -i "s/run_ec2: false/run_ec2: true/" group_vars/all
-                sed -i "s/KMS_RUN_CLUSTER/true/" group_vars/all
-                sed -i "s/OPENVIDURECORDINGTIMEOUT/${OpenViduRecordingTimeOut}/" group_vars/all
-                sed -i "s/OPENVIDURECORDINGNOTIFICATION/${OpenviduRecordingNotification}/" group_vars/all
-                sed -i "s/OPENVIDUSTREAMSVIDEOMAX-RECV-BANDWIDTH/${OpenviduStreamsVideoMaxRecvBandwidth}/" group_vars/all
-                sed -i "s/OPENVIDUSTREAMSVIDEOMIN-RECV-BANDWIDTH/${OpenviduStreamsVideoMinRecvBandwidth}/" group_vars/all
-                sed -i "s/OPENVIDUSTREAMSVIDEOMAX-SEND-BANDWIDTH/${OpenviduStreamsVideoMaxSendBandwidth}/" group_vars/all
-                sed -i "s/OPENVIDUSTREAMSVIDEOMIN-SEND-BANDWIDTH/${OpenviduStreamsVideoMinSendBandwidth}/" group_vars/all
-                sed -i "s/OPENVIDUCLUSTERLOADSTRATEGY/${OpenviduClusterLoadStrategy}/" group_vars/all
-                sed -i "s/KIBANA_USERNAME/${KibanaUser}/" group_vars/all
-                sed -i "s/KIBANA_PASSWORD/${KibanaPassword}/" group_vars/all
-                sed -i "s/AWS_DEFAULT_REGION/${AWS::Region}/" group_vars/all
-                sed -i "s/WEBHOOK_ENABLED/${OpenViduWebhook}/" group_vars/all
-                sed -i "s#WEBHOOK_ENDPOINT#${OpenViduWebhookEndpoint}#" group_vars/all
-                sed -i "s/WEBHOOK_HEADERS/${OpenViduWebhookHeaders}/" group_vars/all
-                sed -i "s/WEBHOOK_EVENTS/${OpenViduWebhookEvents}/" group_vars/all
-                sed -i "s/TURN_MIN_PORT/40000/" group_vars/all
-                sed -i "s/TURN_MAX_PORT/65535/" group_vars/all
-                sed -i "s/OPENVIDU_PRO_CLUSTER_ENVIRONMENT/aws/" group_vars/all
-                sed -i "s/MEDIA_NODES_START_NUMBER/${MediaNodesStartNumber}/" group_vars/all
+                # Openvidu Pro Media Nodes
+                sed -i "s/OPENVIDU_PRO_CLUSTER_MEDIA-NODES=/OPENVIDU_PRO_CLUSTER_MEDIA-NODES=${MediaNodesStartNumber}/" $WORKINGDIR/.env
 
-                ################################
-                # Launch kms on demand script  #
-                ################################
-                # Remove on_premise vars and rename template
-                rm roles/openvidu/vars/main.yml
-                mv roles/openvidu/vars/main.yml.cf roles/openvidu/vars/main.yml
+                # Openvidu Pro enviroment
+                sed -i "s/OPENVIDU_PRO_CLUSTER_ENVIRONMENT=on_premise/OPENVIDU_PRO_CLUSTER_ENVIRONMENT=aws/" $WORKINGDIR/.env
 
-                ################################
-                # Running in MarketPlace       #
-                ################################
-                sed -i "s/install_software: true/install_software: false/" roles/coturn/vars/main.yml
-                sed -i "s/install_software: true/install_software: false/" roles/elastic/vars/main.yml
-                sed -i "s/install_software: true/install_software: false/" roles/nginx/vars/main.yml
-                sed -i "s/install_software: true/install_software: false/" roles/openvidu/vars/main.yml
+                # Replace certificated type
+                sed -i "s/CERTIFICATE_TYPE=selfsigned/CERTIFICATE_TYPE=${WhichCert}/" $WORKINGDIR/.env
+                sed -i "s/LETSENCRYPT_EMAIL=user@example.com/LETSENCRYPT_EMAIL=${LetsEncryptEmail}/" $WORKINGDIR/.env  
 
-                # Replace vars
-                sed -i "s/STACK_ID/$(echo ${AWS::StackId} | sed 's#/#\\/#g')/" roles/openvidu/vars/main.yml
-                sed -i "s/STACK_NAME/${AWS::StackName}/" roles/openvidu/vars/main.yml
-                sed -i "s/STACK_REGION/${AWS::Region}/" roles/openvidu/vars/main.yml
-                sed -i "s/IMAGE_ID/$AWS_AMI_ID/" roles/openvidu/vars/main.yml
-                sed -i "s/INSTANCE_TYPE/${AwsInstanceTypeKMS}/" roles/openvidu/vars/main.yml
-                sed -i "s/KEY_NAME/${KeyName}/" roles/openvidu/vars/main.yml
-                sed -i "s/SUBNET_ID/${OpenViduSubnet}/" roles/openvidu/vars/main.yml
-                sed -i "s/OPENVIDU_SECRET/${OpenViduSecret}/" roles/openvidu/vars/main.yml
+                # Replace Kibana Conf
+                sed -i "s/KIBANA_USER=kibanaadmin/KIBANA_USER=${KibanaUser}/" $WORKINGDIR/.env
+                sed -i "s/KIBANA_PASSWORD=/KIBANA_PASSWORD=${KibanaPassword}/" $WORKINGDIR/.env
 
+                # Replace vars AWS
+                sed -i "s/#AWS_DEFAULT_REGION=/AWS_DEFAULT_REGION=${AWS::Region}/" $WORKINGDIR/.env
+                sed -i "s/#AWS_IMAGE_ID=/AWS_IMAGE_ID=${kmsAmi}/" $WORKINGDIR/.env
+                sed -i "s/#AWS_INSTANCE_TYPE=/AWS_INSTANCE_TYPE=${AwsInstanceTypeKMS}/" $WORKINGDIR/.env
+                sed -i "s/#AWS_KEY_NAME=/AWS_KEY_NAME=${KeyName}/" $WORKINGDIR/.env
+                sed -i "s/#AWS_SUBNET_ID=/AWS_SUBNET_ID=${OpenViduSubnet}/" $WORKINGDIR/.env
+                sed -i "s/#AWS_STACK_ID=/AWS_STACK_ID=$(echo ${AWS::StackId} | sed 's#/#\\/#g')/" $WORKINGDIR/.env
+                sed -i "s/#AWS_STACK_NAME=/AWS_STACK_NAME=${AWS::StackName}/" $WORKINGDIR/.env
+
+                SECGRPID=$(docker run --rm amazon/aws-cli:2.0.7 ec2 describe-security-groups \
+                               --output text \
+                               --filters "Name=tag:aws:cloudformation:logical-id,Values=KMSSecurityGroup" \
+                                         "Name=tag:aws:cloudformation:stack-id,Values=${AWS::StackId}" \
+                               --query 'SecurityGroups[].GroupId[]'
+                )
+                sed -i "s/#AWS_SECURITY_GROUP=/AWS_SECURITY_GROUP=$SECGRPID/" $WORKINGDIR/.env
+
+                # Without Demos
+                if [ "${WantToDeployDemos}" == "false" ]; then
+                  sed -i "s/WITH_DEMOS=true/WITH_DEMOS=false/" $WORKINGDIR/docker-compose.yml
+                  rm $WORKINGDIR/docker-compose.override.yml
+                fi
               - kmsAmi: !FindInMap [KMSAMIMAP, !Ref 'AWS::Region', AMI]
               mode: "000755"
               owner: "root"
               group: "root"
             "/usr/local/bin/buildCerts.sh":
               content: !Sub |
-                #!/bin/bash
-                cd /usr/src/openvidu
-                wget -O nginx.crt ${OwnCertCRT}
-                wget -O nginx.key ${OwnCertKEY}
-              mode: "000755"
-              owner: "root"
-              group: "root"
-            "/usr/local/bin/checkInternetConnection.sh":
-              content: !Sub |
-                #!/bin/bash
-                cd /usr/src/openvidu
-
-                # Check Internet connection
-                ping -q -w 1 -c 1 8.8.8.8 > /dev/null && no_internet=false || no_internet=true
-
-                # If there is no internet connection, Kibana will not import dashboards
-                sed -i "s/NO_INTERNET/$no_internet/" group_vars/all
+                #!/bin/bash -x
+                WORKINGDIR=/usr/src/openvidu
+                wget -O $WORKINGDIR/owncert/certificate.cert ${OwnCertCRT}
+                wget -O $WORKINGDIR/owncert/certificate.key ${OwnCertKEY}
               mode: "000755"
               owner: "root"
               group: "root"
@@ -540,24 +417,9 @@ Resources:
               /usr/local/bin/buildCerts.sh || { echo "[Openvidu] error with the certificate files"; exit 1; }
             fi
 
-            /usr/local/bin/checkInternetConnection.sh || { echo "[Openvidu] error checking internet connection"; exit 1; }
-
-            cd /usr/src/openvidu
-
-            cat>play.yaml<<EOF
-            - hosts: all
-              roles:
-                - nginx
-                - openvidu
-                - elastic
-                - system-shutdown
-                - coturn
-            EOF
-
-            ansible-playbook -i "localhost," -c local play.yaml
-
-            # Getting security group id for media server lauching script
-            /opt/openvidu/cluster/aws/openvidu_get_security_group_id.sh
+            pushd /usr/src/openvidu
+            docker-compose up -d
+            popd
 
             # Wait for the app
             /usr/local/bin/check_app_ready.sh

@@ -1,0 +1,37 @@
+#!/bin/bash
+
+usage() {
+    printf "Usage: \n\t media_node [command]"
+    printf "\n\nAvailable Commands:"
+    printf "\n\tstart\t\tStart media node service"
+    printf "\n\tstop\t\tStop media node service"
+    printf "\n\trestart\t\tRestart media node service"
+    printf "\n\tlogs\t\tShow media node logs"
+    printf "\n\thelp\t\tShow help for media node command"
+    printf "\n"
+}
+
+case $1 in
+
+  start)
+    docker-compose up -d
+    docker-compose logs -f kms
+    ;;
+
+  stop)
+    docker-compose down
+    ;;
+
+  restart)
+    docker-compose down
+    docker-compose up -d
+    docker-compose logs -f kms
+    ;;
+
+  logs)
+    docker-compose logs -f kms
+    ;;
+
+    usage
+    ;;
+esac

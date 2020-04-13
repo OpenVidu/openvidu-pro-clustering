@@ -5,8 +5,6 @@ set -e -o pipefail
 DEBUG=${DEBUG:-false}
 [ "$DEBUG" == "true" ] && set -x
 
-source /opt/openvidu/cluster/openvidu.rc 
-
 TMPFILE=$(mktemp -t openvidu-userdata-XXX --suffix .txt)
 OUTPUT=$(mktemp -t openvidu-launch-kms-XXX --suffix .json)
 ERROUTPUT=$(mktemp -t openvidu-launch-kms-XXX --suffix .err)
@@ -25,7 +23,7 @@ exit_on_error () {
 
     "UnauthorizedOperation")
       MSG_COD=$(cat ${ERROUTPUT} | awk -F: '{ print $3 }')
-      MSG_DEC=$(aws sts decode-authorization-message --encoded-message ${MSG_COD})
+      MSG_DEC=$(docker run --rm amazon/aws-cli:2.0.7 sts decode-authorization-message --encoded-message ${MSG_COD})
 
       echo -e "Unauthorized " $(cat ${MSG_DEC}) >&2
       exit 1
@@ -37,16 +35,16 @@ exit_on_error () {
   esac
 }
 
-aws ec2 run-instances \
-    --image-id ${IMAGE_ID} --count 1 \
-    --instance-type ${INSTANCE_TYPE} \
-    --key-name ${KEY_NAME} \
-    --subnet-id ${SUBNET_ID} \
-    --tag-specifications 'ResourceType=instance,Tags=[{Key="Name",Value="Kurento Media Server"},{Key="ov-cluster-member",Value="kms"}]' \
-    --iam-instance-profile Name="OpenViduInstanceProfile-${STACK_NAME}-${STACK_REGION}" \
-    --security-group-ids ${SECURITY_GROUP} > ${OUTPUT} 2> ${ERROUTPUT}
-
-aws ec2 wait instance-running --instance-ids $(cat ${OUTPUT} | jq --raw-output ' .Instances[] | .InstanceId')
+docker run --rm amazon/aws-cli:2.0.7 ec2 run-instances \
+    --image-id ${AWS_IMAGE_ID} --count 1 \
+    --instance-type ${AWS_INSTANCE_TYPE} \
+    --key-name ${AWS_KEY_NAME} \
+    --subnet-id ${AWS_SUBNET_ID} \
+    --tag-specifications "ResourceType=instance,Tags=[{Key='Name',Value='Kurento Media Server'},{Key='ov-cluster-member',Value='kms'},{Key='ov-stack-name',Value='${AWS_STACK_NAME}'},{Key='ov-stack-region',Value='${AWS_DEFAULT_REGION}'}]" \
+    --iam-instance-profile Name="OpenViduInstanceProfile-${AWS_STACK_NAME}-${AWS_DEFAULT_REGION}" \
+    --security-group-ids ${AWS_SECURITY_GROUP} > ${OUTPUT} 2> ${ERROUTPUT}
+    
+docker run --rm amazon/aws-cli:2.0.7 ec2 wait instance-running --instance-ids $(cat ${OUTPUT} | jq --raw-output ' .Instances[] | .InstanceId')
 
 # Generating the output
 KMS_IP=$(cat ${OUTPUT} | jq --raw-output ' .Instances[] | .NetworkInterfaces[0] | .PrivateIpAddress')
@@ -56,4 +54,3 @@ jq -n \
   --arg id "${KMS_ID}" \
   --arg ip "${KMS_IP}" \
   '{ id: $id, ip: $ip }'
-
