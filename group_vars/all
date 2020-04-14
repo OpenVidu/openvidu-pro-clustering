@@ -9,7 +9,7 @@ openvidu_license:
 # OpenVidu Server CE configuration parameters
 ###########################################
 
-# See https://openvidu.io/docs/reference-docs/openvidu-server-params
+# See https://docs.openvidu.io/en/stable/reference-docs/openvidu-server-params
 
 # Which OpenVidu version to use
 # Check out https://github.com/OpenVidu/openvidu/releases
@@ -108,7 +108,7 @@ openvidu_webhook_events:
 # OpenVidu Server Pro configuration parameters
 ###########################################
 
-# See https://openvidu.io/docs/openvidu-pro/reference-docs/openvidu-server-pro-params
+# See https://docs.openvidu.io/en/stable/openvidu-pro/reference-docs/openvidu-server-pro-params
 
 # Parameter "openvidu.pro.cluster"
 # Is running in cluster?

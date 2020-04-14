@@ -40,7 +40,7 @@ This is the kind of certificate you will be using in your deployment. Three diff
 
 #### OpenVidu Configuration
 
-These fields respectively configure the following [system properties](https://openvidu.io/docs/reference-docs/openvidu-server-params/) of OpenVidu Server: `openvidu.secret`, `openvidu.recording.public-access`, `openvidu.recording.notification`, `openvidu.streams.video.max-recv-bandwidth`, `openvidu.streams.video.min-recv-bandwidth`, `openvidu.streams.video.max-send-bandwidth`, `openvidu.streams.video.min-send-bandwidth`
+These fields respectively configure the following [system properties](https://docs.openvidu.io/en/stable/reference-docs/openvidu-server-params/) of OpenVidu Server: `openvidu.secret`, `openvidu.recording.public-access`, `openvidu.recording.notification`, `openvidu.streams.video.max-recv-bandwidth`, `openvidu.streams.video.min-recv-bandwidth`, `openvidu.streams.video.max-send-bandwidth`, `openvidu.streams.video.min-send-bandwidth`
 
 
 #### Openvidu Security Group
@@ -65,7 +65,7 @@ These fields allow you to limit the IPs that will be able to connect to OpenVidu
 
 #### Other configuration
 
-Choose the size of your instance (see [OpenVidu performance FAQ](https://openvidu.io/docs/troubleshooting/#9-which-is-the-current-status-of-openvidu-on-scalability-and-fault-tolerance)) and a Key Pair ([create one if you don't have any](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#having-ec2-create-your-key-pair)).
+Choose the size of your instance (see [OpenVidu performance FAQ](https://docs.openvidu.io/en/stable/troubleshooting/#9-which-is-the-current-status-of-openvidu-on-scalability-and-fault-tolerance)) and a Key Pair ([create one if you don't have any](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#having-ec2-create-your-key-pair)).
 
 You are ready to go. Click on **Next** 🡆 **Next** 🡆 **Create stack** to finally deploy your OpenVidu Server Pro.
 
@@ -73,12 +73,12 @@ You are ready to go. Click on **Next** 🡆 **Next** 🡆 **Create stack** to fi
 
 Now you just have to wait until Stack status is set to `CREATE_COMPLETE`. Then you will have a production-ready setup with all the advanced features provided by OpenVidu Pro.
 
-> If status reaches `CREATE_FAILED`, check out [this FAQ](https://openvidu.io/docs/troubleshooting/#13-deploying-openvidu-in-aws-is-failing).
+> If status reaches `CREATE_FAILED`, check out [this FAQ](https://docs.openvidu.io/en/stable/troubleshooting/#13-deploying-openvidu-in-aws-is-failing).
 
 To connect to **OpenVidu Inspector** and the **Kibana dashboard**, simply access `Outputs` tab. There you will have both URLs to access both services.
 
 
-To consume [OpenVidu REST API](https://openvidu.io/docs/reference-docs/REST-API/), use URL `https://OPENVIDUPRO_PUBLIC_IP:4443`. For example, in the image above that would be `https://ec2-34-246-186-94.eu-west-1.compute.amazonaws.com:4443`
+To consume [OpenVidu REST API](https://docs.openvidu.io/en/stable/reference-docs/REST-API/), use URL `https://OPENVIDUPRO_PUBLIC_IP:4443`. For example, in the image above that would be `https://ec2-34-246-186-94.eu-west-1.compute.amazonaws.com:4443`
 
->Regarding the compatibility of **openvidu-browser** and **server SDKs** (REST API, openvidu-java-client, openvidu-node-client), use the same version numbers as stated for openvidu-server in [Releases page](https://openvidu.io/docs/releases/). For example, for OpenVidu Pro 2.9.0, use the artifact versions indicated in [2.9.0 release table](https://openvidu.io/docs/releases#290)
+>Regarding the compatibility of **openvidu-browser** and **server SDKs** (REST API, openvidu-java-client, openvidu-node-client), use the same version numbers as stated for openvidu-server in [Releases page](https://docs.openvidu.io/en/stable/releases/). For example, for OpenVidu Pro 2.9.0, use the artifact versions indicated in [2.9.0 release table](https://docs.openvidu.io/en/stable/releases#290)
 
