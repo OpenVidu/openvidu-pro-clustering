@@ -171,7 +171,7 @@ Keep going with the rest of the instances.
 
 ## Running Ansible
 
-Now, you can refer to this [documentation](https://openvidu.io/docs/openvidu-pro/deploying-openvidu-pro/#deploying-openvidu-pro-on-premise) to deploy the software in the infrastructure.
+Now, you can refer to this [documentation](https://docs.openvidu.io/en/stable/openvidu-pro/deploying-openvidu-pro/#deploying-openvidu-pro-on-premise) to deploy the software in the infrastructure.
 
 In the `inventory.yml` file replace the values by the floating IPs.
 

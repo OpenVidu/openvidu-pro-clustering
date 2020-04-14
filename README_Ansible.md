@@ -91,7 +91,7 @@ Uncomment the lines if you're using more than one Media Server
 
 In `group_vars/all` file you will find all the parameters we use to configure the infrastructure. Read all of then carefully as they don't have a default value.
 
-For futher information check out https://openvidu.io/docs/reference-docs/openvidu-server-params/
+For futher information check out https://docs.openvidu.io/en/stable/reference-docs/openvidu-server-params/
 
 ## Deployment
 
