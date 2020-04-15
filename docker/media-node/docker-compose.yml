@@ -2,7 +2,7 @@ version: '3.1'
 
 services:
     kms:
-        image: kurento/kurento-media-server-dev:6.13.1
+        image: ${KMS_IMAGE:-kurento/kurento-media-server-dev:6.13.1}
         restart: always
         network_mode: host
         env_file:
