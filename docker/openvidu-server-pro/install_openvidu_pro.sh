@@ -39,6 +39,8 @@ curl https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVI
      --output ${DOCKER_COMPOSE_FOLDER}/docker-compose.yml
 curl https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/openvidu \
     --output ${DOCKER_COMPOSE_FOLDER}/openvidu
+curl https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/readme.md \
+    --output ${DOCKER_COMPOSE_FOLDER}/readme.md
 
 # Add execution permissions
 chmod +x ${AWS_SCRIPTS}/openvidu_autodiscover.sh

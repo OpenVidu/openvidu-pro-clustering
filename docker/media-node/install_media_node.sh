@@ -35,13 +35,24 @@ curl https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_
      --output ${DOCKER_COMPOSE_FOLDER}/docker-compose.yml
 curl https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}/docker/media-node/media_node \
      --output ${DOCKER_COMPOSE_FOLDER}/media_node
+curl https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}/docker/media-node/readme.md \
+     --output ${DOCKER_COMPOSE_FOLDER}/readme.md
 
 # Add execution permissions
 chmod +x ${DOCKER_COMPOSE_FOLDER}/media_node
 
+
 # Ready to use
-printf "\n========================================"
-printf "\nMedia Node has successfully installed."
-printf '\nNow run "./media_node.sh start" in folder "media_node" for setup.'
-printf '\nRun "./media_node.sh help" in folder for more information about "media_node" command.'
+printf "\n"
+printf "\n   Media Node successfully installed."
+printf "\n"
+printf '\n   1. Go to kms folder:'
+printf '\n   $ cd kms'
+printf "\n"
+printf '\n   2. Start KMS'
+printf '\n   $ ./media_node start'
+printf '\n'
+printf '\n   For more information, check readme.md'
+printf '\n'
+printf '\n'
 exit 0
