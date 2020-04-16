@@ -316,7 +316,7 @@ Resources:
               mode: "000755"
               owner: "root"
               group: "root"
-            "/usr/local/bin/feedGroupVars.sh":
+            '/usr/local/bin/feedGroupVars.sh':
               content: !Sub
               - |
                 #!/bin/bash -xe
@@ -343,7 +343,7 @@ Resources:
                 sed -i "s/OPENVIDU_PRO_CLUSTER_MODE=manual/OPENVIDU_PRO_CLUSTER_MODE=auto/" $WORKINGDIR/.env
 
                 # Openvidu Pro Media Nodes
-                sed -i "s/OPENVIDU_PRO_CLUSTER_MEDIA-NODES=/OPENVIDU_PRO_CLUSTER_MEDIA-NODES=${MediaNodesStartNumber}/" $WORKINGDIR/.env
+                sed -i "s/#OPENVIDU_PRO_CLUSTER_MEDIA_NODES=/OPENVIDU_PRO_CLUSTER_MEDIA_NODES=${MediaNodesStartNumber}/" $WORKINGDIR/.env
 
                 # Openvidu Pro enviroment
                 sed -i "s/OPENVIDU_PRO_CLUSTER_ENVIRONMENT=on_premise/OPENVIDU_PRO_CLUSTER_ENVIRONMENT=aws/" $WORKINGDIR/.env
@@ -382,7 +382,7 @@ Resources:
               mode: "000755"
               owner: "root"
               group: "root"
-            "/usr/local/bin/buildCerts.sh":
+            '/usr/local/bin/buildCerts.sh':
               content: !Sub |
                 #!/bin/bash -x
                 WORKINGDIR=/opt/openvidu
@@ -391,7 +391,7 @@ Resources:
               mode: "000755"
               owner: "root"
               group: "root"
-            "/usr/local/bin/checkAmazonURL.sh":
+            '/usr/local/bin/checkAmazonURL.sh':
               content: !Sub |
                 #!/bin/bash -x
                 WORKINGDIR=/opt/openvidu

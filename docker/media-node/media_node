@@ -32,6 +32,7 @@ case $1 in
     docker-compose logs -f kms
     ;;
 
+  *)
     usage
     ;;
 esac

@@ -1,3 +1,13 @@
+# ------------------------------------------------------------------------------
+#
+#    DO NOT MODIFY THIS FILE !!!
+#
+#    Configuration properties should be specified in .env file
+#
+#    This docker-compose file coordinates all services of OpenVidu CE Platform.
+#
+# ------------------------------------------------------------------------------
+
 version: '3.1'
 
 services:
@@ -5,13 +15,15 @@ services:
         image: ${KMS_IMAGE:-kurento/kurento-media-server-dev:6.13.1}
         restart: always
         network_mode: host
-        env_file:
-            - .env
         ulimits:
             core: -1
         volumes:
             - /opt/openvidu/recordings:/opt/openvidu/recordings
             - /core:/core
+        environment:
+            - KMS_MIN_PORT=40000
+            - KMS_MAX_PORT=57000
+            - GST_DEBUG=${KMS_DEBUG_LEVEL:-}
 
     nginx:
         image: openvidu/openvidu-proxy:1.0.0-beta3

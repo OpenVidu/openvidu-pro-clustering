@@ -24,7 +24,8 @@ services:
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - ${OPENVIDU_RECORDING_PATH}:${OPENVIDU_RECORDING_PATH}
-            - /opt/openvidu/custom-layout:/opt/openvidu/custom-layout
+            - ${OPENVIDU_RECORDING_CUSTOM_LAYOUT}:${OPENVIDU_RECORDING_CUSTOM_LAYOUT}
+            - ${OPENVIDU_CDR_PATH}:${OPENVIDU_CDR_PATH}
             - ./aws:/opt/openvidu/cluster/aws
             - .env:${PWD}/.env
         env_file:
@@ -33,6 +34,7 @@ services:
             - SERVER_SSL_ENABLED=false
             - SERVER_PORT=5443
             - OPENVIDU_RECORDING=true
+            - OPENVIDU_RECORDING_COMPOSED_URL=https://${OPENVIDU_DOMAIN_OR_PUBLIC_IP}/inspector
             - KMS_URIS=["ws://localhost:8888/kurento"]
             - COTURN_IP=${OPENVIDU_DOMAIN_OR_PUBLIC_IP}
             - COTURN_REDIS_IP=127.0.0.1
@@ -77,6 +79,7 @@ services:
 
     elasticsearch:
         image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
+        restart: on-failure
         environment:
             - discovery.type=single-node
         ports:
@@ -84,6 +87,7 @@ services:
 
     kibana:
         image: docker.elastic.co/kibana/kibana:7.6.2
+        restart: on-failure
         environment:
             - SERVER_BASEPATH="/kibana"
         ports:
