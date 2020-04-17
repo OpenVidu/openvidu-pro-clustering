@@ -24,22 +24,22 @@ mkdir ${DOCKER_COMPOSE_FOLDER}
 mkdir ${AWS_SCRIPTS}
 
 # Download necessaries files
-curl https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/aws/openvidu_autodiscover.sh \
+curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/aws/openvidu_autodiscover.sh \
      --output ${AWS_SCRIPTS}/openvidu_autodiscover.sh
-curl https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/aws/openvidu_drop.sh \
+curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/aws/openvidu_drop.sh \
      --output ${AWS_SCRIPTS}/openvidu_drop.sh
-curl https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/aws/openvidu_launch_kms.sh \
+curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/aws/openvidu_launch_kms.sh \
      --output ${AWS_SCRIPTS}/openvidu_launch_kms.sh
 
-curl https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/.env \
+curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/.env \
      --output ${DOCKER_COMPOSE_FOLDER}/.env
-curl https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/docker-compose.override.yml \
+curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/docker-compose.override.yml \
      --output ${DOCKER_COMPOSE_FOLDER}/docker-compose.override.yml
-curl https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/docker-compose.yml \
+curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/docker-compose.yml \
      --output ${DOCKER_COMPOSE_FOLDER}/docker-compose.yml
-curl https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/openvidu \
+curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/openvidu \
     --output ${DOCKER_COMPOSE_FOLDER}/openvidu
-curl https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/readme.md \
+curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/readme.md \
     --output ${DOCKER_COMPOSE_FOLDER}/readme.md
 
 # Add execution permissions
