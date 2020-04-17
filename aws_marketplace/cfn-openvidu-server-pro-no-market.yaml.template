@@ -145,7 +145,7 @@ Parameters:
   # Other configuration
 
   WantToDeployDemos:
-    Description: "Choose if you want to deploy OpenVidu call application. If true, then parameter openvidu.secret must be MY_SECRET for the demos to work out-of-the-box"
+    Description: "Choose if you want to deploy OpenVidu call application. If true, then parameter OPENVIDU_SECRET must be MY_SECRET for the demos to work out-of-the-box"
     Type: String
     AllowedValues:
       - true
@@ -218,9 +218,9 @@ Metadata:
       OpenViduLicense:
         default: "Your OpenVidu Pro License key"
       MediaNodesStartNumber:
-        default: "openvidu.pro.cluster.media-nodes"
+        default: "OPENVIDU_PRO_CLUSTER_MEDIA_NODES"
       OpenViduSecret:
-        default: "openvidu.secret"
+        default: "OPENVIDU_SECRET"
       # Kibana configuration
       KibanaUser:
         default: "Kibana username"
