@@ -18,9 +18,10 @@ version: '3.1'
 services:
 
     openvidu-server:
-        image: openvidu/openvidu-server-pro:2.13.0-beta3
+        image: openvidu/openvidu-server-pro:2.13.0-beta4
         restart: on-failure
         network_mode: host
+        entrypoint: ['/bin/bash', '-c', 'export COTURN_IP=`curl --silent ifconfig.co`; /usr/local/bin/entrypoint.sh']
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - ${OPENVIDU_RECORDING_PATH}:${OPENVIDU_RECORDING_PATH}
@@ -36,7 +37,6 @@ services:
             - OPENVIDU_RECORDING=true
             - OPENVIDU_RECORDING_COMPOSED_URL=https://${OPENVIDU_DOMAIN_OR_PUBLIC_IP}/inspector
             - KMS_URIS=[]
-            - COTURN_IP=${OPENVIDU_DOMAIN_OR_PUBLIC_IP}
             - COTURN_REDIS_IP=127.0.0.1
             - OPENVIDU_PRO_CLUSTER=true
             - OPENVIDU_PRO_KIBANA_HOST=http://127.0.0.1/kibana
@@ -62,7 +62,7 @@ services:
             - MAX_PORT=65535
 
     nginx:
-        image: openvidu/openvidu-proxy:1.0.0-beta3
+        image: openvidu/openvidu-proxy:1.0.0-beta5
         restart: on-failure
         network_mode: host
         entrypoint: ["/bin/bash", "-c", "htpasswd -bc /etc/nginx/kibana.htpasswd ${KIBANA_USER} ${KIBANA_PASSWORD} && /usr/local/bin/entrypoint.sh"]
