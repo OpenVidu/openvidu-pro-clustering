@@ -29,11 +29,11 @@ mkdir -p ${ELASTICSEARCH_FOLDER}
 chown 1000:1000 ${ELASTICSEARCH_FOLDER}
 
 # Download necessaries files
-curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/aws/openvidu_autodiscover.sh \
+curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/cluster/aws/openvidu_autodiscover.sh \
      --output ${AWS_SCRIPTS_FOLDER}/openvidu_autodiscover.sh
-curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/aws/openvidu_drop.sh \
+curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/cluster/aws/openvidu_drop.sh \
      --output ${AWS_SCRIPTS_FOLDER}/openvidu_drop.sh
-curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/aws/openvidu_launch_kms.sh \
+curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/cluster/aws/openvidu_launch_kms.sh \
      --output ${AWS_SCRIPTS_FOLDER}/openvidu_launch_kms.sh
 
 curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/.env \
