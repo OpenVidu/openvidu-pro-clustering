@@ -2,7 +2,8 @@
 
 OPENVIDU_VERSION=master
 DOCKER_COMPOSE_FOLDER=openvidu
-AWS_SCRIPTS=${DOCKER_COMPOSE_FOLDER}/aws
+AWS_SCRIPTS_FOLDER=${DOCKER_COMPOSE_FOLDER}/cluster/aws
+ELASTICSEARCH_FOLDER=${DOCKER_COMPOSE_FOLDER}/elasticsearch
 
 # Check docker and docker-compose installation
 docker -v > /dev/null 2>&1
@@ -21,15 +22,19 @@ fi
 mkdir ${DOCKER_COMPOSE_FOLDER}
 
 # Create aws scripts folder
-mkdir ${AWS_SCRIPTS}
+mkdir -p ${AWS_SCRIPTS_FOLDER}
+
+# Create elasticsearch folder
+mkdir -p ${ELASTICSEARCH_FOLDER}
+chown 1000:1000 ${ELASTICSEARCH_FOLDER}
 
 # Download necessaries files
 curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/aws/openvidu_autodiscover.sh \
-     --output ${AWS_SCRIPTS}/openvidu_autodiscover.sh
+     --output ${AWS_SCRIPTS_FOLDER}/openvidu_autodiscover.sh
 curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/aws/openvidu_drop.sh \
-     --output ${AWS_SCRIPTS}/openvidu_drop.sh
+     --output ${AWS_SCRIPTS_FOLDER}/openvidu_drop.sh
 curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/aws/openvidu_launch_kms.sh \
-     --output ${AWS_SCRIPTS}/openvidu_launch_kms.sh
+     --output ${AWS_SCRIPTS_FOLDER}/openvidu_launch_kms.sh
 
 curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/.env \
      --output ${DOCKER_COMPOSE_FOLDER}/.env
@@ -43,9 +48,9 @@ curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering
     --output ${DOCKER_COMPOSE_FOLDER}/readme.md
 
 # Add execution permissions
-chmod +x ${AWS_SCRIPTS}/openvidu_autodiscover.sh
-chmod +x ${AWS_SCRIPTS}/openvidu_drop.sh
-chmod +x ${AWS_SCRIPTS}/openvidu_launch_kms.sh
+chmod +x ${AWS_SCRIPTS_FOLDER}/openvidu_autodiscover.sh
+chmod +x ${AWS_SCRIPTS_FOLDER}/openvidu_drop.sh
+chmod +x ${AWS_SCRIPTS_FOLDER}/openvidu_launch_kms.sh
 chmod +x ${DOCKER_COMPOSE_FOLDER}/openvidu
 
 # Create own certificated folder
@@ -64,6 +69,7 @@ printf "\n"
 printf '\n   3. Start OpenVidu'
 printf '\n   $ ./openvidu start'
 printf '\n'
+printf "\n   CAUTION: The folder 'openvidu/elasticsearch' use user and group 1000 permissions. This folder is necessary for store elasticsearch data."
 printf '\n   For more information, check readme.md'
 printf '\n'
 printf '\n'

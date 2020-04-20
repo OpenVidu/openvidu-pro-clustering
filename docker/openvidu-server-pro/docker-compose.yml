@@ -27,7 +27,7 @@ services:
             - ${OPENVIDU_RECORDING_PATH}:${OPENVIDU_RECORDING_PATH}
             - ${OPENVIDU_RECORDING_CUSTOM_LAYOUT}:${OPENVIDU_RECORDING_CUSTOM_LAYOUT}
             - ${OPENVIDU_CDR_PATH}:${OPENVIDU_CDR_PATH}
-            - ./aws:/opt/openvidu/cluster/aws
+            - ./cluster:/opt/openvidu/cluster
             - .env:${PWD}/.env
         env_file:
             - .env
@@ -68,7 +68,7 @@ services:
         volumes:
             - ./certificates:/etc/letsencrypt
             - ./owncert:/owncert
-            - /opt/openvidu/custom-layout:/opt/openvidu/custom-layout
+            - ${OPENVIDU_RECORDING_CUSTOM_LAYOUT}:/opt/openvidu/custom-layout
         environment:
             - DOMAIN_OR_PUBLIC_IP=${OPENVIDU_DOMAIN_OR_PUBLIC_IP}
             - CERTIFICATE_TYPE=${CERTIFICATE_TYPE}
@@ -83,6 +83,8 @@ services:
             - discovery.type=single-node
         ports:
             - 9200:9200
+        volumes:
+            - ./elasticsearch:/usr/share/elasticsearch/data
 
     kibana:
         image: docker.elastic.co/kibana/kibana:7.6.2
