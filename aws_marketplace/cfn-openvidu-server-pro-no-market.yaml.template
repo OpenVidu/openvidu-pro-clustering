@@ -405,6 +405,19 @@ Resources:
               mode: "000755"
               owner: "root"
               group: "root"
+            '/usr/local/bin/restartCE.sh':
+              content: !Sub |
+                #!/bin/bash -x
+                # Get new amazon URL
+                /usr/local/bin/checkAmazonURL.sh
+
+                # Restart all services
+                pushd /opt/openvidu
+                docker-compose up -d
+                popd
+              mode: "000755"
+              owner: "root"
+              group: "root"
     Properties:
       ImageId: !FindInMap [OVAMIMAP, !Ref 'AWS::Region', AMI]
       InstanceType: !Ref AwsInstanceTypeOV
@@ -429,9 +442,8 @@ Resources:
             /usr/local/bin/feedGroupVars.sh || { echo "[Openvidu] Parameters incorrect/insufficient"; exit 1; }
 
             # Launch on reboot
-            crontab -l | { cat; echo '@reboot /usr/local/bin/checkAmazonURL.sh'; } | crontab -
-            crontab -l | { cat; echo '@reboot /bin/bash -c "cd /opt/openvidu && docker-compose up -d"'; } | crontab -
-
+            echo "@reboot /usr/local/bin/restartCE.sh" | crontab
+            
             # Download certs if "WichCert" mode
             if [ "${WhichCert}" == "owncert" ]; then
               /usr/local/bin/buildCerts.sh || { echo "[Openvidu] error with the certificate files"; exit 1; }
