@@ -409,7 +409,7 @@ Resources:
               mode: "000755"
               owner: "root"
               group: "root"
-            '/usr/local/bin/restartCE.sh':
+            '/usr/local/bin/restartPRO.sh':
               content: !Sub |
                 #!/bin/bash -x
                 # Get new amazon URL
@@ -446,7 +446,7 @@ Resources:
             /usr/local/bin/feedGroupVars.sh || { echo "[Openvidu] Parameters incorrect/insufficient"; exit 1; }
 
             # Launch on reboot
-            echo "@reboot /usr/local/bin/restartCE.sh" | crontab
+            echo "@reboot /usr/local/bin/restartPRO.sh" | crontab
             
             # Download certs if "WichCert" mode
             if [ "${WhichCert}" == "owncert" ]; then
