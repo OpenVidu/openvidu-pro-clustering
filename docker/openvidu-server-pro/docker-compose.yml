@@ -18,7 +18,7 @@ version: '3.1'
 services:
 
     openvidu-server:
-        image: openvidu/openvidu-server-pro:2.13.0-beta5
+        image: openvidu/openvidu-server-pro:2.13.0-beta6
         restart: on-failure
         network_mode: host
         entrypoint: ['/bin/bash', '-c', 'export COTURN_IP=`curl --silent ifconfig.co`; /usr/local/bin/entrypoint.sh']
@@ -34,7 +34,6 @@ services:
         environment:
             - SERVER_SSL_ENABLED=false
             - SERVER_PORT=5443
-            - OPENVIDU_RECORDING=true
             - KMS_URIS=[]
             - COTURN_REDIS_IP=127.0.0.1
             - OPENVIDU_PRO_CLUSTER=true
