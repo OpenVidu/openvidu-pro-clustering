@@ -260,7 +260,7 @@ Parameters:
     Default: 0
 
   OpenViduWebhook:
-    Description: "true to enable OpenVidu Server Webhook service. false otherwise."
+    Description: "true to enable OpenVidu Webhook service. false otherwise."
     Type: String
     Default: false
     AllowedValues:
@@ -273,12 +273,12 @@ Parameters:
     Default: http://my.endpoint.com
 
   OpenViduWebhookHeaders:
-    Description: "List of headers that OpenVidu Server Webhook service will attach to HTTP POST messages. JUST one header at the moment"
+    Description: "List of headers that OpenVidu Webhook service will attach to HTTP POST messages. JUST one header at the moment"
     Type: String
 
   OpenViduWebhookEvents:
     Description: >-
-      Comma separate list of events that will be sent by OpenVidu Server Webhook service. Check out all the events
+      Comma separate list of events that will be sent by OpenVidu Webhook service. Check out all the events
        here: https://docs.openvidu.io/en/stable/reference-docs/openvidu-server-cdr/
     Type: String
     Default: "sessionCreated,sessionDestroyed,participantJoined,participantLeft,webrtcConnectionCreated,webrtcConnectionDestroyed,recordingStatusChanged"

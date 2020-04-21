@@ -84,7 +84,7 @@ openvidu_streams_video_max_send_bandwidth: 0
 openvidu_streams_video_min_send_bandwidth: 0
 
 # Parameter "openvidu.webhook"
-# true to enable OpenVidu Server Webhook service. false' otherwise
+# true to enable OpenVidu Webhook service. false' otherwise
 # Values: true | false
 openvidu_webhook: false
 
@@ -94,13 +94,13 @@ openvidu_webhook: false
 openvidu_webhook_endpoint: http(s)://ENDPOINT
 
 # Parameter "openvidu.webhook.headers"
-# List of headers that OpenVidu Server Webhook service will attach to HTTP POST messages
+# List of headers that OpenVidu Webhook service will attach to HTTP POST messages
 # Example:
 # openvidu_webhook_headers: "Authorization: Basic T1BFTlZJRFVBUFA6TVlfU0VDUkVU"
 openvidu_webhook_headers:
 
 # Parameter "openvidu.webhook.events"
-# List of events that will be sent by OpenVidu Server Webhook service
+# List of events that will be sent by OpenVidu Webhook service
 # openvidu_webhook_events: "sessionCreated,sessionDestroyed,participantJoined,participantLeft,webrtcConnectionCreated,webrtcConnectionDestroyed,recordingStatusChanged,filterEventDispatched,mediaNodeStatusChanged"
 openvidu_webhook_events:
 
