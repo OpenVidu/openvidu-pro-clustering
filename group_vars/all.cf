@@ -101,7 +101,7 @@ openvidu_webhook_events: WEBHOOK_EVENTS
 # OpenVidu PRO specific configuration
 ######################################
 
-# See https://docs.openvidu.io/en/stable/reference-docs/openvidu-server-params#extra-configuration-parameters-for-openvidu-server-pro
+# See https://docs.openvidu.io/en/stable/reference-docs/openvidu-config#extra-configuration-parameters-for-openvidu-server-pro
 
 # Parameter "openvidu.pro.cluster"
 # Is running in cluster?

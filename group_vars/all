@@ -9,7 +9,7 @@ openvidu_license:
 # OpenVidu Server CE configuration parameters
 ###########################################
 
-# See https://docs.openvidu.io/en/stable/reference-docs/openvidu-server-params
+# See https://docs.openvidu.io/en/stable/reference-docs/openvidu-config
 
 # Which OpenVidu version to use
 # Check out https://github.com/OpenVidu/openvidu/releases

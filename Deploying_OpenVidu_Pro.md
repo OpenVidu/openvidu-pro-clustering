@@ -40,7 +40,7 @@ This is the kind of certificate you will be using in your deployment. Three diff
 
 #### OpenVidu Configuration
 
-These fields respectively configure the following [system properties](https://docs.openvidu.io/en/stable/reference-docs/openvidu-server-params/) of OpenVidu Server: `OPENVIDU_SECRET`, `OPENVIDU_RECORDING_PUBLIC_ACCESS`, `OPENVIDU_RECORDING_NOTIFICATION`, `OPENVIDU_STREAMS_VIDEO_MAX_RECV_BANDWIDTH`, `OPENVIDU_STREAMS_VIDEO_MIN_RECV_BANDWIDTH`, `OPENVIDU_STREAMS_VIDEO_MAX_SEND_BANDWIDTH`, `OPENVIDU_STREAMS_VIDEO_MIN_SEND_BANDWIDTH`
+These fields respectively configure the following [system properties](https://docs.openvidu.io/en/stable/reference-docs/openvidu-config/) of OpenVidu Server: `OPENVIDU_SECRET`, `OPENVIDU_RECORDING_PUBLIC_ACCESS`, `OPENVIDU_RECORDING_NOTIFICATION`, `OPENVIDU_STREAMS_VIDEO_MAX_RECV_BANDWIDTH`, `OPENVIDU_STREAMS_VIDEO_MIN_RECV_BANDWIDTH`, `OPENVIDU_STREAMS_VIDEO_MAX_SEND_BANDWIDTH`, `OPENVIDU_STREAMS_VIDEO_MIN_SEND_BANDWIDTH`
 
 
 #### Openvidu Security Group
