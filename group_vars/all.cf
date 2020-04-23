@@ -77,7 +77,7 @@ openvidu_streams_video_max_send_bandwidth: OPENVIDUSTREAMSVIDEOMAX-SEND-BANDWIDT
 openvidu_streams_video_min_send_bandwidth: OPENVIDUSTREAMSVIDEOMIN-SEND-BANDWIDTH
 
 # Parameter "openvidu.webhook"
-# true to enable OpenVidu Server Webhook service. false' otherwise
+# true to enable OpenVidu Webhook service. false' otherwise
 # Values: true | false
 openvidu_webhook: WEBHOOK_ENABLED
 
@@ -87,13 +87,13 @@ openvidu_webhook: WEBHOOK_ENABLED
 openvidu_webhook_endpoint: "WEBHOOK_ENDPOINT"
 
 # Parameter "openvidu.webhook.headers"
-# List of headers that OpenVidu Server Webhook service will attach to HTTP POST messages
+# List of headers that OpenVidu Webhook service will attach to HTTP POST messages
 # Example:
 # openvidu_webhook_headers: "Authorization: Basic T1BFTlZJRFVBUFA6TVlfU0VDUkVU"
 openvidu_webhook_headers:
 
 # Parameter "openvidu.webhook.events"
-# List of events that will be sent by OpenVidu Server Webhook service
+# List of events that will be sent by OpenVidu Webhook service
 # Leave blank if all events.
 openvidu_webhook_events: WEBHOOK_EVENTS
 
@@ -101,7 +101,7 @@ openvidu_webhook_events: WEBHOOK_EVENTS
 # OpenVidu PRO specific configuration
 ######################################
 
-# See https://docs.openvidu.io/en/stable/reference-docs/openvidu-server-params#extra-configuration-parameters-for-openvidu-server-pro
+# See https://docs.openvidu.io/en/stable/reference-docs/openvidu-config#extra-configuration-parameters-for-openvidu-server-pro
 
 # Parameter "openvidu.pro.cluster"
 # Is running in cluster?
