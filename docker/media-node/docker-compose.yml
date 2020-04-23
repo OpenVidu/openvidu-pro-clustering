@@ -26,7 +26,7 @@ services:
             - GST_DEBUG=${KMS_DEBUG_LEVEL:-}
 
     nginx:
-        image: openvidu/openvidu-proxy:1.0.0-beta5
+        image: openvidu/openvidu-proxy:1.0.0
         entrypoint: ["/bin/bash", "-c", "service nginx restart && tail -f /var/log/nginx/*.log"]
         restart: on-failure
         network_mode: host
