@@ -18,8 +18,14 @@ if [ ${CF_OVP_TARGET} == "market" ]; then
 fi
 
 echo "Making original AMIs public"
-aws ec2 modify-image-attribute --image-id ${KMS_AMI_ID} --launch-permission "Add=[{Group=all}]"
+
+aws ec2 wait image-exists --image-ids ${OV_AMI_ID}
+aws ec2 wait image-available --image-ids ${OV_AMI_ID}
 aws ec2 modify-image-attribute --image-id ${OV_AMI_ID} --launch-permission "Add=[{Group=all}]"
+
+aws ec2 wait image-exists --image-ids ${KMS_AMI_ID}
+aws ec2 wait image-available --image-ids ${KMS_AMI_ID}
+aws ec2 modify-image-attribute --image-id ${KMS_AMI_ID} --launch-permission "Add=[{Group=all}]"
 
 TARGET_REGIONS="eu-north-1
                 eu-west-3
@@ -42,22 +48,75 @@ TARGET_REGIONS="eu-north-1
                 us-west-2
                 me-south-1"
 
-echo "Kurento IDs"
+OPENVIDU_SERVER_PRO_AMI_IDS=()
+MEDIA_NODE_AMI_IDS=()
+REGIONS=()
 for REGION in ${TARGET_REGIONS}
 do
-	ID=$(aws ec2 copy-image --name ${KMS_AMI_NAME} --source-image-id ${KMS_AMI_ID} --source-region ${AWS_DEFAULT_REGION} --region ${REGION} --output text --query 'ImageId')
-    aws ec2 modify-image-attribute --image-id ${ID} --launch-permission "Add=[{Group=all}]"
-    echo "    ${REGION}:"
-    echo "      AMI: ${ID}"
+    REGIONS+=($REGION)
+    ID=$(aws ec2 copy-image --name ${OV_AMI_NAME} --source-image-id ${OV_AMI_ID} --source-region ${AWS_DEFAULT_REGION} --region ${REGION} --output text --query 'ImageId')
+    echo "Replicated OpenVidu Server Pro AMI in region ${REGION} with id ${ID}"
+    OPENVIDU_SERVER_PRO_AMI_IDS+=($ID)
+    ID=$(aws ec2 copy-image --name ${KMS_AMI_NAME} --source-image-id ${KMS_AMI_ID} --source-region ${AWS_DEFAULT_REGION} --region ${REGION} --output text --query 'ImageId')
+    echo "Replicated Media Node AMI in region ${REGION} with id ${ID}"
+    MEDIA_NODE_AMI_IDS+=($ID)
 done
 
-echo ""
-echo ""
-echo "OV IDs"
-for REGION in ${TARGET_REGIONS}
+if [ "${#OPENVIDU_SERVER_PRO_AMI_IDS[@]}" -ne "${#REGIONS[@]}" ]; then
+    echo "The number of elements in array of OpenVidu Server Pro AMI ids and array of regions is not equal"
+    exit 1
+fi
+if [ "${#MEDIA_NODE_AMI_IDS[@]}" -ne "${#REGIONS[@]}" ]; then
+    echo "The number of elements in array of Media Node AMI ids and array of regions is not equal"
+    exit 1
+fi
+
+echo "Waiting for images to be available..."
+echo "-------------------------------------"
+ITER=0
+for i in "${REGIONS[@]}"
 do
-	ID=$(aws ec2 copy-image --name ${OV_AMI_NAME}  --source-image-id ${OV_AMI_ID}  --source-region ${AWS_DEFAULT_REGION} --region ${REGION} --output text --query 'ImageId')
-    aws ec2 modify-image-attribute --image-id ${ID} --launch-permission "Add=[{Group=all}]"
+    REGION=${REGIONS[$ITER]}
+    # OpenVidu Server Pro Node
+    OV_AMI_ID=${OPENVIDU_SERVER_PRO_AMI_IDS[$ITER]}
+	aws ec2 wait image-exists --region ${REGION} --image-ids ${OV_AMI_ID}
+    echo "${OV_AMI_ID} of region ${REGION} exists"
+    aws ec2 wait image-available --region ${REGION} --image-ids ${OV_AMI_ID}
+    echo "${OV_AMI_ID} of region ${REGION} available"
+    aws ec2 modify-image-attribute --region ${REGION} --image-id ${OV_AMI_ID} --launch-permission "Add=[{Group=all}]"
+    echo "${OV_AMI_ID} of region ${REGION} is now public"
+    # Media Node
+    KMS_AMI_ID=${MEDIA_NODE_AMI_IDS[$ITER]}
+    aws ec2 wait image-exists --region ${REGION} --image-ids ${KMS_AMI_ID}
+    echo "${KMS_AMI_ID} of region ${REGION} exists"
+    aws ec2 wait image-available --region ${REGION} --image-ids ${KMS_AMI_ID}
+    echo "${KMS_AMI_ID} of region ${REGION} available"
+    aws ec2 modify-image-attribute --region ${REGION} --image-id ${KMS_AMI_ID} --launch-permission "Add=[{Group=all}]"
+    echo "${KMS_AMI_ID} of region ${REGION} is now public"
+    echo "-------------------------------------"
+    ITER=$(expr $ITER + 1)
+done
+
+echo
+echo "OpenVidu Server Pro Node AMI IDs"
+ITER=0
+for i in "${OPENVIDU_SERVER_PRO_AMI_IDS[@]}"
+do
+    AMI_ID=${OPENVIDU_SERVER_PRO_AMI_IDS[$ITER]}
+    REGION=${REGIONS[$ITER]}
     echo "    ${REGION}:"
-    echo "      AMI: ${ID}"
+    echo "      AMI: ${AMI_ID}"
+    ITER=$(expr $ITER + 1)
+done
+
+echo
+echo "Media Node AMI IDs"
+ITER=0
+for i in "${MEDIA_NODE_AMI_IDS[@]}"
+do
+    AMI_ID=${MEDIA_NODE_AMI_IDS[$ITER]}
+    REGION=${REGIONS[$ITER]}
+    echo "    ${REGION}:"
+    echo "      AMI: ${AMI_ID}"
+    ITER=$(expr $ITER + 1)
 done
