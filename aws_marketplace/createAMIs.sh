@@ -40,12 +40,21 @@ cp cfn-mkt-kms-ami.yaml.template cfn-mkt-kms-ami.yaml
 cp cfn-mkt-ov-ami.yaml.template cfn-mkt-ov-ami.yaml
 
 ## Setting Openvidu Version and Ubuntu Latest AMIs
-sed -i "s/OPENVIDU_VERSION/${OPENVIDU_PRO_VERSION}/" cfn-mkt-kms-ami.yaml
-sed -i "s/OPENVIDU_VERSION/${OPENVIDU_PRO_VERSION}/" cfn-mkt-ov-ami.yaml
-sed -i "s/AMIEUWEST1/${AMIEUWEST1}/" cfn-mkt-kms-ami.yaml
-sed -i "s/AMIEUWEST1/${AMIEUWEST1}/" cfn-mkt-ov-ami.yaml
-sed -i "s/AMIUSEAST1/${AMIUSEAST1}/" cfn-mkt-kms-ami.yaml
-sed -i "s/AMIUSEAST1/${AMIUSEAST1}/" cfn-mkt-ov-ami.yaml
+sed -i "s/OPENVIDU_VERSION/${OPENVIDU_PRO_VERSION}/g" cfn-mkt-ov-ami.yaml
+sed -i "s/AWS_DOCKER_TAG/${AWS_DOCKER_TAG}/g" cfn-mkt-ov-ami.yaml
+sed -i "s/OPENVIDU_RECORDING_DOCKER_TAG/${OPENVIDU_RECORDING_DOCKER_TAG}/g" cfn-mkt-ov-ami.yaml
+sed -i "s/REDIS_DOCKER_TAG/${REDIS_DOCKER_TAG}/g" cfn-mkt-ov-ami.yaml
+sed -i "s/OPENVIDU_COTURN_DOCKER_TAG/${OPENVIDU_COTURN_DOCKER_TAG}/g" cfn-mkt-ov-ami.yaml
+sed -i "s/OPENVIDU_PROXY_DOCKER_TAG/${OPENVIDU_PROXY_DOCKER_TAG}/g" cfn-mkt-ov-ami.yaml
+sed -i "s/ELASTICSEARCH_DOCKER_TAG/${ELASTICSEARCH_DOCKER_TAG}/g" cfn-mkt-ov-ami.yaml
+sed -i "s/KIBANA_DOCKER_TAG/${KIBANA_DOCKER_TAG}/g" cfn-mkt-ov-ami.yaml
+sed -i "s/OPENVIDU_CALL_DOCKER_TAG/${OPENVIDU_CALL_DOCKER_TAG}/g" cfn-mkt-ov-ami.yaml
+sed -i "s/AMIEUWEST1/${AMIEUWEST1}/g" cfn-mkt-ov-ami.yaml
+sed -i "s/AMIUSEAST1/${AMIUSEAST1}/g" cfn-mkt-ov-ami.yaml
+
+sed -i "s/OPENVIDU_VERSION/${OPENVIDU_PRO_VERSION}/g" cfn-mkt-kms-ami.yaml
+sed -i "s/AMIEUWEST1/${AMIEUWEST1}/g" cfn-mkt-kms-ami.yaml
+sed -i "s/AMIUSEAST1/${AMIUSEAST1}/g" cfn-mkt-kms-ami.yaml
 
 ## KMS AMI
 

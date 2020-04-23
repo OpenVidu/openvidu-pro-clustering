@@ -83,9 +83,19 @@ Resources:
                 set -eu -o pipefail
                 
                 # AWS cli
-                docker pull amazon/aws-cli:2.0.7
+                docker pull amazon/aws-cli:AWS_DOCKER_TAG
+
                 # Openvidu recording
-                docker pull openvidu/openvidu-recording:2.9.0
+                docker pull openvidu/openvidu-recording:OPENVIDU_RECORDING_DOCKER_TAG
+              
+                # Openvidu PRO images
+                docker pull openvidu/openvidu-server-pro:OPENVIDU_VERSION
+                docker pull redis:REDIS_DOCKER_TAG
+                docker pull openvidu/openvidu-coturn:OPENVIDU_COTURN_DOCKER_TAG
+                docker pull openvidu/openvidu-proxy:OPENVIDU_PROXY_DOCKER_TAG
+                docker pull docker.elastic.co/elasticsearch/elasticsearch:ELASTICSEARCH_DOCKER_TAG
+                docker pull docker.elastic.co/kibana/kibana:KIBANA_DOCKER_TAG
+                docker pull openvidu/openvidu-call:OPENVIDU_CALL_DOCKER_TAG
               mode: "000755"
               owner: "root"
               group: "root"
