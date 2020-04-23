@@ -17,6 +17,10 @@ if [ ${CF_OVP_TARGET} == "market" ]; then
     export AWS_SECRET_ACCESS_KEY=${NAEVA_AWS_SECRET_ACCESS_KEY}
 fi
 
+echo "Making original AMIs public"
+aws ec2 modify-image-attribute --image-id ${KMS_AMI_ID} --launch-permission "Add=[{Group=all}]"
+aws ec2 modify-image-attribute --image-id ${OV_AMI_ID} --launch-permission "Add=[{Group=all}]"
+
 TARGET_REGIONS="eu-north-1
                 eu-west-3
                 eu-west-2
@@ -41,8 +45,10 @@ TARGET_REGIONS="eu-north-1
 echo "Kurento IDs"
 for REGION in ${TARGET_REGIONS}
 do
-	ID=$(aws ec2 copy-image --name ${KMS_AMI_NAME} --source-image-id ${KMS_AMI_ID} --source-region ${AWS_DEFAULT_REGION} --region ${REGION})
-    echo ${REGION}: $(echo ${ID} | awk '{ print $3 }')
+	ID=$(aws ec2 copy-image --name ${KMS_AMI_NAME} --source-image-id ${KMS_AMI_ID} --source-region ${AWS_DEFAULT_REGION} --region ${REGION} --output text --query 'ImageId')
+    aws ec2 modify-image-attribute --image-id ${ID} --launch-permission "Add=[{Group=all}]"
+    echo "    ${REGION}:"
+    echo "      AMI: ${ID}"
 done
 
 echo ""
@@ -50,6 +56,8 @@ echo ""
 echo "OV IDs"
 for REGION in ${TARGET_REGIONS}
 do
-	ID=$(aws ec2 copy-image --name ${OV_AMI_NAME}  --source-image-id ${OV_AMI_ID}  --source-region ${AWS_DEFAULT_REGION} --region ${REGION})
-	echo ${REGION}: $(echo ${ID} | awk '{ print $3 }')
+	ID=$(aws ec2 copy-image --name ${OV_AMI_NAME}  --source-image-id ${OV_AMI_ID}  --source-region ${AWS_DEFAULT_REGION} --region ${REGION} --output text --query 'ImageId')
+    aws ec2 modify-image-attribute --image-id ${ID} --launch-permission "Add=[{Group=all}]"
+    echo "    ${REGION}:"
+    echo "      AMI: ${ID}"
 done
