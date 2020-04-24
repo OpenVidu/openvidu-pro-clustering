@@ -5,16 +5,20 @@ DOCKER_COMPOSE_FOLDER=kms
 NGINX_CONF=${DOCKER_COMPOSE_FOLDER}/nginx_conf
 
 # Check docker and docker-compose installation
-docker -v > /dev/null 2>&1
-if [ $? -ne 0 ]; then
+if ! command -v docker > /dev/null; then
      echo "You don't have docker installed, please install it and re-run the command"
      exit 0
 fi
 
-docker-compose -v > /dev/null 2>&1
-if [ $? -ne 0 ]; then
+if ! command -v docker-compose > /dev/null; then
      echo "You don't have docker-compose installed, please install it and re-run the command"
      exit 0
+else
+     COMPOSE_VERSION=$(docker-compose version --short | sed "s/-rc[0-9]*//")
+     if ! printf '%s\n%s\n' "1.24" "$COMPOSE_VERSION" | sort -V -C; then
+          echo "You need a docker-compose version equal or higher than 1.24, please update your docker-compose and re-run the command"; \
+          exit 0
+     fi
 fi
 
 # Create openvidu-docker-compose folder
