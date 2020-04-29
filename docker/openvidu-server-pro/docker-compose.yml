@@ -60,10 +60,10 @@ services:
             - MAX_PORT=65535
 
     nginx:
-        image: openvidu/openvidu-proxy:1.0.0
+        image: openvidu/openvidu-proxy:2.0.0-beta1
         restart: on-failure
         network_mode: host
-        entrypoint: ["/bin/bash", "-c", "htpasswd -bc /etc/nginx/kibana.htpasswd ${KIBANA_USER} ${KIBANA_PASSWORD} && /usr/local/bin/entrypoint.sh"]
+        entrypoint: ['/bin/sh', '-c', 'htpasswd -bc /etc/nginx/kibana.htpasswd "${KIBANA_USER}" "${KIBANA_PASSWORD}" && /usr/local/bin/entrypoint.sh']
         volumes:
             - ./certificates:/etc/letsencrypt
             - ./owncert:/owncert
@@ -72,6 +72,8 @@ services:
             - DOMAIN_OR_PUBLIC_IP=${OPENVIDU_DOMAIN_OR_PUBLIC_IP}
             - CERTIFICATE_TYPE=${CERTIFICATE_TYPE}
             - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
+            - PROXY_HTTP_PORT=${OPENVIDU_HTTP_PORT:-}
+            - PROXY_HTTPS_PORT=${OPENVIDU_HTTPS_PORT:-}
             - PROXY_MODE=PRO
             - WITH_DEMOS=true
 
