@@ -247,15 +247,8 @@ Metadata:
         default: "Deploy OpenVidu Call application"
 
 Conditions:
-  NoSelfSigned:
-    'Fn::Not':
-      - 'Fn::Or':
-        - 'Fn::Equals':
-            - Ref: WhichCert
-            - selfsigned
-        - 'Fn::Equals':
-            - Ref: WhichCert
-            - customcert
+    WhichCertPresent: !Not [ !Equals [!Ref WhichCert, ""] ]
+    PublicElasticIPPresent: !Not [ !Equals [!Ref PublicElasticIP, ""] ]
 
 Resources:
 
@@ -334,8 +327,10 @@ Resources:
                 sed -i "s/OPENVIDU_SECRET=/OPENVIDU_SECRET=${OpenViduSecret}/" $WORKINGDIR/.env
 
                 # Replace domain name
-                if [[ "${WhichCert}" == "letsencrypt" || "${WhichCert}" == "owncert" ]]; then
+                if [[ "${MyDomainName}" != ''  && "${PublicElasticIP}" != '' ]]; then
                   sed -i "s/OPENVIDU_DOMAIN_OR_PUBLIC_IP=/OPENVIDU_DOMAIN_OR_PUBLIC_IP=${MyDomainName}/" $WORKINGDIR/.env
+                elif [[ "${MyDomainName}" == '' && "${PublicElasticIP}" != '' ]]; then
+                  sed -i "s/OPENVIDU_DOMAIN_OR_PUBLIC_IP=/OPENVIDU_DOMAIN_OR_PUBLIC_IP=${PublicElasticIP}/" $WORKINGDIR/.env
                 else
                   [ ! -d "/usr/share/openvidu" ] && mkdir -p /usr/share/openvidu
                   PublicHostname=$(curl http://169.254.169.254/latest/meta-data/public-hostname)
@@ -377,9 +372,9 @@ Resources:
                 )
                 sed -i "s/#AWS_SECURITY_GROUP=/AWS_SECURITY_GROUP=$SECGRPID/" $WORKINGDIR/.env
 
-                # Without Demos
+                # Without Application
                 if [ "${WantToDeployDemos}" == "false" ]; then
-                  sed -i "s/WITH_DEMOS=true/WITH_DEMOS=false/" $WORKINGDIR/docker-compose.yml
+                  sed -i "s/WITH_APP=true/WITH_APP=false/" $WORKINGDIR/docker-compose.yml
                   rm $WORKINGDIR/docker-compose.override.yml
                 fi
               - kmsAmi: !FindInMap [KMSAMIMAP, !Ref 'AWS::Region', AMI]
@@ -390,30 +385,21 @@ Resources:
               content: !Sub |
                 #!/bin/bash -x
                 WORKINGDIR=/opt/openvidu
-                wget -O $WORKINGDIR/owncert/certificate.cert ${OwnCertCRT}
-                wget -O $WORKINGDIR/owncert/certificate.key ${OwnCertKEY}
-              mode: "000755"
-              owner: "root"
-              group: "root"
-            '/usr/local/bin/checkAmazonURL.sh':
-              content: !Sub |
-                #!/bin/bash -x
-                WORKINGDIR=/opt/openvidu
-
-                if [ "${WhichCert}" == "selfsigned" ]; then
-                  OldPublicHostname=$(cat /usr/share/openvidu/old-host-name)
-                  PublicHostname=$(curl http://169.254.169.254/latest/meta-data/public-hostname)
-                  sed -i "s/$OldPublicHostname/$PublicHostname/" $WORKINGDIR/.env
-                  echo $PublicHostname > /usr/share/openvidu/old-host-name
-                fi
+                wget --no-check-certificate -O $WORKINGDIR/owncert/certificate.cert ${OwnCertCRT}
+                wget --no-check-certificate -O $WORKINGDIR/owncert/certificate.key ${OwnCertKEY}
               mode: "000755"
               owner: "root"
               group: "root"
             '/usr/local/bin/restartPRO.sh':
               content: !Sub |
                 #!/bin/bash -x
+                WORKINGDIR=/opt/openvidu
+                
                 # Get new amazon URL
-                /usr/local/bin/checkAmazonURL.sh
+                OldPublicHostname=$(cat /usr/share/openvidu/old-host-name)
+                PublicHostname=$(curl http://169.254.169.254/latest/meta-data/public-hostname)
+                sed -i "s/$OldPublicHostname/$PublicHostname/" $WORKINGDIR/.env
+                echo $PublicHostname > /usr/share/openvidu/old-host-name
 
                 # Restart all services
                 pushd /opt/openvidu
@@ -561,7 +547,7 @@ Resources:
 
   MyEIP:
     Type: AWS::EC2::EIPAssociation
-    Condition: NoSelfSigned
+    Condition: PublicElasticIPPresent
     Properties:
       InstanceId: !Ref OpenViduServer
       EIP: !Ref PublicElasticIP
@@ -582,7 +568,7 @@ Outputs:
         - - 'https://'
           - !Ref MyDomainName
           - '/inspector'
-    Condition: NoSelfSigned
+    Condition: WhichCertPresent
 
   Kibana:
     Description: "Check out graph and performance of your OpenVidu installation"
@@ -599,4 +585,4 @@ Outputs:
         - - 'https://'
           - !Ref MyDomainName
           - '/kibana'
-    Condition: NoSelfSigned
+    Condition: WhichCertPresent
