@@ -478,14 +478,6 @@ Resources:
       VpcId: !Ref OpenViduVPC
       GroupDescription: SSH, Proxy and KMS WebRTC Ports
       SecurityGroupIngress:
-        - IpProtocol: udp
-          FromPort: 40000
-          ToPort: 65535
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: 40000
-          ToPort: 65535
-          CidrIp: 0.0.0.0/0
         - IpProtocol: tcp
           FromPort: 22
           ToPort: 22
@@ -498,6 +490,14 @@ Resources:
           FromPort: 8888
           ToPort: 8888
           CidrIp: !Join [ "/", [ !GetAtt OpenViduServer.PrivateIp, "32" ] ]
+        - IpProtocol: udp
+          FromPort: 40000
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 40000
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
       SecurityGroupEgress:
         - IpProtocol: tcp
           FromPort: 1
@@ -514,23 +514,19 @@ Resources:
       GroupDescription: SSH, Proxy and OpenVidu WebRTC Ports
       VpcId: !Ref OpenViduVPC
       SecurityGroupIngress:
-        - IpProtocol: udp
-          FromPort: 40000
-          ToPort: 65535
-          CidrIp: 0.0.0.0/0
         - IpProtocol: tcp
-          FromPort: 40000
-          ToPort: 65535
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: 4443
-          ToPort: 4443
+          FromPort: 22
+          ToPort: 22
           CidrIp: 0.0.0.0/0
         - IpProtocol: tcp
           FromPort: 80
           ToPort: 80
           CidrIp: 0.0.0.0/0
         - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
           FromPort: 3478
           ToPort: 3478
           CidrIp: 0.0.0.0/0
@@ -538,13 +534,13 @@ Resources:
           FromPort: 3478
           ToPort: 3478
           CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: 22
-          ToPort: 22
+        - IpProtocol: udp
+          FromPort: 40000
+          ToPort: 65535
           CidrIp: 0.0.0.0/0
         - IpProtocol: tcp
-          FromPort: 443
-          ToPort: 443
+          FromPort: 40000
+          ToPort: 65535
           CidrIp: 0.0.0.0/0
       SecurityGroupEgress:
         - IpProtocol: tcp
