@@ -72,8 +72,8 @@ services:
             - DOMAIN_OR_PUBLIC_IP=${DOMAIN_OR_PUBLIC_IP}
             - CERTIFICATE_TYPE=${CERTIFICATE_TYPE}
             - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
-            - PROXY_HTTP_PORT=${OPENVIDU_HTTP_PORT:-}
-            - PROXY_HTTPS_PORT=${OPENVIDU_HTTPS_PORT:-}
+            - PROXY_HTTP_PORT=${HTTP_PORT:-}
+            - PROXY_HTTPS_PORT=${HTTPS_PORT:-}
             - PROXY_MODE=PRO
             - WITH_DEMOS=true
 
