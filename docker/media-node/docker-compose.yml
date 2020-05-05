@@ -25,6 +25,17 @@ services:
             - KMS_MAX_PORT=57000
             - GST_DEBUG=${KMS_DEBUG_LEVEL:-}
 
+    filebeat:
+        image: "docker.elastic.co/beats/filebeat:7.6.2"
+        network_mode: host
+        restart: always
+        user: root
+        volumes:
+            - ./filebeat_conf/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+            - /var/lib/docker:/var/lib/docker:ro
+            - /var/run/docker.sock:/var/run/docker.sock
+        command: filebeat -e -strict.perms=false -E "output.elasticsearch.hosts=['${ELASTICSEARCH_URL}']"
+
     nginx:
         image: openvidu/openvidu-proxy:2.0.0-beta1
         entrypoint: ['/bin/sh', '-c', 'nginx -g "daemon on;" && tail -f /var/log/nginx/*.log']
