@@ -46,7 +46,8 @@ TARGET_REGIONS="eu-north-1
                 us-east-2
                 us-west-1
                 us-west-2
-                me-south-1"
+                me-south-1
+                af-south-1"
 
 OPENVIDU_SERVER_PRO_AMI_IDS=()
 MEDIA_NODE_AMI_IDS=()
