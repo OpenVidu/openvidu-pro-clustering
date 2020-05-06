@@ -36,18 +36,18 @@ new_ov_installation() {
     chown 1000:1000 "${ELASTICSEARCH_FOLDER}" || fatal_error "Error while changing permission to 'elasticsearch' folder"
 
     # Download necessaries files
-    printf '\n     => Downloading Openvidu CE files:'
+    printf '\n     => Downloading Openvidu PRO files:'
 
     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/cluster/aws/openvidu_autodiscover.sh \
          --output "${AWS_SCRIPTS_FOLDER}/openvidu_autodiscover.sh" || fatal_error "Error when downloading the file 'openvidu_autodiscover.sh'"
     printf '\n          - openvidu_autodiscover.sh'
 
     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/cluster/aws/openvidu_drop.sh \
-         --output ${AWS_SCRIPTS_FOLDER}/openvidu_drop.sh || fatal_error "Error when downloading the file 'openvidu_drop.sh'"
+         --output "${AWS_SCRIPTS_FOLDER}/openvidu_drop.sh" || fatal_error "Error when downloading the file 'openvidu_drop.sh'"
     printf '\n          - openvidu_drop.sh'
 
     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/cluster/aws/openvidu_launch_kms.sh \
-         --output ${AWS_SCRIPTS_FOLDER}/openvidu_launch_kms.sh || fatal_error "Error when downloading the file 'openvidu_launch_kms.sh'"
+         --output "${AWS_SCRIPTS_FOLDER}/openvidu_launch_kms.sh" || fatal_error "Error when downloading the file 'openvidu_launch_kms.sh'"
     printf '\n          - openvidu_launch_kms.sh'
 
     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/.env \
@@ -63,7 +63,7 @@ new_ov_installation() {
     printf '\n          - docker-compose.yml'
 
     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/openvidu \
-         --output ${OPENVIDU_FOLDER}/openvidu || fatal_error "Error when downloading the file 'openvidu'"
+         --output "${OPENVIDU_FOLDER}/openvidu" || fatal_error "Error when downloading the file 'openvidu'"
     printf '\n          - openvidu'
 
     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/readme.md \
@@ -113,145 +113,188 @@ new_ov_installation() {
 }
 
 upgrade_ov() {
-    # Search local Openvidu installation
-    printf '\n'
-    printf '\n     ============================================'
-    printf '\n       Search Previous Installation of Openvidu'
-    printf '\n     ============================================'
-    printf '\n'
+     # Search local Openvidu installation
+     printf '\n'
+     printf '\n     ============================================'
+     printf '\n       Search Previous Installation of Openvidu'
+     printf '\n     ============================================'
+     printf '\n'
 
-    SEARCH_IN_FOLDERS=(
-        "." 
-        "/opt/openvidu"
-    )
+     SEARCH_IN_FOLDERS=(
+          "." 
+          "/opt/openvidu"
+     )
 
-    for folder in "${SEARCH_IN_FOLDERS[@]}"; do
-        printf "\n     => Searching in '%s' folder..." "${folder}"
+     for folder in "${SEARCH_IN_FOLDERS[@]}"; do
+          printf "\n     => Searching in '%s' folder..." "${folder}"
 
-        if [ -f "${folder}/docker-compose.yml" ]; then
-            OPENVIDU_PREVIOUS_FOLDER="${folder}"
+          if [ -f "${folder}/docker-compose.yml" ]; then
+               OPENVIDU_PREVIOUS_FOLDER="${folder}"
 
-            printf "\n     => Found installation in folder '%s'" "${folder}"
-            break
-        fi
-    done
+               printf "\n     => Found installation in folder '%s'" "${folder}"
+               break
+          fi
+     done
 
-    [ -z "${OPENVIDU_PREVIOUS_FOLDER}" ] && fatal_error "No previous Openvidu installation found"
+     [ -z "${OPENVIDU_PREVIOUS_FOLDER}" ] && fatal_error "No previous Openvidu installation found"
 
-    # Uppgrade Openvidu
-    OPENVIDU_PREVIOUS_VERSION=$(grep 'Openvidu Version:' "${OPENVIDU_PREVIOUS_FOLDER}/docker-compose.yml" | awk '{ print $4 }')
-    [ -z "${OPENVIDU_PREVIOUS_VERSION}" ] && OPENVIDU_PREVIOUS_VERSION=2.13.0
+     # Uppgrade Openvidu
+     OPENVIDU_PREVIOUS_VERSION=$(grep 'Openvidu Version:' "${OPENVIDU_PREVIOUS_FOLDER}/docker-compose.yml" | awk '{ print $4 }')
+     [ -z "${OPENVIDU_PREVIOUS_VERSION}" ] && OPENVIDU_PREVIOUS_VERSION=2.13.0
 
-    # In this point using the variable 'OPENVIDU_PREVIOUS_VERSION' we can verify if the upgrade is 
-    # posible or not. If it is not posible launch a warning and stop the upgrade.
+     # In this point using the variable 'OPENVIDU_PREVIOUS_VERSION' we can verify if the upgrade is 
+     # posible or not. If it is not posible launch a warning and stop the upgrade.
 
-    printf '\n'
-    printf '\n     ======================================='
-    printf '\n       Upgrade Openvidu PRO %s to %s' "${OPENVIDU_PREVIOUS_VERSION}" "${OPENVIDU_VERSION}"
-    printf '\n     ======================================='
-    printf '\n'
+     printf '\n'
+     printf '\n     ======================================='
+     printf '\n       Upgrade Openvidu PRO %s to %s' "${OPENVIDU_PREVIOUS_VERSION}" "${OPENVIDU_VERSION}"
+     printf '\n     ======================================='
+     printf '\n'
 
-    ROLL_BACK_FOLDER="${OPENVIDU_PREVIOUS_FOLDER}/.old-${OPENVIDU_PREVIOUS_VERSION}"
-    printf "\n     Creating roll back folder '%s'..." ".old-${OPENVIDU_PREVIOUS_VERSION}"
-    mkdir "${ROLL_BACK_FOLDER}" || fatal_error "Error while creating the folder '.old-${OPENVIDU_PREVIOUS_VERSION}'"
+     ROLL_BACK_FOLDER="${OPENVIDU_PREVIOUS_FOLDER}/.old-${OPENVIDU_PREVIOUS_VERSION}"
+     TMP_FOLDER="${OPENVIDU_PREVIOUS_FOLDER}/tmp"
+     USE_OV_CALL=$(grep -E '^        image: openvidu/openvidu-call:2.12.0$' "${OPENVIDU_PREVIOUS_FOLDER}/docker-compose.override.yml" | tr -d '[:space:]')
 
-    # Move old files to roll back folder
-    USE_OV_CALL=$(grep -E '^        image: openvidu/openvidu-call:2.12.0$' "${OPENVIDU_PREVIOUS_FOLDER}/docker-compose.override.yml" | tr -d '[:space:]')
+     printf "\n     Creating roll back folder '%s'..." ".old-${OPENVIDU_PREVIOUS_VERSION}"
+     mkdir "${ROLL_BACK_FOLDER}" || fatal_error "Error while creating the folder '.old-${OPENVIDU_PREVIOUS_VERSION}'"
 
-    printf '\n     => Moving previous installation files:'
-    mv "${OPENVIDU_PREVIOUS_FOLDER}/docker-compose.yml" "${ROLL_BACK_FOLDER}" || fatal_error "Error while moving previous 'docker-compose.yml'"
-    printf '\n          - docker-compose.yml'
-    mv "${OPENVIDU_PREVIOUS_FOLDER}/openvidu" "${ROLL_BACK_FOLDER}" || fatal_error "Error while moving previous 'openvidu'"
-    printf '\n          - openvidu'
-    mv "${OPENVIDU_PREVIOUS_FOLDER}/readme.md" "${ROLL_BACK_FOLDER}" || fatal_error "Error while moving previous 'readme.md'"
-    printf '\n          - readme.md'
-    if [ ! -z "${USE_OV_CALL}" ]; then
-        mv "${OPENVIDU_PREVIOUS_FOLDER}/docker-compose.override.yml" "${ROLL_BACK_FOLDER}" || fatal_error "Error while moving previous 'docker-compose.override.yml'"
-        printf '\n          - docker-compose.override.yml'
-    fi
-    printf '\n          - cluster/aws'
-    mv "${OPENVIDU_PREVIOUS_FOLDER}/cluster/aws" "${ROLL_BACK_FOLDER}" || fatal_error "Error while moving previous 'readme.md'"
-    mkdir "${OPENVIDU_PREVIOUS_FOLDER}/cluster/aws" || fatal_error "Error while creating the folder 'cluster/aws'"
+     printf "\n     Creating temporal folder 'tmp'..."
+     mkdir "${TMP_FOLDER}" || fatal_error "Error while creating the folder 'temporal'"
 
-    # Download necessaries files
-    printf '\n     => Downloading new Openvidu PRO files:'
+     # Download necessaries files
+     printf '\n     => Downloading new Openvidu PRO files:'
 
     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/cluster/aws/openvidu_autodiscover.sh \
-         --output "${OPENVIDU_PREVIOUS_FOLDER}/cluster/aws/openvidu_autodiscover.sh" || fatal_error "Error when downloading the file 'openvidu_autodiscover.sh'"
+         --output "${TMP_FOLDER}/openvidu_autodiscover.sh" || fatal_error "Error when downloading the file 'openvidu_autodiscover.sh'"
     printf '\n          - openvidu_autodiscover.sh'
 
     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/cluster/aws/openvidu_drop.sh \
-         --output "${OPENVIDU_PREVIOUS_FOLDER}/cluster/aws/openvidu_drop.sh" || fatal_error "Error when downloading the file 'openvidu_drop.sh'"
+         --output "${TMP_FOLDER}/openvidu_drop.sh" || fatal_error "Error when downloading the file 'openvidu_drop.sh'"
     printf '\n          - openvidu_drop.sh'
 
     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/cluster/aws/openvidu_launch_kms.sh \
-         --output "${OPENVIDU_PREVIOUS_FOLDER}/cluster/aws/openvidu_launch_kms.sh" || fatal_error "Error when downloading the file 'openvidu_launch_kms.sh'"
+         --output "${TMP_FOLDER}/openvidu_launch_kms.sh" || fatal_error "Error when downloading the file 'openvidu_launch_kms.sh'"
     printf '\n          - openvidu_launch_kms.sh'
 
     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/.env \
-         --output "${OPENVIDU_PREVIOUS_FOLDER}/.env-${OPENVIDU_VERSION}" || fatal_error "Error when downloading the file '.env'"
-    printf '\n          - .env-%s' "${OPENVIDU_VERSION}"
+         --output "${TMP_FOLDER}/.env" || fatal_error "Error when downloading the file '.env'"
+    printf '\n          - .env'
 
-    if [ ! -z "${USE_OV_CALL}" ]; then
-        curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu/${OPENVIDU_VERSION}/openvidu-server/docker/openvidu-docker-compose/docker-compose.override.yml \
-             --output "${OPENVIDU_PREVIOUS_FOLDER}/docker-compose.override.yml" || fatal_error "Error when downloading the file 'docker-compose.override.yml'"
-         printf "\n          - docker-compose.override.yml"
-    else 
-        curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/docker-compose.override.yml \
-             --output "${OPENVIDU_PREVIOUS_FOLDER}/docker-compose.override.yml-${OPENVIDU_VERSION}" || fatal_error "Error when downloading the file 'docker-compose.override.yml'"
-        printf '\n          - docker-compose.override.yml-%s' "${OPENVIDU_VERSION}"
-    fi
+    curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/docker-compose.override.yml \
+         --output "${TMP_FOLDER}/docker-compose.override.yml" || fatal_error "Error when downloading the file 'docker-compose.override.yml'"
+    printf '\n          - docker-compose.override.yml'
 
     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/docker-compose.yml \
-         --output "${OPENVIDU_PREVIOUS_FOLDER}/docker-compose.yml" || fatal_error "Error when downloading the file 'docker-compose.yml'"
+         --output "${TMP_FOLDER}/docker-compose.yml" || fatal_error "Error when downloading the file 'docker-compose.yml'"
     printf '\n          - docker-compose.yml'
 
     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/openvidu \
-         --output "${OPENVIDU_PREVIOUS_FOLDER}/openvidu" || fatal_error "Error when downloading the file 'openvidu'"
+         --output "${TMP_FOLDER}/openvidu" || fatal_error "Error when downloading the file 'openvidu'"
     printf '\n          - openvidu'
 
     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}/docker/openvidu-server-pro/readme.md \
-         --output "${OPENVIDU_PREVIOUS_FOLDER}/readme.md" || fatal_error "Error when downloading the file 'readme.md'"
+         --output "${TMP_FOLDER}/readme.md" || fatal_error "Error when downloading the file 'readme.md'"
     printf '\n          - readme.md'
 
-    # Add execution permissions
-    printf "\n     => Adding permission:"
+     # Dowloading new images and stoped actual Openvidu
+     printf '\n     => Dowloading new images...'
+     printf '\n'
+     sleep 1
 
-    chmod +x "${OPENVIDU_FOLDER}/openvidu" || fatal_error "Error while adding permission to 'openvidu' program"
-    printf '\n          - openvidu'
-    
-    chmod +x ${AWS_SCRIPTS_FOLDER}/openvidu_autodiscover.sh || fatal_error "Error while adding permission to 'openvidu_autodiscover.sh' program"
-    printf '\n          - openvidu_autodiscover.sh'
-    
-    chmod +x ${AWS_SCRIPTS_FOLDER}/openvidu_drop.sh || fatal_error "Error while adding permission to 'openvidu' openvidu_drop.sh"
-    printf '\n          - openvidu_drop.sh'
-    
-    chmod +x ${AWS_SCRIPTS_FOLDER}/openvidu_launch_kms.sh || fatal_error "Error while adding permission to 'openvidu_launch_kms.sh' program"
-    printf '\n          - openvidu_launch_kms.sh'
-    
-    # Ready to use
-    printf '\n'
-    printf '\n'
-    printf '\n     ======================================='
-    printf '\n     Openvidu PRO successfully upgrade.'
-    printf '\n     ======================================='
-    printf '\n'
-    printf "\n     1. A new file 'docker-compose.yml' has been created with the new services"
-    printf '\n'
-    printf "\n     2. The current file '.env' has been kept but a new file '.env-VERSION' has been created." 
-    printf "\n     Please check the new file '.env-VERSION' use your data from the file '.env' and replace it"
-    printf '\n     to have the new improvements.' 
-    printf '\n'
-    printf "\n     3. If you were using Openvidu Call it has been updated in the file 'docker-compose.override.yml'"
-    printf "\n     however if you are using your own application a file called 'docker-compose.override.yml-VERSION'"
-    printf "\n     has been created with the latest version of Openvidu Call, you can delete it or use it if you wish."
-    printf '\n'
-    printf '\n     4. Start new version of Openvidu'
-    printf '\n     $ ./openvidu start'
-    printf '\n'
-    printf '\n     For more information, check readme.md'
-    printf '\n'
-    printf '\n'
+     [ -f "${TMP_FOLDER}/docker-compose.yml" ] && docker-compose -f "${TMP_FOLDER}/docker-compose.yml" pull
+     [ -f "${TMP_FOLDER}/docker-compose.override.yml" ] && docker-compose -f "${TMP_FOLDER}/docker-compose.override.yml" pull
+     
+     printf '\n     => Stoping Openvidu...'
+     printf '\n'
+     sleep 1
+
+     docker-compose down
+     printf '\n'
+
+     # Move old files to roll back folder
+     printf '\n     => Moving previous installation files to rollback folder:'
+
+     mv "${OPENVIDU_PREVIOUS_FOLDER}/docker-compose.yml" "${ROLL_BACK_FOLDER}" || fatal_error "Error while moving previous 'docker-compose.yml'"
+     printf '\n          - docker-compose.yml'
+
+     if [ ! -z "${USE_OV_CALL}" ]; then
+          mv "${OPENVIDU_PREVIOUS_FOLDER}/docker-compose.override.yml" "${ROLL_BACK_FOLDER}" || fatal_error "Error while moving previous 'docker-compose.override.yml'"
+          printf '\n          - docker-compose.override.yml'
+     fi
+
+     mv "${OPENVIDU_PREVIOUS_FOLDER}/openvidu" "${ROLL_BACK_FOLDER}" || fatal_error "Error while moving previous 'openvidu'"
+     printf '\n          - openvidu'
+
+     mv "${OPENVIDU_PREVIOUS_FOLDER}/readme.md" "${ROLL_BACK_FOLDER}" || fatal_error "Error while moving previous 'readme.md'"
+     printf '\n          - readme.md'
+
+     mv "${OPENVIDU_PREVIOUS_FOLDER}/cluster/aws" "${ROLL_BACK_FOLDER}" || fatal_error "Error while moving previous 'cluster/aws'"
+     printf '\n          - cluster/aws'
+
+     # Move tmp files to Openvidu
+     printf '\n     => Updating files:'
+
+     mv "${TMP_FOLDER}/docker-compose.yml" "${OPENVIDU_PREVIOUS_FOLDER}" || fatal_error "Error while updating 'docker-compose.yml'"
+     printf '\n          - docker-compose.yml'
+
+     if [ ! -z "${USE_OV_CALL}" ]; then
+          mv "${TMP_FOLDER}/docker-compose.override.yml" "${OPENVIDU_PREVIOUS_FOLDER}" || fatal_error "Error while updating 'docker-compose.override.yml'"
+          printf '\n          - docker-compose.override.yml'
+     else
+          mv "${TMP_FOLDER}/docker-compose.override.yml" "${OPENVIDU_PREVIOUS_FOLDER}/docker-compose.override.yml-${OPENVIDU_VERSION}" || fatal_error "Error while updating 'docker-compose.override.yml'"
+          printf '\n          - docker-compose.override.yml-%s' "${OPENVIDU_VERSION}"
+     fi
+
+     mv "${TMP_FOLDER}/.env" "${OPENVIDU_PREVIOUS_FOLDER}/.env-${OPENVIDU_VERSION}" || fatal_error "Error while moving previous '.env'"
+     printf '\n          - .env-%s' "${OPENVIDU_VERSION}"
+
+     mv "${TMP_FOLDER}/openvidu" "${OPENVIDU_PREVIOUS_FOLDER}" || fatal_error "Error while updating 'openvidu'"
+     printf '\n          - openvidu'
+
+     mv "${TMP_FOLDER}/readme.md" "${OPENVIDU_PREVIOUS_FOLDER}" || fatal_error "Error while updating 'readme.md'"
+     printf '\n          - readme.md'
+
+     mkdir "${OPENVIDU_PREVIOUS_FOLDER}/cluster/aws" || fatal_error "Error while creating the folder 'cluster/aws'"
+
+     mv "${TMP_FOLDER}/openvidu_autodiscover.sh" "${OPENVIDU_PREVIOUS_FOLDER}/cluster/aws" || fatal_error "Error while updating 'readme.md'"
+     printf '\n          - openvidu_autodiscover.sh'
+
+     mv "${TMP_FOLDER}/openvidu_drop.sh" "${OPENVIDU_PREVIOUS_FOLDER}/cluster/aws" || fatal_error "Error while updating 'readme.md'"
+     printf '\n          - openvidu_drop.sh'
+
+     mv "${TMP_FOLDER}/openvidu_launch_kms.sh" "${OPENVIDU_PREVIOUS_FOLDER}/cluster/aws" || fatal_error "Error while updating 'readme.md'"
+     printf '\n          - openvidu_launch_kms.sh'
+
+     printf "\n     => Deleting 'tmp' folder"
+     rm -rf "${TMP_FOLDER}" || fatal_error "Error deleting 'tmp' folder"
+
+     # Add execution permissions
+     printf "\n     => Adding permission to 'openvidu' program..."
+     chmod +x "${OPENVIDU_PREVIOUS_FOLDER}/openvidu" || fatal_error "Error while adding permission to 'openvidu' program"
+
+     # Ready to use
+     printf '\n'
+     printf '\n'
+     printf '\n     ======================================='
+     printf '\n     Openvidu Platform successfully upgrade.'
+     printf '\n     ======================================='
+     printf '\n'
+     printf "\n     1. A new file 'docker-compose.yml' has been created with the new services"
+     printf '\n'
+     printf "\n     2. The current file '.env' has been kept but a new file '.env-VERSION' has been created." 
+     printf "\n     Please check the new file '.env-VERSION' use your data from the file '.env' and replace it"
+     printf '\n     to have the new improvements.' 
+     printf '\n'
+     printf "\n     3. If you were using Openvidu Call it has been updated in the file 'docker-compose.override.yml'"
+     printf "\n     however if you are using your own application a file called 'docker-compose.override.yml-VERSION'"
+     printf "\n     has been created with the latest version of Openvidu Call, you can delete it or use it if you wish."
+     printf '\n'
+     printf '\n     4. Start new version of Openvidu'
+     printf '\n     $ ./openvidu start'
+     printf '\n'
+     printf '\n     For more information, check readme.md'
+     printf '\n'
+     printf '\n'
 }
 
 # Check docker and docker-compose installation

@@ -4,13 +4,13 @@ upgrade_media_node() {
   UPGRADE_SCRIPT_URL="https://s3-eu-west-1.amazonaws.com/aws.openvidu.io/install_media_node_OVVERSION.sh"
   HTTP_STATUS=$(curl -s -o /dev/null -I -w "%{http_code}" ${UPGRADE_SCRIPT_URL//OVVERSION/$1})
 
-  printf "  => Upgrading Media Node to %s Version" "$1"
+  printf "  => Upgrading Media Node to '%s' version" "$1"
 
   if [ "$HTTP_STATUS" == "200" ]; then
-    printf "\n    => Downloading and upgrading new Version"
+    printf "\n    => Downloading and upgrading new version"
     printf "\n"
 
-    curl ${UPGRADE_SCRIPT_URL//OVVERSION/$1} | bash -s upgrade
+    curl --silent ${UPGRADE_SCRIPT_URL//OVVERSION/$1} | bash -s upgrade
   else
      printf "\n     =======¡ERROR!======="
      printf "\n     Media Node Version %s not exist" "$1"
@@ -52,13 +52,25 @@ case $1 in
   logs)
     docker-compose logs -f kms
     ;;
+
   upgrade)
     if [ -z "$2" ]; then
-      upgrade_media_node latest
+      UPGRADE_VERSION="latest"
     else
-      upgrade_media_node "$2"
+      UPGRADE_VERSION="$2"
     fi
+
+    read -r -p "  You're about to update Media Node to '${UPGRADE_VERSION}' version. Are you sure? [y/N]: " response
+        case "$response" in
+        [yY][eE][sS]|[yY]) 
+            upgrade_media_node "${UPGRADE_VERSION}"
+            ;;
+        *)
+            exit 0
+            ;;
+    esac
     ;;
+
   *)
     usage
     ;;

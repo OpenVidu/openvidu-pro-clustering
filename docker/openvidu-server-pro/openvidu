@@ -1,13 +1,34 @@
 #!/bin/bash
 
+upgrade_ov() {
+  UPGRADE_SCRIPT_URL="https://s3-eu-west-1.amazonaws.com/aws.openvidu.io/install_openvidu_pro_OVVERSION.sh"
+  HTTP_STATUS=$(curl -s -o /dev/null -I -w "%{http_code}" ${UPGRADE_SCRIPT_URL//OVVERSION/$1})
+
+  printf "  => Upgrading Openvidu PRO to '%s' version" "$1"
+
+  if [ "$HTTP_STATUS" == "200" ]; then
+    printf "\n    => Downloading and upgrading new version"
+    printf "\n"
+
+    curl --silent ${UPGRADE_SCRIPT_URL//OVVERSION/$1} | bash -s upgrade
+  else
+     printf "\n     =======¡ERROR!======="
+     printf "\n     Openvidu PRO Version '%s' not exist" "$1"
+     printf "\n"
+     exit 0
+  fi
+}
+
 usage() {
     printf "Usage: \n\t openvidu [command]"
     printf "\n\nAvailable Commands:"
-    printf "\n\tstart\t\tStart all services"
-    printf "\n\tstop\t\tStop all services"
-    printf "\n\trestart\t\tRestart all stoped and running services"
-    printf "\n\tlogs\t\tShow openvidu-server logs"
-    printf "\n\thelp\t\tShow help for openvidu command"
+    printf "\n\tstart\t\t\tStart all services"
+    printf "\n\tstop\t\t\tStop all services"
+    printf "\n\trestart\t\t\tRestart all stoped and running services"
+    printf "\n\tlogs\t\t\tShow openvidu-server logs"
+    printf "\n\tupgrade\t\t\tUpgrade to the lastest Openvidu version"
+    printf "\n\tupgrade [version]\tUpgrade to the specific Openvidu version"
+    printf "\n\thelp\t\t\tShow help for openvidu command"
     printf "\n"
 }
 
@@ -31,7 +52,25 @@ case $1 in
   logs)
     docker-compose logs -f openvidu-server
     ;;
-    
+
+  upgrade)
+    if [ -z "$2" ]; then
+      UPGRADE_VERSION="latest"
+    else
+      UPGRADE_VERSION="$2"
+    fi
+
+    read -r -p "  You're about to update Openvidu PRO to '${UPGRADE_VERSION}' version. Are you sure? [y/N]: " response
+        case "$response" in
+        [yY][eE][sS]|[yY]) 
+            upgrade_ov "${UPGRADE_VERSION}"
+            ;;
+        *)
+            exit 0
+            ;;
+    esac
+    ;;
+
   *)
     usage
     ;;

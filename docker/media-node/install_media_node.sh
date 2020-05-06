@@ -18,11 +18,11 @@ new_media_node_installation() {
      printf '\n     ======================================='
      printf '\n'
 
-     # Create openvidu-docker-compose folder
+     # Create kms folder
      printf '\n     => Creating folder '%s'...' "${MEDIA_NODE_FOLDER}"
      mkdir "${MEDIA_NODE_FOLDER}" || fatal_error "Error while creating the folder '${MEDIA_NODE_FOLDER}'"
 
-     # Create kms folder
+     # Create nginx folder
      printf "\n     => Creating folder 'nginx_conf'..."
      mkdir "${NGINX_CONF_FOLDER}" || fatal_error "Error while creating the folder 'nginx_conf'"
 
@@ -51,11 +51,11 @@ new_media_node_installation() {
 
      curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}/docker/media-node/nginx_conf/nginx.conf \
           --output "${NGINX_CONF_FOLDER}/nginx.conf" || fatal_error "Error when downloading the file 'nginx.conf'"
-     printf '\n          nginx.conf'
+     printf '\n          - nginx.conf'
 
      # Add execution permissions
      printf "\n     => Adding permission to 'media_node' program..."
-     chmod +x "${DOCKER_COMPOSE_FOLDER}/media_node" || fatal_error "Error while adding permission to 'media_node' program"
+     chmod +x "${MEDIA_NODE_FOLDER}/media_node" || fatal_error "Error while adding permission to 'media_node' program"
 
      # Ready to use
      printf "\n"
@@ -110,7 +110,7 @@ upgrade_media_node() {
 
      printf '\n'
      printf '\n     ======================================='
-     printf '\n       Upgrade Media Node %s to %s' "${OPENVIDU_PREVIOUS_VERSION}" "${OPENVIDU_VERSION}"
+     printf '\n       Upgrade Media Node %s to %s' "${OPENVIDU_PREVIOUS_VERSION}" "${MEDIA_NODE_VERSION}"
      printf '\n     ======================================='
      printf '\n'
 
@@ -148,7 +148,7 @@ upgrade_media_node() {
 
      curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}/docker/media-node/nginx_conf/nginx.conf \
           --output "${TMP_FOLDER}/nginx.conf" || fatal_error "Error when downloading the file 'nginx.conf'"
-     printf '\n          nginx.conf'
+     printf '\n          - nginx.conf'
 
      # Dowloading new images and stoped actual Media Node
      printf '\n     => Dowloading new images...'
@@ -185,11 +185,11 @@ upgrade_media_node() {
      mv "${TMP_FOLDER}/docker-compose.yml" "${MEDIA_NODE_PREVIOUS_FOLDER}" || fatal_error "Error while updating 'docker-compose.yml'"
      printf '\n          - docker-compose.yml'
 
-     mv "${TMP_FOLDER}/.env" "${MEDIA_NODE_PREVIOUS_FOLDER}/.env-${OPENVIDU_VERSION}" || fatal_error "Error while moving previous '.env'"
-     printf '\n          - .env-%s' "${OPENVIDU_VERSION}"
+     mv "${TMP_FOLDER}/.env" "${MEDIA_NODE_PREVIOUS_FOLDER}/.env-${MEDIA_NODE_VERSION}" || fatal_error "Error while moving previous '.env'"
+     printf '\n          - .env-%s' "${MEDIA_NODE_VERSION}"
 
-     mv "${TMP_FOLDER}/openvidu" "${MEDIA_NODE_PREVIOUS_FOLDER}" || fatal_error "Error while updating 'openvidu'"
-     printf '\n          - openvidu'
+     mv "${TMP_FOLDER}/media_node" "${MEDIA_NODE_PREVIOUS_FOLDER}" || fatal_error "Error while updating 'media_node'"
+     printf '\n          - media_node'
 
      mv "${TMP_FOLDER}/readme.md" "${MEDIA_NODE_PREVIOUS_FOLDER}" || fatal_error "Error while updating 'readme.md'"
      printf '\n          - readme.md'
@@ -218,12 +218,14 @@ upgrade_media_node() {
      printf '\n'
      printf "\n     1. A new file 'docker-compose.yml' has been created with the new services"
      printf '\n'
-     printf "\n     2. The current file '.env' has been kept but a new file '.env-VERSION' has been created." 
-     printf "\n     Please check the new file '.env-VERSION' use your data from the file '.env' and replace it"
+     printf "\n     2. The current file '.env' has been kept but a new file '.env-%s' has been created." "${MEDIA_NODE_VERSION}" 
+     printf "\n     Please check the new file '.env-%s' use your data from the file '.env' and replace it" "${MEDIA_NODE_VERSION}"
      printf '\n     to have the new improvements.' 
      printf '\n'
      printf '\n     3. Start new version of Media Node'
      printf '\n     $ ./media_node start'
+     printf '\n'
+     printf "\n     If you want to roll-back all the files from the previous installation are in the folder '.old-%s'" "${OPENVIDU_PREVIOUS_VERSION}"
      printf '\n'
      printf '\n     For more information, check readme.md'
      printf '\n'
