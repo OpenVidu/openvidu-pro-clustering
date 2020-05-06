@@ -6,15 +6,25 @@ filebeat.inputs:
 processors:
 - add_docker_metadata:
     host: "unix:///var/run/docker.sock"
+- add_host_metadata: ~
 
 - decode_json_fields:
     fields: ["message"]
     target: "json"
     overwrite_keys: true
 
-output.elasticsearch:
-  indices:
-    - index: "filebeat-%{[agent.version]}-%{+yyyy.MM.dd}"
+output:
+  elasticsearch:
+    indices:
+      - index: "filebeat-kurento-%{[host.hostname]}"
+        when.or:
+          - contains:
+              container.image.name: kurento/kurento-media-server
+    pipelines:
+      - pipeline: kurento_pipeline
+        when.or:
+          - contains:
+              container.image.name: kurento/kurento-media-server
 
 logging.json: true
 logging.metrics.enabled: false

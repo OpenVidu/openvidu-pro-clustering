@@ -1,0 +1,34 @@
+{
+    "description" : "Kurento grok Pipeline",
+    "processors" : [
+        {
+            "grok" : {
+                "field" : "message",
+                "patterns" : [ "%{SPACE}%{TIME:execution_time}%{SPACE}%{NUMBER:PID}%{SPACE}%{BASE16NUM:thread_id}%{SPACE}%{LOG_LEVEL:log_level}%{SPACE}%{GREEDYDATA:log_message}" ],
+                "pattern_definitions" : {
+                    "LOG_LEVEL" : "ERROR|WARNING|FIXME|INFO|DEBUG|LOG|TRACE|MEMDUMP"
+                }
+            }
+        },
+        {
+            "rename" : {
+                "field": "message",
+                "target_field": "unformatted_message"
+            }
+        },
+        {
+            "rename" : {
+                "field": "log_message",
+                "target_field": "message"
+            }
+        }
+    ],
+    "on_failure": [
+        {
+            "set": {
+                "field": "log_level",
+                "value": "UNKNOWN"
+            }
+        }
+    ]
+}
