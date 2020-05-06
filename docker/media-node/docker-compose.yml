@@ -6,6 +6,8 @@
 #
 #    This docker-compose file coordinates all services of OpenVidu CE Platform.
 #
+#    Openvidu Version: 2.13.0
+#
 # ------------------------------------------------------------------------------
 
 version: '3.1'
@@ -26,7 +28,7 @@ services:
             - GST_DEBUG=${KMS_DEBUG_LEVEL:-}
 
     nginx:
-        image: openvidu/openvidu-proxy:2.0.0-beta1
+        image: openvidu/openvidu-proxy:2.0.0-beta3
         entrypoint: ['/bin/sh', '-c', 'nginx -g "daemon on;" && tail -f /var/log/nginx/*.log']
         restart: on-failure
         network_mode: host
