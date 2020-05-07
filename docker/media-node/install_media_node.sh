@@ -161,7 +161,7 @@ upgrade_media_node() {
      printf '\n'
      sleep 1
 
-     docker-compose down
+     docker-compose -f "${MEDIA_NODE_PREVIOUS_FOLDER}/docker-compose.yml" down
      printf '\n'
 
      # Move old files to roll back folder

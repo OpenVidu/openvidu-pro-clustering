@@ -208,7 +208,8 @@ upgrade_ov() {
      printf '\n'
      sleep 1
 
-     docker-compose down
+     docker-compose -f "${OPENVIDU_PREVIOUS_FOLDER}/docker-compose.yml" down | true
+     docker-compose -f "${OPENVIDU_PREVIOUS_FOLDER}/docker-compose.override.yml" down | true
      printf '\n'
 
      # Move old files to roll back folder
