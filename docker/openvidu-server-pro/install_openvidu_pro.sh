@@ -212,7 +212,7 @@ upgrade_ov() {
 
      printf "\n          => Moving to 'openvidu' folder..."
      cd "${OPENVIDU_PREVIOUS_FOLDER}" || fatal_error "Error when moving to 'openvidu' folder"
-     docker-compose -f down | true
+     docker-compose down | true
 
      printf '\n'
      printf '\n     => Moving to working dir...'
