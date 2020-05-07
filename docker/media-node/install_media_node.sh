@@ -165,7 +165,7 @@ upgrade_media_node() {
      sleep 1
 
      printf "\n          => Moving to 'openvidu' folder..."
-     cd "${OPENVIDU_PREVIOUS_FOLDER}" || fatal_error "Error when moving to 'openvidu' folder"
+     cd "${MEDIA_NODE_PREVIOUS_FOLDER}" || fatal_error "Error when moving to 'openvidu' folder"
      docker-compose down | true
 
      printf '\n'
