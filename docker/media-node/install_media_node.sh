@@ -116,6 +116,7 @@ upgrade_media_node() {
 
      ROLL_BACK_FOLDER="${MEDIA_NODE_PREVIOUS_FOLDER}/.old-${OPENVIDU_PREVIOUS_VERSION}"
      TMP_FOLDER="${MEDIA_NODE_PREVIOUS_FOLDER}/tmp"
+     ACTUAL_FOLDER="$PWD"
 
      printf "\n     Creating roll back folder '%s'..." ".old-${OPENVIDU_PREVIOUS_VERSION}"
      mkdir "${ROLL_BACK_FOLDER}" || fatal_error "Error while creating the folder '.old-${OPENVIDU_PREVIOUS_VERSION}'"
@@ -155,14 +156,21 @@ upgrade_media_node() {
      printf '\n'
      sleep 1
 
-     [ -f "${TMP_FOLDER}/docker-compose.yml" ] && docker-compose -f "${TMP_FOLDER}/docker-compose.yml" pull
+     printf "\n          => Moving to 'tmp' folder..."
+     cd "${TMP_FOLDER}" || fatal_error "Error when moving to 'tmp' folder"
+     docker-compose pull | true
      
      printf '\n     => Stoping Media Node...'
      printf '\n'
      sleep 1
 
-     docker-compose -f "${MEDIA_NODE_PREVIOUS_FOLDER}/docker-compose.yml" down
+     printf "\n          => Moving to 'openvidu' folder..."
+     cd "${OPENVIDU_PREVIOUS_FOLDER}" || fatal_error "Error when moving to 'openvidu' folder"
+     docker-compose -f down | true
+
      printf '\n'
+     printf '\n     => Moving to working dir...'
+     cd "${ACTUAL_FOLDER}" || fatal_error "Error when moving to working dir"
 
      # Move old files to roll back folder
      printf '\n     => Moving previous installation files to rollback folder:'
