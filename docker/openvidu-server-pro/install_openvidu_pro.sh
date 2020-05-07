@@ -31,7 +31,7 @@ new_ov_installation() {
      # Create elasticsearch folder
      printf "\n     => Creating folder 'elasticsearch'..."
      mkdir -p "${ELASTICSEARCH_FOLDER}" || fatal_error "Error while creating the folder 'elasticsearch'"
-    
+
      printf "\n     => Changing permission to 'elasticsearch' folder..."
      chown 1000:1000 "${ELASTICSEARCH_FOLDER}" || fatal_error "Error while changing permission to 'elasticsearch' folder"
 
@@ -75,13 +75,13 @@ new_ov_installation() {
 
      chmod +x "${OPENVIDU_FOLDER}/openvidu" || fatal_error "Error while adding permission to 'openvidu' program"
      printf '\n          - openvidu'
-    
+
      chmod +x "${AWS_SCRIPTS_FOLDER}/openvidu_autodiscover.sh" || fatal_error "Error while adding permission to 'openvidu_autodiscover.sh' program"
      printf '\n          - openvidu_autodiscover.sh'
-    
+
      chmod +x "${AWS_SCRIPTS_FOLDER}/openvidu_drop.sh" || fatal_error "Error while adding permission to 'openvidu' openvidu_drop.sh"
      printf '\n          - openvidu_drop.sh'
-    
+
      chmod +x "${AWS_SCRIPTS_FOLDER}/openvidu_launch_kms.sh" || fatal_error "Error while adding permission to 'openvidu_launch_kms.sh' program"
      printf '\n          - openvidu_launch_kms.sh'
 
@@ -100,7 +100,7 @@ new_ov_installation() {
      printf '\n     $ cd openvidu'
      printf '\n'
      printf '\n     2. Configure OPENVIDU_DOMAIN_OR_PUBLIC_IP, OPENVIDU_PRO_LICENSE, OPENVIDU_SECRET, and KIBANA_PASSWORD in .env file:'
-     printf '\n     $ nano .env' 
+     printf '\n     $ nano .env'
      printf '\n'
      printf '\n     3. Start OpenVidu'
      printf '\n     $ ./openvidu start'
@@ -121,8 +121,8 @@ upgrade_ov() {
      printf '\n'
 
      SEARCH_IN_FOLDERS=(
-          "." 
-          "/opt/openvidu"
+          "${PWD}"
+          "/opt/${OPENVIDU_FOLDER}"
      )
 
      for folder in "${SEARCH_IN_FOLDERS[@]}"; do
@@ -142,7 +142,7 @@ upgrade_ov() {
      OPENVIDU_PREVIOUS_VERSION=$(grep 'Openvidu Version:' "${OPENVIDU_PREVIOUS_FOLDER}/docker-compose.yml" | awk '{ print $4 }')
      [ -z "${OPENVIDU_PREVIOUS_VERSION}" ] && OPENVIDU_PREVIOUS_VERSION=2.13.0
 
-     # In this point using the variable 'OPENVIDU_PREVIOUS_VERSION' we can verify if the upgrade is 
+     # In this point using the variable 'OPENVIDU_PREVIOUS_VERSION' we can verify if the upgrade is
      # posible or not. If it is not posible launch a warning and stop the upgrade.
 
      printf '\n'
@@ -153,7 +153,7 @@ upgrade_ov() {
 
      ROLL_BACK_FOLDER="${OPENVIDU_PREVIOUS_FOLDER}/.old-${OPENVIDU_PREVIOUS_VERSION}"
      TMP_FOLDER="${OPENVIDU_PREVIOUS_FOLDER}/tmp"
-     ACTUAL_FOLDER="$PWD"
+     ACTUAL_FOLDER="${PWD}"
      USE_OV_CALL=$(grep -E '^        image: openvidu/openvidu-call:2.12.0$' "${OPENVIDU_PREVIOUS_FOLDER}/docker-compose.override.yml" | tr -d '[:space:]')
 
      printf "\n     Creating roll back folder '%s'..." ".old-${OPENVIDU_PREVIOUS_VERSION}"
@@ -203,7 +203,9 @@ upgrade_ov() {
      sleep 1
 
      printf "\n          => Moving to 'tmp' folder..."
+     printf '\n'
      cd "${TMP_FOLDER}" || fatal_error "Error when moving to 'tmp' folder"
+     printf '\n'
      docker-compose pull | true
 
      printf '\n     => Stoping Openvidu...'
@@ -211,7 +213,9 @@ upgrade_ov() {
      sleep 1
 
      printf "\n          => Moving to 'openvidu' folder..."
+     printf '\n'
      cd "${OPENVIDU_PREVIOUS_FOLDER}" || fatal_error "Error when moving to 'openvidu' folder"
+     printf '\n'
      docker-compose down | true
 
      printf '\n'
@@ -280,13 +284,13 @@ upgrade_ov() {
 
      chmod +x "${OPENVIDU_PREVIOUS_FOLDER}/openvidu" || fatal_error "Error while adding permission to 'openvidu' program"
      printf '\n          - openvidu'
-    
+
      chmod +x "${OPENVIDU_PREVIOUS_FOLDER}/cluster/aws/openvidu_autodiscover.sh" || fatal_error "Error while adding permission to 'openvidu_autodiscover.sh' program"
      printf '\n          - openvidu_autodiscover.sh'
-    
+
      chmod +x "${OPENVIDU_PREVIOUS_FOLDER}/cluster/aws/openvidu_drop.sh" || fatal_error "Error while adding permission to 'openvidu' openvidu_drop.sh"
      printf '\n          - openvidu_drop.sh'
-    
+
      chmod +x "${OPENVIDU_PREVIOUS_FOLDER}/cluster/aws/openvidu_launch_kms.sh" || fatal_error "Error while adding permission to 'openvidu_launch_kms.sh' program"
      printf '\n          - openvidu_launch_kms.sh'
 
@@ -299,9 +303,9 @@ upgrade_ov() {
      printf '\n'
      printf "\n     1. A new file 'docker-compose.yml' has been created with the new services"
      printf '\n'
-     printf "\n     2. The current file '.env' has been kept but a new file '.env-%s' has been created." "${OPENVIDU_VERSION}" 
+     printf "\n     2. The current file '.env' has been kept but a new file '.env-%s' has been created." "${OPENVIDU_VERSION}"
      printf "\n     Please check the new file '.env-%s' use your data from the file '.env' and replace it" "${OPENVIDU_VERSION}"
-     printf '\n     to have the new improvements.' 
+     printf '\n     to have the new improvements.'
      printf '\n'
      printf "\n     3. If you were using Openvidu Call it has been updated in the file 'docker-compose.override.yml'"
      printf "\n     however if you are using your own application a file called 'docker-compose.override.yml-%s'" "${OPENVIDU_VERSION}"

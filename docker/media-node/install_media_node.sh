@@ -40,7 +40,7 @@ new_media_node_installation() {
      curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}/docker/media-node/media_node \
           --output "${MEDIA_NODE_FOLDER}/media_node" || fatal_error "Error when downloading the file 'media_node'"
      printf '\n          - media_node'
-     
+
      curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}/docker/media-node/readme.md \
           --output "${MEDIA_NODE_FOLDER}/readme.md" || fatal_error "Error when downloading the file 'readme.md'"
      printf '\n          - readme.md'
@@ -84,8 +84,8 @@ upgrade_media_node() {
      printf '\n'
 
      SEARCH_IN_FOLDERS=(
-          "." 
-          "/opt/kms"
+          "${PWD}"
+          "/opt/${MEDIA_NODE_FOLDER}"
      )
 
      for folder in "${SEARCH_IN_FOLDERS[@]}"; do
@@ -105,7 +105,7 @@ upgrade_media_node() {
      OPENVIDU_PREVIOUS_VERSION=$(grep 'Openvidu Version:' "${MEDIA_NODE_PREVIOUS_FOLDER}/docker-compose.yml" | awk '{ print $4 }')
      [ -z "${OPENVIDU_PREVIOUS_VERSION}" ] && OPENVIDU_PREVIOUS_VERSION=2.13.0
 
-     # In this point using the variable 'OPENVIDU_PREVIOUS_VERSION' we can verify if the upgrade is 
+     # In this point using the variable 'OPENVIDU_PREVIOUS_VERSION' we can verify if the upgrade is
      # posible or not. If it is not posible launch a warning and stop the upgrade.
 
      printf '\n'
@@ -138,7 +138,7 @@ upgrade_media_node() {
      curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}/docker/media-node/media_node \
           --output "${TMP_FOLDER}/media_node" || fatal_error "Error when downloading the file 'media_node'"
      printf '\n          - media_node'
-     
+
      curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}/docker/media-node/readme.md \
           --output "${TMP_FOLDER}/readme.md" || fatal_error "Error when downloading the file 'readme.md'"
      printf '\n          - readme.md'
@@ -157,14 +157,16 @@ upgrade_media_node() {
      sleep 1
 
      printf "\n          => Moving to 'tmp' folder..."
+     printf '\n'
      cd "${TMP_FOLDER}" || fatal_error "Error when moving to 'tmp' folder"
      docker-compose pull | true
-     
+
      printf '\n     => Stoping Media Node...'
      printf '\n'
      sleep 1
 
      printf "\n          => Moving to 'openvidu' folder..."
+     printf '\n'
      cd "${MEDIA_NODE_PREVIOUS_FOLDER}" || fatal_error "Error when moving to 'openvidu' folder"
      docker-compose down | true
 
@@ -226,9 +228,9 @@ upgrade_media_node() {
      printf '\n'
      printf "\n     1. A new file 'docker-compose.yml' has been created with the new services"
      printf '\n'
-     printf "\n     2. The current file '.env' has been kept but a new file '.env-%s' has been created." "${MEDIA_NODE_VERSION}" 
+     printf "\n     2. The current file '.env' has been kept but a new file '.env-%s' has been created." "${MEDIA_NODE_VERSION}"
      printf "\n     Please check the new file '.env-%s' use your data from the file '.env' and replace it" "${MEDIA_NODE_VERSION}"
-     printf '\n     to have the new improvements.' 
+     printf '\n     to have the new improvements.'
      printf '\n'
      printf '\n     3. Start new version of Media Node'
      printf '\n     $ ./media_node start'
