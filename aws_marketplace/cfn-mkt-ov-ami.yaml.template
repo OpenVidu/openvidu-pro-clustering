@@ -66,7 +66,7 @@ Resources:
               mode: "000755"
               owner: "root"
               group: "root"
-            "/usr/local/bin/getDockerCompose.sh":
+            "/usr/local/bin/installOpenviduServerPRO.sh":
               content: !Sub |
                 #!/bin/bash
                 set -eu -o pipefail
@@ -114,7 +114,7 @@ Resources:
 
             /usr/local/bin/installDockerAndDockerCompose.sh || { echo "[Openvidu] error installing docker and compose"; exit 1; }
 
-            /usr/local/bin/getDockerCompose.sh || { echo "[Openvidu] error getting compose"; exit 1; }
+            /usr/local/bin/installOpenviduServerPRO.sh || { echo "[Openvidu] error installing Openvidu Server PRO"; exit 1; }
 
             /usr/local/bin/getDockerImages.sh || { echo "[Openvidu] error getting docker images"; exit 1; }
 
