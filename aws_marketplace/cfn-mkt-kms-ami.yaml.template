@@ -128,6 +128,9 @@ Resources:
             # Cleaning the house
             shred -v -u /var/log/cloud-init-output.log
             shred -v -u /etc/ssh/*_key /etc/ssh/*_key.pub
+            shred -v -u /usr/local/bin/installDockerAndDockerCompose.sh
+            shred -v -u /usr/local/bin/installMediaNode.sh
+            shred -v -u /usr/local/bin/runMediaNode.sh
             find /var/lib/cloud/instances/$(curl http://169.254.169.254/latest/meta-data/instance-id) -type f | xargs shred -v -u
             rm -rf /var/lib/cloud/instances/$(curl http://169.254.169.254/latest/meta-data/instance-id)
 
