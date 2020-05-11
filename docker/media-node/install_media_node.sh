@@ -222,20 +222,20 @@ upgrade_media_node() {
      # Ready to use
      printf '\n'
      printf '\n'
-     printf '\n     ======================================='
-     printf '\n     Openvidu Platform successfully upgrade.'
-     printf '\n     ======================================='
+     printf '\n     ================================================'
+     printf "\n     Openvidu successfully upgraded to version %s" "${OPENVIDU_VERSION}"
+     printf '\n     ================================================'
      printf '\n'
-     printf "\n     1. A new file 'docker-compose.yml' has been created with the new services"
+     printf "\n     1. A new file 'docker-compose.yml' has been created with the new OpenVidu %s services" "${OPENVIDU_VERSION}"
      printf '\n'
-     printf "\n     2. The current file '.env' has been kept but a new file '.env-%s' has been created." "${MEDIA_NODE_VERSION}"
-     printf "\n     Please check the new file '.env-%s' use your data from the file '.env' and replace it" "${MEDIA_NODE_VERSION}"
-     printf '\n     to have the new improvements.'
+     printf "\n     2. The previous file '.env' remains intact, but a new file '.env-%s' has been created." "${OPENVIDU_VERSION}"
+     printf "\n     Transfer any configuration you wish to keep in the upgraded version from '.env' to '.env-%s'." "${OPENVIDU_VERSION}"
+     printf "\n     When you are OK with it, rename and leave as the only '.env' file of the folder the new '.env-%s'." "${OPENVIDU_VERSION}"
      printf '\n'
      printf '\n     3. Start new version of Media Node'
      printf '\n     $ ./media_node start'
      printf '\n'
-     printf "\n     If you want to roll-back all the files from the previous installation are in the folder '.old-%s'" "${OPENVIDU_PREVIOUS_VERSION}"
+     printf "\n     If you want to rollback, all the files from the previous installation have been copied to folder '.old-%s'" "${OPENVIDU_PREVIOUS_VERSION}"
      printf '\n'
      printf '\n     For more information, check readme.md'
      printf '\n'
