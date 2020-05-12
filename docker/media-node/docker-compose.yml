@@ -28,7 +28,7 @@ services:
             - GST_DEBUG=${KMS_DEBUG_LEVEL:-}
 
     nginx:
-        image: openvidu/openvidu-proxy:2.0.0-beta4
+        image: openvidu/openvidu-proxy:2.0.0
         entrypoint: ['/bin/sh', '-c', 'nginx -g "daemon on;" && tail -f /var/log/nginx/*.log']
         restart: on-failure
         network_mode: host
