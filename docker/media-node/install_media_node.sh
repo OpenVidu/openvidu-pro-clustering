@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 MEDIA_NODE_FOLDER=kms
-MEDIA_NODE_VERSION=v2.14.0
+MEDIA_NODE_VERSION=master
 NGINX_CONF_FOLDER=${MEDIA_NODE_FOLDER}/nginx_conf
 
 fatal_error() {
