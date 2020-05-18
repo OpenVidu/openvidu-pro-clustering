@@ -33,7 +33,7 @@ collect_basic_information() {
   [ -z "${OV_CALL_VERSION}" ] && OV_CALL_VERSION="No present"
 
   OV_TYPE_INSTALLATION=$(grep 'Installation Mode:' "${OV_FOLDER}/docker-compose.yml" | awk '{ print $4,$5 }')
-  TREE_OV_DIRECTORY=$(find "." | sed -e "s/[^-][^\/]*\// |/g" -e "s/|\([^ ]\)/|-\1/")
+  TREE_OV_DIRECTORY=$(find "." ! -path '*/0/*' | sed -e "s/[^-][^\/]*\// |/g" -e "s/|\([^ ]\)/|-\1/")
 }
 
 version_ov() {
