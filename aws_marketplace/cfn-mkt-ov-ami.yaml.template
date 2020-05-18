@@ -74,6 +74,9 @@ Resources:
                 # Install openvidu-pro
                 cd /opt
                 curl https://s3-eu-west-1.amazonaws.com/aws.openvidu.io/install_openvidu_pro_OPENVIDU_VERSION.sh | bash
+
+                # Define Installation Type
+                sed -i "s/Installation Mode: On Premises/Installation Mode: Cloud Formation/" /opt/openvidu/docker-compose.yml
               mode: "000755"
               owner: "root"
               group: "root"
