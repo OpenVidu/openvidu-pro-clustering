@@ -294,6 +294,10 @@ upgrade_ov() {
      chmod +x "${OPENVIDU_PREVIOUS_FOLDER}/cluster/aws/openvidu_launch_kms.sh" || fatal_error "Error while adding permission to 'openvidu_launch_kms.sh' program"
      printf '\n          - openvidu_launch_kms.sh'
 
+     # Define old mode: On Premise or Cloud Formation
+     OLD_MODE=$(grep -E "Installation Mode:.*$" "${TMP_FOLDER}/docker-compose.yml" | awk '{ print $4,$5 }')
+     [ ! -z "${OLD_MODE}" ] && sed -i -r "s/Installation Mode:.+/Installation Mode: ${OLD_MODE}/" "${OPENVIDU_PREVIOUS_FOLDER}/docker-compose.yml"
+
      # Ready to use
      printf '\n'
      printf '\n'

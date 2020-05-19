@@ -219,6 +219,10 @@ upgrade_media_node() {
      printf "\n     => Adding permission to 'media_node' program..."
      chmod +x "${MEDIA_NODE_PREVIOUS_FOLDER}/media_node" || fatal_error "Error while adding permission to 'media_node' program"
 
+     # Define old mode: On Premise or Cloud Formation
+     OLD_MODE=$(grep -E "Installation Mode:.*$" "${TMP_FOLDER}/docker-compose.yml" | awk '{ print $4,$5 }')
+     [ ! -z "${OLD_MODE}" ] && sed -i -r "s/Installation Mode:.+/Installation Mode: ${OLD_MODE}/" "${MEDIA_NODE_PREVIOUS_FOLDER}/docker-compose.yml"
+
      # Ready to use
      printf '\n'
      printf '\n'
