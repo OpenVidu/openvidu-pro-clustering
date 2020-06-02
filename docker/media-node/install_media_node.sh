@@ -61,6 +61,7 @@ new_media_node_installation() {
      chmod +x "${MEDIA_NODE_FOLDER}/media_node" || fatal_error "Error while adding permission to 'media_node' program"
 
      # Pull images
+     printf "\n     => Pulling images...\n"
      cd "${MEDIA_NODE_FOLDER}" || fatal_error "Error when moving to '${MEDIA_NODE_FOLDER}' folder"
      KMS_IMAGE=$(cat docker-compose.yml | grep KMS_IMAGE | sed 's/\(^.*KMS_IMAGE:-\)\(.*\)\(\}.*$\)/\2/')
      METRICBEAT_IMAGE=$(cat docker-compose.yml | grep METRICBEAT_IMAGE | sed 's/\(^.*METRICBEAT_IMAGE:-\)\(.*\)\(\}.*$\)/\2/')
