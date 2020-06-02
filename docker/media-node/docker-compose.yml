@@ -15,26 +15,16 @@
 version: '3.1'
 
 services:
-    kms:
-        image: ${KMS_IMAGE:-kurento/kurento-media-server:6.13.2}
+    media-node-controller:
+        image: openvidu/media-node-controller:1.0.0
         restart: always
-        network_mode: host
         ulimits:
             core: -1
         volumes:
             - /opt/openvidu/recordings:/opt/openvidu/recordings
-            - /opt/openvidu/kms-crashes:/opt/openvidu/kms-crashes
+            - /var/run/docker.sock:/var/run/docker.sock
         environment:
-            - KMS_MIN_PORT=40000
-            - KMS_MAX_PORT=57000
-            - GST_DEBUG=${KMS_DEBUG_LEVEL:-}
-
-    nginx:
-        image: openvidu/openvidu-proxy:2.0.0
-        entrypoint: ['/bin/sh', '-c', 'nginx -g "daemon on;" && tail -f /var/log/nginx/*.log']
-        restart: on-failure
-        network_mode: host
-        volumes:
-            - ./nginx_conf/nginx.conf:/etc/nginx/nginx.conf
-            - ./nginx_conf/kms-recorder.conf:/etc/nginx/conf.d/default.conf
-            - /opt/openvidu/recordings:/opt/openvidu/recordings
+            - KMS_IMAGE=${KMS_IMAGE:-kurento/kurento-media-server:6.13.2}
+            - KMS_DEBUG_LEVEL=${KMS_DEBUG_LEVEL:-}
+            - METRICBEAT_IMAGE=${METRICBEAT_IMAGE:-docker.elastic.co/beats/metricbeat:7.7.0}
+            - FILEBEAT_IMAGE=${FILEBEAT_IMAGE:-docker.elastic.co/beats/filebeat:7.7.0}

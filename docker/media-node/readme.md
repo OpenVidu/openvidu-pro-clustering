@@ -37,6 +37,7 @@ These ports need to be opened and publicly accessible for each type of instance 
 - **40000 - 65535 UDP** (WebRTC connections with clients may be established using a random port inside this range)
 - **40000 - 65535 TCP** (WebRTC connections with clients may be established using a random port inside this range, if UDP can't be used because client network is blocking it)
 - **8888 TCP (must only be accessible for OpenVidu Server Pro instance)** (Kurento Media Server listens on port 8888 by default)
+- **3000 TCP (must only be accessible for OpenVidu Server Pro instance)** Media nodes are orchestrated through and intermediary service called media-node-controller via http. This service listens on port 3000.
 
 
 > **NOTE**: in production environments you will have to configure a **fully qualified domain name** in your **OpenVidu Server Pro instance**. You can register a FQDN for the OpenVidu Server Pro instance using a DNS server, pairing the OpenVidu Server Pro instance public IP with your domain name. This is the only way to later set up a valid certificate in OpenVidu Server Pro instance, so clients don't get a warning when connecting to a video session
@@ -79,7 +80,7 @@ For more information, check readme.md
 
 OpenVidu Platform configuration is specified in the **`.env`** file with environment variables.
 
-- You _must_ give a value to properties **`DOMAIN_OR_PUBLIC_IP`**, **`OPENVIDU_SECRET`** and **`KIBANA_PASSWORD`**. Default empty values will fail. 
+- You _must_ give a value to properties **`DOMAIN_OR_PUBLIC_IP`**, **`OPENVIDU_SECRET`** and **`KIBANA_PASSWORD`**. Default empty values will fail.
 - Other value that you _must_ give is  **`OPENVIDU_PRO_LICENSE`** You need an **[OpenVidu account](https://openvidu.io/account)** to purchase it. There's a **15 day free trial** waiting for you!
 - You can change the **`CERTIFICATE_TYPE`** if you have a valid domain name. Setting this property to `letsencrypt` will automatically generate a valid certificate for you (it is required to set property `LETSENCRYPT_EMAIL`). Or if for any unknown reason you prefer to use your own certificate, set the property to `owncert` and place the certificate files as explained.
 - All other configuration properties come with sane defaults. You can go through them and change whatever you want. Visit [OpenVidu Server CE configuration](reference-docs/openvidu-config/) and [OpenVidu Server Pro configuration](openvidu-pro/reference-docs/openvidu-pro-config/) for further information.
@@ -235,19 +236,21 @@ Execute the following command to download and run the installation script.
 curl https://s3-eu-west-1.amazonaws.com/aws.openvidu.io/install_media_node_latest.sh | bash
 ```
 
-This will download all required files into `kms` folder and will show this message with basic instructions:
+This will download all required files into `media-node` folder and will show this message with basic instructions:
 
 ```html
 Media Node successfully installed.
 
 1. Go to kms folder:
-$ cd kms
+$ cd media-node
 
 2. Start KMS
 $ ./media_node start
 
 For more information, check readme.md
 ```
+
+> **NOTE**: The command `./media_node start` will run a rest service listening at port 3000. This service will initialize Kurento Media Server at step 4.3), when the node is configured in OpenVidu Server Pro.
 
 <br>
 
@@ -396,7 +399,7 @@ Fix config errors
 
 #### Docker compose
 
-To solve any other issue, it is important to understand how is OpenVidu executed. 
+To solve any other issue, it is important to understand how is OpenVidu executed.
 
 OpenVidu is executed as a docker-compose file. The commands executed by the script are the standard docker-compose commands, so internally they just do:
 
@@ -404,14 +407,14 @@ OpenVidu is executed as a docker-compose file. The commands executed by the scri
     - `$ docker-compose up -d`
     - `$ docker-compose logs -f openvidu-server`
 - stop
-    - `$ docker-compose down` 
+    - `$ docker-compose down`
 - restart
-    - `$ docker-compose down` 
+    - `$ docker-compose down`
     - `$ docker-compose up -d`
     - `$ docker-compose logs -f openvidu-server`
 - logs
     - `$ docker-compose logs -f openvidu-server`
- 
+
 <br>
 As you can see, logs of `openvidu-server` service are shown when platform is started or restarted. This log contains the most important information for the OpenVidu execution.
 
@@ -423,7 +426,7 @@ Take a look to service logs to see what happened. First, see openvidu-server log
 ./openvidu logs
 ```
 
-You can also see all service logs together: 
+You can also see all service logs together:
 
 ```
 docker-compose logs -f
@@ -444,7 +447,7 @@ Sometimes we may have a typo when writing a property name. For this reason, open
 
 ```console
 Configuration properties
----------------------  
+---------------------
 * CERTIFICATE_TYPE=selfsigned
 * OPENVIDU_CDR=false
 * OPENVIDU_CDR_PATH=/opt/openvidu/cdr
@@ -470,7 +473,7 @@ To change the level of _openvidu-server_ logs change the property `OV_CE_DEBUG_L
 
 #### Docker compose
 
-To solve any other issue, it is important to understand how is Media Node executed. 
+To solve any other issue, it is important to understand how is Media Node executed.
 
 Media Node is executed as a docker-compose file. The commands executed by the script are the standard docker-compose commands, so internally they just do:
 
@@ -478,14 +481,14 @@ Media Node is executed as a docker-compose file. The commands executed by the sc
     - `$ docker-compose up -d`
     - `$ docker-compose logs -f kms`
 - stop
-    - `$ docker-compose down` 
+    - `$ docker-compose down`
 - restart
-    - `$ docker-compose down` 
+    - `$ docker-compose down`
     - `$ docker-compose up -d`
     - `$ docker-compose logs -f kms`
 - logs
     - `$ docker-compose logs -f kms`
- 
+
 <br>
 As you can see, logs of `kms` service are shown when platform is started or restarted.
 
@@ -497,7 +500,7 @@ Take a look to service logs to see what happened. First, see openvidu-server log
 ./media_node logs
 ```
 
-You can also see all service logs together: 
+You can also see all service logs together:
 
 ```
 docker-compose logs -f

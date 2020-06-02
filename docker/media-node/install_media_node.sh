@@ -2,8 +2,7 @@
 
 MEDIA_NODE_FOLDER=kms
 MEDIA_NODE_VERSION=master
-NGINX_CONF_FOLDER=${MEDIA_NODE_FOLDER}/nginx_conf
-
+BEATS_FOLDER=${MEDIA_NODE_FOLDER}/beats
 fatal_error() {
      printf "\n     =======¡ERROR!======="
      printf "\n     %s" "$1"
@@ -22,9 +21,9 @@ new_media_node_installation() {
      printf '\n     => Creating folder '%s'...' "${MEDIA_NODE_FOLDER}"
      mkdir "${MEDIA_NODE_FOLDER}" || fatal_error "Error while creating the folder '${MEDIA_NODE_FOLDER}'"
 
-     # Create nginx folder
+     # Create beats folder
      printf "\n     => Creating folder 'nginx_conf'..."
-     mkdir "${NGINX_CONF_FOLDER}" || fatal_error "Error while creating the folder 'nginx_conf'"
+     mkdir "${BEATS_FOLDER}" || fatal_error "Error while creating the folder 'beats'"
 
      # Download necessaries files
      printf '\n     => Downloading Media Node files:'
@@ -45,13 +44,17 @@ new_media_node_installation() {
           --output "${MEDIA_NODE_FOLDER}/readme.md" || fatal_error "Error when downloading the file 'readme.md'"
      printf '\n          - readme.md'
 
-     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}/docker/media-node/nginx_conf/kms-recorder.conf \
-          --output "${NGINX_CONF_FOLDER}/kms-recorder.conf" || fatal_error "Error when downloading the file 'kms-recorder.conf'"
-     printf '\n          - kms-recorder.conf'
+     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}/docker/media-node/beats/filebeat.yml \
+          --output "${BEATS_FOLDER}/filebeat.yml" || fatal_error "Error when downloading the file 'filebeat.yml'"
+     printf '\n          - filebeat.yml'
 
-     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}/docker/media-node/nginx_conf/nginx.conf \
-          --output "${NGINX_CONF_FOLDER}/nginx.conf" || fatal_error "Error when downloading the file 'nginx.conf'"
-     printf '\n          - nginx.conf'
+     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}/docker/media-node/beats/metricbeat-elasticsearch.yml \
+          --output "${BEATS_FOLDER}/metricbeat-elasticsearch.yml" || fatal_error "Error when downloading the file 'metricbeat-elasticsearch.yml'"
+     printf '\n          - metricbeat-elasticsearch.yml'
+
+     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}/docker/media-node/beats/metricbeat-openvidu.yml \
+          --output "${BEATS_FOLDER}/metricbeat-openvidu.yml" || fatal_error "Error when downloading the file 'metricbeat-openvidu.yml'"
+     printf '\n          - metricbeat-openvidu.yml'
 
      # Add execution permissions
      printf "\n     => Adding permission to 'media_node' program..."
@@ -103,7 +106,7 @@ upgrade_media_node() {
 
      # Uppgrade Media Node
      OPENVIDU_PREVIOUS_VERSION=$(grep 'Openvidu Version:' "${MEDIA_NODE_PREVIOUS_FOLDER}/docker-compose.yml" | awk '{ print $4 }')
-     [ -z "${OPENVIDU_PREVIOUS_VERSION}" ] && OPENVIDU_PREVIOUS_VERSION=2.13.0
+     [ -z "${OPENVIDU_PREVIOUS_VERSION}" ] && OPENVIDU_PREVIOUS_VERSION=2.14.0
 
      # In this point using the variable 'OPENVIDU_PREVIOUS_VERSION' we can verify if the upgrade is
      # posible or not. If it is not posible launch a warning and stop the upgrade.
@@ -143,13 +146,17 @@ upgrade_media_node() {
           --output "${TMP_FOLDER}/readme.md" || fatal_error "Error when downloading the file 'readme.md'"
      printf '\n          - readme.md'
 
-     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}/docker/media-node/nginx_conf/kms-recorder.conf \
-          --output "${TMP_FOLDER}/kms-recorder.conf" || fatal_error "Error when downloading the file 'kms-recorder.conf'"
-     printf '\n          - kms-recorder.conf'
+     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}/docker/media-node/beats/filebeat.yml \
+          --output "${TMP_FOLDER}/filebeat.yml" || fatal_error "Error when downloading the file 'filebeat.yml'"
+     printf '\n          - filebeat.yml'
 
-     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}/docker/media-node/nginx_conf/nginx.conf \
-          --output "${TMP_FOLDER}/nginx.conf" || fatal_error "Error when downloading the file 'nginx.conf'"
-     printf '\n          - nginx.conf'
+     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}/docker/media-node/beats/metricbeat-elasticsearch.yml \
+          --output "${TMP_FOLDER}/metricbeat-elasticsearch.yml" || fatal_error "Error when downloading the file 'metricbeat-elasticsearch.yml'"
+     printf '\n          - metricbeat-elasticsearch.yml'
+
+     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}/docker/media-node/beats/metricbeat-openvidu.yml \
+          --output "${TMP_FOLDER}/metricbeat-openvidu.yml" || fatal_error "Error when downloading the file 'metricbeat-openvidu.yml'"
+     printf '\n          - metricbeat-openvidu.yml'
 
      # Dowloading new images and stoped actual Media Node
      printf '\n     => Dowloading new images...'
@@ -204,13 +211,16 @@ upgrade_media_node() {
      mv "${TMP_FOLDER}/readme.md" "${MEDIA_NODE_PREVIOUS_FOLDER}" || fatal_error "Error while updating 'readme.md'"
      printf '\n          - readme.md'
 
-     mkdir "${MEDIA_NODE_PREVIOUS_FOLDER}/nginx_conf" || fatal_error "Error while creating the folder 'nginx_conf'"
+     mkdir "${MEDIA_NODE_PREVIOUS_FOLDER}/beats" || fatal_error "Error while creating the folder 'beats'"
 
-     mv "${TMP_FOLDER}/kms-recorder.conf" "${MEDIA_NODE_PREVIOUS_FOLDER}/nginx_conf" || fatal_error "Error while updating 'readme.md'"
-     printf '\n          - kms-recorder.conf'
+     mv "${TMP_FOLDER}/filebeat.yml" "${MEDIA_NODE_PREVIOUS_FOLDER}/beats" || fatal_error "Error while updating 'filebeat.yml'"
+     printf '\n          - filebeat.yml'
 
-     mv "${TMP_FOLDER}/nginx.conf" "${MEDIA_NODE_PREVIOUS_FOLDER}/nginx_conf" || fatal_error "Error while updating 'readme.md'"
-     printf '\n          - nginx.conf'
+     mv "${TMP_FOLDER}/metricbeat-elasticsearch.yml" "${MEDIA_NODE_PREVIOUS_FOLDER}/beats" || fatal_error "Error while updating 'metricbeat-elasticsearch.yml'"
+     printf '\n          - metricbeat-elasticsearch.yml'
+
+     mv "${TMP_FOLDER}/metricbeat-openvidu.yml" "${MEDIA_NODE_PREVIOUS_FOLDER}/beats" || fatal_error "Error while updating 'metricbeat-openvidu.yml'"
+     printf '\n          - metricbeat-openvidu.yml'
 
      printf "\n     => Deleting 'tmp' folder"
      rm -rf "${TMP_FOLDER}" || fatal_error "Error deleting 'tmp' folder"
