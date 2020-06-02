@@ -62,9 +62,9 @@ new_media_node_installation() {
 
      # Pull images
      cd "${MEDIA_NODE_FOLDER}" || fatal_error "Error when moving to '${MEDIA_NODE_FOLDER}' folder"
-     KMS_IMAGE=$(cat .env | grep KMS_IMAGE | cut -d'{' -f2 | cut -d "}" -f1)
-     METRICBEAT_IMAGE=$(cat .env | grep METRICBEAT_IMAGE | cut -d'{' -f2 | cut -d "}" -f1)
-     FILEBEAT_IMAGE=$(cat .env | grep METRICBEAT_IMAGE | cut -d'{' -f2 | cut -d "}" -f1)
+     KMS_IMAGE=$(cat docker-compose.yml | grep KMS_IMAGE | sed 's/\(^.*KMS_IMAGE:-\)\(.*\)\(\}.*$\)/\2/')
+     METRICBEAT_IMAGE=$(cat docker-compose.yml | grep METRICBEAT_IMAGE | sed 's/\(^.*METRICBEAT_IMAGE:-\)\(.*\)\(\}.*$\)/\2/')
+     FILEBEAT_IMAGE=$(cat .docker-compose.yml | grep FILEBEAT_IMAGE | sed 's/\(^.*FILEBEAT_IMAGE:-\)\(.*\)\(\}.*$\)/\2/')
      docker pull $KMS_IMAGE || fatal "Error while pulling docker image: $KMS_IMAGE"
      docker pull $METRICBEAT_IMAGE || fatal "Error while pulling docker image: $METRICBEAT_IMAGE"
      docker pull $FILEBEAT_IMAGE || fatal "Error while pulling docker image: $FILEBEAT_IMAGE"
@@ -177,9 +177,9 @@ upgrade_media_node() {
 
      # Pull images
      cd "${TMP_FOLDER}" || fatal_error "Error when moving to '${TMP_FOLDER}' folder"
-     KMS_IMAGE=$(cat .env | grep KMS_IMAGE | cut -d'{' -f2 | cut -d "}" -f1)
-     METRICBEAT_IMAGE=$(cat .env | grep METRICBEAT_IMAGE | cut -d'{' -f2 | cut -d "}" -f1)
-     FILEBEAT_IMAGE=$(cat .env | grep METRICBEAT_IMAGE | cut -d'{' -f2 | cut -d "}" -f1)
+     KMS_IMAGE=$(cat docker-compose.yml | grep KMS_IMAGE | sed 's/\(^.*KMS_IMAGE:-\)\(.*\)\(\}.*$\)/\2/')
+     METRICBEAT_IMAGE=$(cat docker-compose.yml | grep METRICBEAT_IMAGE | sed 's/\(^.*METRICBEAT_IMAGE:-\)\(.*\)\(\}.*$\)/\2/')
+     FILEBEAT_IMAGE=$(cat .docker-compose.yml | grep FILEBEAT_IMAGE | sed 's/\(^.*FILEBEAT_IMAGE:-\)\(.*\)\(\}.*$\)/\2/')
      docker pull $KMS_IMAGE || fatal "Error while pulling docker image: $KMS_IMAGE"
      docker pull $METRICBEAT_IMAGE || fatal "Error while pulling docker image: $METRICBEAT_IMAGE"
      docker pull $FILEBEAT_IMAGE || fatal "Error while pulling docker image: $FILEBEAT_IMAGE"
