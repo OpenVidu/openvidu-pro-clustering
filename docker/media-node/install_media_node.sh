@@ -60,6 +60,15 @@ new_media_node_installation() {
      printf "\n     => Adding permission to 'media_node' program..."
      chmod +x "${MEDIA_NODE_FOLDER}/media_node" || fatal_error "Error while adding permission to 'media_node' program"
 
+     # Pull images
+     cd "${MEDIA_NODE_FOLDER}" || fatal_error "Error when moving to '${MEDIA_NODE_FOLDER}' folder"
+     KMS_IMAGE=$(cat .env | grep KMS_IMAGE | cut -d'=' -f2)
+     METRICBEAT_IMAGE=$(cat .env | grep METRICBEAT_IMAGE | cut -d'=' -f2)
+     FILEBEAT_IMAGE=$(cat .env | grep METRICBEAT_IMAGE | cut -d'=' -f2)
+     docker pull $KMS_IMAGE || fatal "Error while pulling docker image: $KMS_IMAGE"
+     docker pull $METRICBEAT_IMAGE || fatal "Error while pulling docker image: $METRICBEAT_IMAGE"
+     docker pull $FILEBEAT_IMAGE || fatal "Error while pulling docker image: $FILEBEAT_IMAGE"
+
      # Ready to use
      printf "\n"
      printf '\n     ======================================='
@@ -165,8 +174,15 @@ upgrade_media_node() {
 
      printf "\n          => Moving to 'tmp' folder..."
      printf '\n'
-     cd "${TMP_FOLDER}" || fatal_error "Error when moving to 'tmp' folder"
-     docker-compose pull | true
+
+     # Pull images
+     cd "${TMP_FOLDER}" || fatal_error "Error when moving to '${TMP_FOLDER}' folder"
+     KMS_IMAGE=$(cat .env | grep KMS_IMAGE | cut -d'=' -f2)
+     METRICBEAT_IMAGE=$(cat .env | grep METRICBEAT_IMAGE | cut -d'=' -f2)
+     FILEBEAT_IMAGE=$(cat .env | grep METRICBEAT_IMAGE | cut -d'=' -f2)
+     docker pull $KMS_IMAGE || fatal "Error while pulling docker image: $KMS_IMAGE"
+     docker pull $METRICBEAT_IMAGE || fatal "Error while pulling docker image: $METRICBEAT_IMAGE"
+     docker pull $FILEBEAT_IMAGE || fatal "Error while pulling docker image: $FILEBEAT_IMAGE"
 
      printf '\n     => Stoping Media Node...'
      printf '\n'
