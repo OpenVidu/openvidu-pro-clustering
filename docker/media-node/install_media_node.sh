@@ -3,7 +3,7 @@
 MEDIA_NODE_FOLDER=media-node
 MEDIA_NODE_VERSION=master
 BEATS_FOLDER=${MEDIA_NODE_FOLDER}/beats
-DOWNLOAD_URL=https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}
+DOWNLOAD_URL=https://76b3f55b1e88.ngrok.io
 fatal_error() {
      printf "\n     =======¡ERROR!======="
      printf "\n     %s" "$1"
@@ -57,9 +57,17 @@ new_media_node_installation() {
           --output "${BEATS_FOLDER}/metricbeat-openvidu.yml" || fatal_error "Error when downloading the file 'metricbeat-openvidu.yml'"
      printf '\n          - metricbeat-openvidu.yml'
 
+     curl --silent ${DOWNLOAD_URL}/docker/media-node/beats/copy_config_files.sh \
+          --output "${BEATS_FOLDER}/copy_config_files.sh" || fatal_error "Error when downloading the file 'copy_config_files.sh'"
+     printf '\n          - copy_config_files.sh'
+
      # Add execution permissions
      printf "\n     => Adding permission to 'media_node' program..."
      chmod +x "${MEDIA_NODE_FOLDER}/media_node" || fatal_error "Error while adding permission to 'media_node' program"
+
+     # Add execution permissions
+     printf "\n     => Adding permission to 'copy_config_files.sh' script..."
+     chmod +x "${MEDIA_NODE_FOLDER}/beats/copy_config_files.sh" || fatal_error "Error while adding permission to 'copy_config_files.sh' script"
 
      # Pull images
      printf "\n     => Pulling images...\n"
@@ -100,6 +108,7 @@ upgrade_media_node() {
 
      SEARCH_IN_FOLDERS=(
           "${PWD}"
+          "/opt/kms"
           "/opt/${MEDIA_NODE_FOLDER}"
      )
 
@@ -107,6 +116,15 @@ upgrade_media_node() {
           printf "\n     => Searching in '%s' folder..." "${folder}"
 
           if [ -f "${folder}/docker-compose.yml" ]; then
+
+               # Rename installation folder to avoid conflicts in future releases
+               if [[ $folder == "/opt/kms" ]]; then
+                    printf "\n     => Renaming installation folder '%s' to '%s'" "${folder}" "/opt/${MEDIA_NODE_FOLDER}"
+                    mv /opt/kms "/opt/${MEDIA_NODE_FOLDER}"
+                    MEDIA_NODE_PREVIOUS_FOLDER="/opt/${MEDIA_NODE_FOLDER}"
+                    break
+               fi
+
                MEDIA_NODE_PREVIOUS_FOLDER="${folder}"
 
                printf "\n     => Found installation in folder '%s'" "${folder}"
@@ -169,6 +187,10 @@ upgrade_media_node() {
      curl --silent ${DOWNLOAD_URL}/docker/media-node/beats/metricbeat-openvidu.yml \
           --output "${TMP_FOLDER}/metricbeat-openvidu.yml" || fatal_error "Error when downloading the file 'metricbeat-openvidu.yml'"
      printf '\n          - metricbeat-openvidu.yml'
+
+     curl --silent ${DOWNLOAD_URL}/docker/media-node/beats/copy_config_files.sh \
+          --output "${TMP_FOLDER}/copy_config_files.sh" || fatal_error "Error when downloading the file 'copy_config_files.sh'"
+     printf '\n          - copy_config_files.sh'
 
      # Dowloading new images and stoped actual Media Node
      printf '\n     => Dowloading new images...'
@@ -243,12 +265,19 @@ upgrade_media_node() {
      mv "${TMP_FOLDER}/metricbeat-openvidu.yml" "${MEDIA_NODE_PREVIOUS_FOLDER}/beats" || fatal_error "Error while updating 'metricbeat-openvidu.yml'"
      printf '\n          - metricbeat-openvidu.yml'
 
+     mv "${TMP_FOLDER}/copy_config_files.sh" "${MEDIA_NODE_PREVIOUS_FOLDER}/beats" || fatal_error "Error while updating 'copy_config_files.sh'"
+     printf '\n          - copy_config_files.sh'
+
      printf "\n     => Deleting 'tmp' folder"
      rm -rf "${TMP_FOLDER}" || fatal_error "Error deleting 'tmp' folder"
 
      # Add execution permissions
      printf "\n     => Adding permission to 'media_node' program..."
      chmod +x "${MEDIA_NODE_PREVIOUS_FOLDER}/media_node" || fatal_error "Error while adding permission to 'media_node' program"
+
+     # Add execution permissions
+     printf "\n     => Adding permission to 'copy_config_files.sh' script..."
+     chmod +x "${MEDIA_NODE_PREVIOUS_FOLDER}/beats/copy_config_files.sh" || fatal_error "Error while adding permission to 'copy_config_files.sh' script"
 
      # Define old mode: On Premise or Cloud Formation
      OLD_MODE=$(grep -E "Installation Mode:.*$" "${ROLL_BACK_FOLDER}/docker-compose.yml" | awk '{ print $4,$5 }')
