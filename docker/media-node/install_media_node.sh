@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-MEDIA_NODE_FOLDER=kms
+MEDIA_NODE_FOLDER=media-node
 MEDIA_NODE_VERSION=master
 BEATS_FOLDER=${MEDIA_NODE_FOLDER}/beats
 DOWNLOAD_URL=https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}
@@ -18,12 +18,12 @@ new_media_node_installation() {
      printf '\n     ======================================='
      printf '\n'
 
-     # Create kms folder
+     # Create media-node folder
      printf '\n     => Creating folder '%s'...' "${MEDIA_NODE_FOLDER}"
      mkdir "${MEDIA_NODE_FOLDER}" || fatal_error "Error while creating the folder '${MEDIA_NODE_FOLDER}'"
 
      # Create beats folder
-     printf "\n     => Creating folder 'beats'..."
+     printf '\n     => Creating folder '%s'...' "${BEATS_FOLDER}"
      mkdir "${BEATS_FOLDER}" || fatal_error "Error while creating the folder 'beats'"
 
      # Download necessaries files
@@ -70,6 +70,7 @@ new_media_node_installation() {
      docker pull $KMS_IMAGE || fatal "Error while pulling docker image: $KMS_IMAGE"
      docker pull $METRICBEAT_IMAGE || fatal "Error while pulling docker image: $METRICBEAT_IMAGE"
      docker pull $FILEBEAT_IMAGE || fatal "Error while pulling docker image: $FILEBEAT_IMAGE"
+     docker-compose pull | true
 
      # Ready to use
      printf "\n"
@@ -77,10 +78,10 @@ new_media_node_installation() {
      printf "\n          Media Node successfully installed."
      printf '\n     ======================================='
      printf "\n"
-     printf '\n     1. Go to kms folder:'
-     printf '\n     $ cd kms'
+     printf '\n     1. Go to media-node folder:'
+     printf '\n     $ cd media-node'
      printf "\n"
-     printf '\n     2. Start KMS'
+     printf '\n     2. Start Media Node Controller'
      printf '\n     $ ./media_node start'
      printf '\n'
      printf '\n     For more information, check readme.md'
@@ -186,6 +187,7 @@ upgrade_media_node() {
      docker pull $KMS_IMAGE || fatal "Error while pulling docker image: $KMS_IMAGE"
      docker pull $METRICBEAT_IMAGE || fatal "Error while pulling docker image: $METRICBEAT_IMAGE"
      docker pull $FILEBEAT_IMAGE || fatal "Error while pulling docker image: $FILEBEAT_IMAGE"
+     docker-compose pull | true
 
      printf '\n     => Stoping Media Node...'
      printf '\n'

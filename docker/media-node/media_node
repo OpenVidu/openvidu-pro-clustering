@@ -64,6 +64,7 @@ generate_report() {
   REPORT_CREATION_TIME=$(date +"%H:%M:%S")
   REPORT_NAME="media-node-report-${REPORT_CREATION_DATE}-$(date +"%H-%M").txt"
   REPORT_OUPUT="${MEDIA_NODE_FOLDER}/${REPORT_NAME}"
+  CONTAINERS=$(docker ps | awk '{if(NR>1) print $NF}')
 
   {
     printf "\n  ======================================="
@@ -123,23 +124,38 @@ generate_report() {
     printf '\n'
     printf '\n'
     printf "\n  ======================================="
-    printf "\n  =            DOCKER LOGS              ="
+    printf "\n  =                LOGS                 ="
     printf "\n  ======================================="
-    printf '\n'
-    printf '\n  ================ PROXY ================'
-    printf '\n'
-    printf '\n'
 
-    docker-compose logs nginx
+    for CONTAINER in $CONTAINERS
+    do
+      printf '\n'
+      printf "\n  ---------------------------------------"
+      printf "\n  %s" $CONTAINER
+      printf "\n  ---------------------------------------"
+      printf '\n'
+      docker logs $CONTAINER
+      printf "\n  ---------------------------------------"
+      printf '\n'
+      printf '\n'
+    done
 
-    printf '\n'
-    printf '\n'
-    printf '\n  ================ KMS =================='
-    printf '\n'
-    printf '\n'
-    printf '\n'
+    printf "\n  ======================================="
+    printf "\n  =       CONTAINER ENVS VARIABLES      ="
+    printf "\n  ======================================="
 
-    docker-compose logs kms
+    for CONTAINER in $CONTAINERS
+    do
+      printf '\n'
+      printf "\n  ======================================="
+      printf "\n  %s" $CONTAINER
+      printf "\n  ---------------------------------------"
+      printf '\n'
+      docker exec $CONTAINER env
+      printf "\n  ---------------------------------------"
+      printf '\n'
+      printf '\n'
+    done
 
   } >> "${REPORT_OUPUT}"
 
@@ -167,7 +183,7 @@ case $1 in
 
   start)
     docker-compose up -d
-    docker-compose logs -f kms
+    docker-compose logs -f media-node-controller
     ;;
 
   stop)
@@ -177,11 +193,11 @@ case $1 in
   restart)
     docker-compose down
     docker-compose up -d
-    docker-compose logs -f kms
+    docker-compose logs -f media-node-controller
     ;;
 
   logs)
-    docker-compose logs -f kms
+    docker-compose logs -f media-node-controller
     ;;
 
   upgrade)
