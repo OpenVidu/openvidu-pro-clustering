@@ -21,23 +21,15 @@ output:
   elasticsearch:
     hosts: ["${OPENVIDU_SERVER_PRO_IP}:9200"]
     indices:
-      - index: "filebeat-redis-%{+yyyy.MM.dd}"
-        when.or:
-          - contains:
-              container.image.name: redis
-      - index: "filebeat-coturn-%{+yyyy.MM.dd}"
-        when.or:
-          - contains:
-              container.image.name: openvidu/openvidu-coturn
       - index: "filebeat-kurento-%{+yyyy.MM.dd}"
         when.or:
           - contains:
-              container.image.name: openvidu/openvidu-pro-cluster-kms
+              container.image.name: kurento/kurento-media-server
     pipelines:
       - pipeline: kurento-pipeline
         when.or:
           - contains:
-              container.image.name: openvidu/openvidu-pro-cluster-kms
+              container.image.name: kurento/kurento-media-server
 
 logging.json: true
 logging.metrics.enabled: false
