@@ -3,6 +3,7 @@
 MEDIA_NODE_FOLDER=kms
 MEDIA_NODE_VERSION=master
 BEATS_FOLDER=${MEDIA_NODE_FOLDER}/beats
+DOWNLOAD_URL=https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}
 fatal_error() {
      printf "\n     =======¡ERROR!======="
      printf "\n     %s" "$1"
@@ -22,37 +23,37 @@ new_media_node_installation() {
      mkdir "${MEDIA_NODE_FOLDER}" || fatal_error "Error while creating the folder '${MEDIA_NODE_FOLDER}'"
 
      # Create beats folder
-     printf "\n     => Creating folder 'nginx_conf'..."
+     printf "\n     => Creating folder 'beats'..."
      mkdir "${BEATS_FOLDER}" || fatal_error "Error while creating the folder 'beats'"
 
      # Download necessaries files
      printf '\n     => Downloading Media Node files:'
 
-     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}/docker/media-node/docker-compose.yml \
+     curl --silent ${DOWNLOAD_URL}/docker/media-node/docker-compose.yml \
           --output "${MEDIA_NODE_FOLDER}/docker-compose.yml" || fatal_error "Error when downloading the file 'docker-compose.yml'"
      printf '\n          - docker-compose.yml'
 
-     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}/docker/media-node/.env \
+     curl --silent ${DOWNLOAD_URL}/docker/media-node/.env \
           --output "${MEDIA_NODE_FOLDER}/.env" || fatal_error "Error when downloading the file '.env'"
      printf '\n          - .env'
 
-     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}/docker/media-node/media_node \
+     curl --silent ${DOWNLOAD_URL}/docker/media-node/media_node \
           --output "${MEDIA_NODE_FOLDER}/media_node" || fatal_error "Error when downloading the file 'media_node'"
      printf '\n          - media_node'
 
-     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}/docker/media-node/readme.md \
+     curl --silent ${DOWNLOAD_URL} \
           --output "${MEDIA_NODE_FOLDER}/readme.md" || fatal_error "Error when downloading the file 'readme.md'"
      printf '\n          - readme.md'
 
-     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}/docker/media-node/beats/filebeat.yml \
+     curl --silent ${DOWNLOAD_URL}/docker/media-node/beats/filebeat.yml \
           --output "${BEATS_FOLDER}/filebeat.yml" || fatal_error "Error when downloading the file 'filebeat.yml'"
      printf '\n          - filebeat.yml'
 
-     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}/docker/media-node/beats/metricbeat-elasticsearch.yml \
+     curl --silent ${DOWNLOAD_URL}/docker/media-node/beats/metricbeat-elasticsearch.yml \
           --output "${BEATS_FOLDER}/metricbeat-elasticsearch.yml" || fatal_error "Error when downloading the file 'metricbeat-elasticsearch.yml'"
      printf '\n          - metricbeat-elasticsearch.yml'
 
-     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}/docker/media-node/beats/metricbeat-openvidu.yml \
+     curl --silent ${DOWNLOAD_URL}/docker/media-node/beats/metricbeat-openvidu.yml \
           --output "${BEATS_FOLDER}/metricbeat-openvidu.yml" || fatal_error "Error when downloading the file 'metricbeat-openvidu.yml'"
      printf '\n          - metricbeat-openvidu.yml'
 
@@ -140,31 +141,31 @@ upgrade_media_node() {
      # Download necessaries files
      printf '\n     => Downloading new Media Node files:'
 
-     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}/docker/media-node/docker-compose.yml \
+     curl --silent ${DOWNLOAD_URL}/docker/media-node/docker-compose.yml \
           --output "${TMP_FOLDER}/docker-compose.yml" || fatal_error "Error when downloading the file 'docker-compose.yml'"
      printf '\n          - docker-compose.yml'
 
-     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}/docker/media-node/.env \
+     curl --silent ${DOWNLOAD_URL}/docker/media-node/.env \
           --output "${TMP_FOLDER}/.env" || fatal_error "Error when downloading the file '.env'"
      printf '\n          - .env'
 
-     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}/docker/media-node/media_node \
+     curl --silent ${DOWNLOAD_URL}/docker/media-node/media_node \
           --output "${TMP_FOLDER}/media_node" || fatal_error "Error when downloading the file 'media_node'"
      printf '\n          - media_node'
 
-     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}/docker/media-node/readme.md \
+     curl --silent ${DOWNLOAD_URL}/docker/media-node/readme.md \
           --output "${TMP_FOLDER}/readme.md" || fatal_error "Error when downloading the file 'readme.md'"
      printf '\n          - readme.md'
 
-     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}/docker/media-node/beats/filebeat.yml \
+     curl --silent ${DOWNLOAD_URL}/docker/media-node/beats/filebeat.yml \
           --output "${TMP_FOLDER}/filebeat.yml" || fatal_error "Error when downloading the file 'filebeat.yml'"
      printf '\n          - filebeat.yml'
 
-     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}/docker/media-node/beats/metricbeat-elasticsearch.yml \
+     curl --silent ${DOWNLOAD_URL}/docker/media-node/beats/metricbeat-elasticsearch.yml \
           --output "${TMP_FOLDER}/metricbeat-elasticsearch.yml" || fatal_error "Error when downloading the file 'metricbeat-elasticsearch.yml'"
      printf '\n          - metricbeat-elasticsearch.yml'
 
-     curl --silent https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}/docker/media-node/beats/metricbeat-openvidu.yml \
+     curl --silent ${DOWNLOAD_URL}/docker/media-node/beats/metricbeat-openvidu.yml \
           --output "${TMP_FOLDER}/metricbeat-openvidu.yml" || fatal_error "Error when downloading the file 'metricbeat-openvidu.yml'"
      printf '\n          - metricbeat-openvidu.yml'
 
@@ -177,6 +178,7 @@ upgrade_media_node() {
      printf '\n'
 
      # Pull images
+     printf "\n     => Pulling images...\n"
      cd "${TMP_FOLDER}" || fatal_error "Error when moving to '${TMP_FOLDER}' folder"
      KMS_IMAGE=$(cat docker-compose.yml | grep KMS_IMAGE | sed 's/\(^.*KMS_IMAGE:-\)\(.*\)\(\}.*$\)/\2/')
      METRICBEAT_IMAGE=$(cat docker-compose.yml | grep METRICBEAT_IMAGE | sed 's/\(^.*METRICBEAT_IMAGE:-\)\(.*\)\(\}.*$\)/\2/')
