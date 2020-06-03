@@ -183,7 +183,7 @@ stop_containers() {
   CONTAINERS=$(docker ps | awk '{if(NR>1) print $NF}')
   for CONTAINER in $CONTAINERS
   do
-    [ "$(docker ps -q | grep ${CONTAINER})" ] && docker stop ${CONTAINER}
+    [ "$(docker ps -a | grep ${CONTAINER})" ] && docker stop ${CONTAINER}
   done
 
 }
