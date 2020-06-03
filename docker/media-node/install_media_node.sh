@@ -3,7 +3,7 @@
 MEDIA_NODE_FOLDER=media-node
 MEDIA_NODE_VERSION=master
 BEATS_FOLDER=${MEDIA_NODE_FOLDER}/beats
-DOWNLOAD_URL=https://76b3f55b1e88.ngrok.io
+DOWNLOAD_URL=https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}
 fatal_error() {
      printf "\n     =======¡ERROR!======="
      printf "\n     %s" "$1"
