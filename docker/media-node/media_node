@@ -180,10 +180,12 @@ usage() {
 }
 
 stop_containers() {
-  CONTAINERS=$(docker ps -q)
-  if [[ ! -z $CONTAINERS ]]; then
-    docker stop $CONTAINERS
-  fi
+  CONTAINERS=$(docker ps | awk '{if(NR>1) print $NF}')
+  for CONTAINER in $CONTAINERS
+  do
+    [ "$(docker ps -q | grep ${CONTAINER})" ] && docker stop ${CONTAINER}
+  done
+
 }
 
 case $1 in
