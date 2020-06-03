@@ -179,6 +179,13 @@ usage() {
     printf "\n"
 }
 
+stop_containers() {
+  CONTAINERS=$(docker ps -q)
+  if [[ ! -z $CONTAINERS ]]; then
+    docker stop $CONTAINERS
+  fi
+}
+
 case $1 in
 
   start)
@@ -188,12 +195,12 @@ case $1 in
 
   stop)
     docker-compose down
-    docker stop $(docker ps -q)
+    stop_containers
     ;;
 
   restart)
     docker-compose down
-    docker stop $(docker ps -q)
+    stop_containers
     docker-compose up -d
     docker-compose logs -f media-node-controller
     ;;
