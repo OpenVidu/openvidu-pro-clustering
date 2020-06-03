@@ -188,10 +188,12 @@ case $1 in
 
   stop)
     docker-compose down
+    docker stop $(docker ps -q)
     ;;
 
   restart)
     docker-compose down
+    docker stop $(docker ps -q)
     docker-compose up -d
     docker-compose logs -f media-node-controller
     ;;
