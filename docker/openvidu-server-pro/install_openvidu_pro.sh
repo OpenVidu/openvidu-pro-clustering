@@ -31,7 +31,7 @@ new_ov_installation() {
      mkdir -p "${AWS_SCRIPTS_FOLDER}" || fatal_error "Error while creating the folder 'cluster/aws'"
 
      # Create beats folder
-     printf "\n     => Creating folder 'cluster/aws'..."
+     printf "\n     => Creating folder 'beats'..."
      mkdir -p "${BEATS_FOLDER}" || fatal_error "Error while creating the folder 'beats'"
 
      # Create elasticsearch folder
