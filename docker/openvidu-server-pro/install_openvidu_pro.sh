@@ -52,7 +52,7 @@ new_ov_installation() {
           --output "${AWS_SCRIPTS_FOLDER}/openvidu_launch_kms.sh" || fatal_error "Error when downloading the file 'openvidu_launch_kms.sh'"
      printf '\n          - openvidu_launch_kms.sh'
 
-     curl --silent ${DOWNLOAD_URL}/docker/openvidu-server-pro/cluster/beats/filebeat.yml \
+     curl --silent ${DOWNLOAD_URL}/docker/openvidu-server-pro/beats/filebeat.yml \
           --output "${BEATS_FOLDER}/filebeat.yml" || fatal_error "Error when downloading the file 'filebeat.yml'"
      printf '\n          - filebeat.yml'
 
@@ -183,7 +183,7 @@ upgrade_ov() {
           --output "${TMP_FOLDER}/openvidu_launch_kms.sh" || fatal_error "Error when downloading the file 'openvidu_launch_kms.sh'"
      printf '\n          - openvidu_launch_kms.sh'
 
-     curl --silent ${DOWNLOAD_URL}/docker/openvidu-server-pro/cluster/beats/filebeat.yml \
+     curl --silent ${DOWNLOAD_URL}/docker/openvidu-server-pro/beats/filebeat.yml \
           --output "${TMP_FOLDER}/filebeat.yml" || fatal_error "Error when downloading the file 'filebeat.yml'"
      printf '\n          - filebeat.yml'
 
