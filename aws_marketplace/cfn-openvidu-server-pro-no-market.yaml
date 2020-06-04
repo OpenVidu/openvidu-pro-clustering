@@ -58,10 +58,25 @@ Parameters:
     NoEcho: true
     ConstraintDescription: OpenVidu Secret is mandatory (no whitespaces or quotations allowed)
 
-  MediaNodesStartNumber:
-    Description: "How many Media Nodes do you want on startup (EC2 instances will be launched)"
+  MinMediaNodes:
+    Description: "Minimum number of Media Nodes to launch on Autoscaling (EC2 instances will be launched)"
     Type: Number
     Default: 1
+
+  MaxMediaNodes:
+    Description: "Maximum number of Media Nodes to launch on Autoscaling (EC2 instances will be launched)"
+    Type: Number
+    Default: 3
+
+  MinLoadAutoScaling:
+    Description: "Minimum load to scale down in autoscaling"
+    Type: Number
+    Default: 30
+
+  MaxLoadAutoScaling:
+    Description: "Maximum load to scale up in autoscaling"
+    Type: Number
+    Default: 30
 
   # Kibana configuration
 
@@ -115,7 +130,7 @@ Parameters:
       - c5.xlarge
       - c5.2xlarge
       - c5.4xlarge
-      - c5.9xlarge	
+      - c5.9xlarge
       - c5.12xlarge
       - c5.18xlarge
       - c5.24xlarge
@@ -155,7 +170,7 @@ Parameters:
       - c5.xlarge
       - c5.2xlarge
       - c5.4xlarge
-      - c5.9xlarge	
+      - c5.9xlarge
       - c5.12xlarge
       - c5.18xlarge
       - c5.24xlarge
@@ -179,7 +194,7 @@ Parameters:
   # Other configuration
 
   WantToDeployDemos:
-    Description: "Choose if you want to deploy OpenVidu Call application alongside OpenVidu platform." 
+    Description: "Choose if you want to deploy OpenVidu Call application alongside OpenVidu platform."
     Type: String
     AllowedValues:
       - true
@@ -332,8 +347,8 @@ Resources:
           files:
             '/usr/local/bin/check_app_ready.sh':
               content: |
-                #!/bin/bash 
-                while true; do 
+                #!/bin/bash
+                while true; do
                   HTTP_STATUS=$(curl -Ik http://localhost:5443/ | head -n1 | awk '{print $2}')
                   if [ $HTTP_STATUS == 200 ]; then
                     break
@@ -368,8 +383,17 @@ Resources:
                   echo $PublicHostname > /usr/share/openvidu/old-host-name
                 fi
 
+                # Replace OpenVidu Private ip
+                PRIVATE_IP=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
+                sed -i "s/OPENVIDU_PRO_PRIVATE_IP=/OPENVIDU_PRO_PRIVATE_IP=$PRIVATE_IP/" $WORKINGDIR/.env
+
                 # Openvidu Pro mode
                 sed -i "s/OPENVIDU_PRO_CLUSTER_MODE=manual/OPENVIDU_PRO_CLUSTER_MODE=auto/" $WORKINGDIR/.env
+                sed -i "s/OPENVIDU_PRO_CLUSTER_AUTOSCALING=false/OPENVIDU_PRO_CLUSTER_AUTOSCALING=true/" $WORKINGDIR/.env
+                sed -i "s/#OPENVIDU_PRO_CLUSTER_AUTOSCALING_MAX_NODES=/OPENVIDU_PRO_CLUSTER_AUTOSCALING_MAX_NODES=${MaxMediaNodes}/" $WORKINGDIR/.env
+                sed -i "s/#OPENVIDU_PRO_CLUSTER_AUTOSCALING_MIN_NODES=/OPENVIDU_PRO_CLUSTER_AUTOSCALING_MIN_NODES=${MinMediaNodes}/" $WORKINGDIR/.env
+                sed -i "s/#OPENVIDU_PRO_CLUSTER_AUTOSCALING_MAX_LOAD=/OPENVIDU_PRO_CLUSTER_AUTOSCALING_MAX_LOAD=${MaxLoadAutoScaling}/" $WORKINGDIR/.env
+                sed -i "s/#OPENVIDU_PRO_CLUSTER_AUTOSCALING_MIN_LOAD=/OPENVIDU_PRO_CLUSTER_AUTOSCALING_MIN_LOAD=${MinLoadAutoScaling}/" $WORKINGDIR/.env
 
                 # Openvidu Pro Media Nodes
                 sed -i "s/#OPENVIDU_PRO_CLUSTER_MEDIA_NODES=/OPENVIDU_PRO_CLUSTER_MEDIA_NODES=${MediaNodesStartNumber}/" $WORKINGDIR/.env
@@ -379,7 +403,7 @@ Resources:
 
                 # Replace certificated type
                 sed -i "s/CERTIFICATE_TYPE=selfsigned/CERTIFICATE_TYPE=${WhichCert}/" $WORKINGDIR/.env
-                sed -i "s/LETSENCRYPT_EMAIL=user@example.com/LETSENCRYPT_EMAIL=${LetsEncryptEmail}/" $WORKINGDIR/.env  
+                sed -i "s/LETSENCRYPT_EMAIL=user@example.com/LETSENCRYPT_EMAIL=${LetsEncryptEmail}/" $WORKINGDIR/.env
 
                 # Replace Kibana Conf
                 sed -i "s/KIBANA_USER=kibanaadmin/KIBANA_USER=${KibanaUser}/" $WORKINGDIR/.env
@@ -425,7 +449,7 @@ Resources:
               content: !Sub |
                 #!/bin/bash -x
                 WORKINGDIR=/opt/openvidu
-                
+
                 # Get new amazon URL
                 OldPublicHostname=$(cat /usr/share/openvidu/old-host-name)
                 PublicHostname=$(curl http://169.254.169.254/latest/meta-data/public-hostname)
@@ -464,7 +488,7 @@ Resources:
 
             # Launch on reboot
             echo "@reboot /usr/local/bin/restartPRO.sh" | crontab
-            
+
             # Download certs if "WichCert" mode
             if [ "${WhichCert}" == "owncert" ]; then
               /usr/local/bin/buildCerts.sh || { echo "[Openvidu] error with the certificate files"; exit 1; }

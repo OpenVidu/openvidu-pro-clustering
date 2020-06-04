@@ -38,7 +38,7 @@ Resources:
               content: |
                 #!/bin/bash
                 set -eu -o pipefail
-                
+
                 # Install Docker
                 apt-get update && apt-get install -y \
                     apt-transport-https \
@@ -70,18 +70,18 @@ Resources:
               content: |
                 #!/bin/bash
                 set -eu -o pipefail
-                
+
                 # Install kms
                 cd /opt
                 curl https://s3-eu-west-1.amazonaws.com/aws.openvidu.io/install_media_node_OPENVIDU_VERSION.sh | bash
-                
+
                 # Define Installation Type
                 sed -i "s/Installation Mode: On Premises/Installation Mode: Cloud Formation/" /opt/kms/docker-compose.yml
 
                 # Create recording folder
                 mkdir -p /opt/openvidu/recordings
                 chmod 777 /opt/openvidu/recordings
-                
+
                 # Configure crash report
                 mkdir -p /opt/openvidu/kms-crashes
                 sed -i "s/enabled=1/enabled=0/" /etc/default/apport
@@ -116,7 +116,7 @@ Resources:
                 python-pip \
                 ec2-instance-connect
             pip install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz
-            
+
             cfn-init --region ${AWS::Region} --stack ${AWS::StackId} --resource KurentoMediaServer
 
             /usr/local/bin/installDockerAndDockerCompose.sh || { echo "[Openvidu] error installing software"; exit 1; }
