@@ -30,6 +30,10 @@ new_ov_installation() {
      printf "\n     => Creating folder 'cluster/aws'..."
      mkdir -p "${AWS_SCRIPTS_FOLDER}" || fatal_error "Error while creating the folder 'cluster/aws'"
 
+     # Create beats folder
+     printf "\n     => Creating folder 'cluster/aws'..."
+     mkdir -p "${BEATS_FOLDER}" || fatal_error "Error while creating the folder 'cluster/aws'"
+
      # Create elasticsearch folder
      printf "\n     => Creating folder 'elasticsearch'..."
      mkdir -p "${ELASTICSEARCH_FOLDER}" || fatal_error "Error while creating the folder 'elasticsearch'"
@@ -276,6 +280,8 @@ upgrade_ov() {
      printf '\n          - readme.md'
 
      mkdir "${OPENVIDU_PREVIOUS_FOLDER}/cluster/aws" || fatal_error "Error while creating the folder 'cluster/aws'"
+
+     mkdir "${OPENVIDU_PREVIOUS_FOLDER}/beats" || fatal_error "Error while creating the folder 'beats'"
 
      mv "${TMP_FOLDER}/openvidu_autodiscover.sh" "${OPENVIDU_PREVIOUS_FOLDER}/cluster/aws" || fatal_error "Error while updating 'readme.md'"
      printf '\n          - openvidu_autodiscover.sh'
