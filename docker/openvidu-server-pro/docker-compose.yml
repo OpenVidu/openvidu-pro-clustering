@@ -103,3 +103,13 @@ services:
             - SERVER_BASEPATH="/kibana"
         ports:
             - 5601:5601
+
+    filebeat:
+        image: "docker.elastic.co/beats/filebeat:7.7.0"
+        restart: always
+        user: root
+        volumes:
+            - ./filebeat-conf/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+            - /var/lib/docker:/var/lib/docker:ro
+            - /var/run/docker.sock:/var/run/docker.sock
+        command: filebeat -e -strict.perms=false
