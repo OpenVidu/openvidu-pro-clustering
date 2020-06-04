@@ -109,7 +109,7 @@ services:
         restart: always
         user: root
         volumes:
-            - ./filebeat-conf/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+            - ./beats/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
             - /var/lib/docker:/var/lib/docker:ro
             - /var/run/docker.sock:/var/run/docker.sock
         command: filebeat -e -strict.perms=false
