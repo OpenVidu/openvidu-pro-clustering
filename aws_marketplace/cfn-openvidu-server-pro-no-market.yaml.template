@@ -226,8 +226,11 @@ Metadata:
           default: OpenVidu configuration
         Parameters:
           - OpenViduLicense
-          - MediaNodesStartNumber
           - OpenViduSecret
+          - MinMediaNodes
+          - MaxMediaNodes
+          - MinLoadAutoScaling
+          - MaxLoadAutoScaling
       - Label:
           default: Kibana configuration
         Parameters:
@@ -266,10 +269,16 @@ Metadata:
       # OpenVidu configuration
       OpenViduLicense:
         default: "OpenVidu Pro License key"
-      MediaNodesStartNumber:
-        default: "Initial number of Media Node in your cluster"
       OpenViduSecret:
         default: "Openvidu Secret"
+      MinMediaNodes:
+        default: "Minimum number of Media Nodes to launch on Autoscaling"
+      MaxMediaNodes:
+        default: "Maximum number of Media Nodes to launch on Autoscaling"
+      MinLoadAutoScaling:
+        default: "Minimum load to scale down in autoscaling"
+      MaxLoadAutoScaling:
+        default: "Maximum load to scale up in autoscaling"
       # Kibana configuration
       KibanaUser:
         default: "Kibana username"
@@ -394,9 +403,6 @@ Resources:
                 sed -i "s/#OPENVIDU_PRO_CLUSTER_AUTOSCALING_MIN_NODES=/OPENVIDU_PRO_CLUSTER_AUTOSCALING_MIN_NODES=${MinMediaNodes}/" $WORKINGDIR/.env
                 sed -i "s/#OPENVIDU_PRO_CLUSTER_AUTOSCALING_MAX_LOAD=/OPENVIDU_PRO_CLUSTER_AUTOSCALING_MAX_LOAD=${MaxLoadAutoScaling}/" $WORKINGDIR/.env
                 sed -i "s/#OPENVIDU_PRO_CLUSTER_AUTOSCALING_MIN_LOAD=/OPENVIDU_PRO_CLUSTER_AUTOSCALING_MIN_LOAD=${MinLoadAutoScaling}/" $WORKINGDIR/.env
-
-                # Openvidu Pro Media Nodes
-                sed -i "s/#OPENVIDU_PRO_CLUSTER_MEDIA_NODES=/OPENVIDU_PRO_CLUSTER_MEDIA_NODES=${MediaNodesStartNumber}/" $WORKINGDIR/.env
 
                 # Openvidu Pro enviroment
                 sed -i "s/OPENVIDU_PRO_CLUSTER_ENVIRONMENT=on_premise/OPENVIDU_PRO_CLUSTER_ENVIRONMENT=aws/" $WORKINGDIR/.env
