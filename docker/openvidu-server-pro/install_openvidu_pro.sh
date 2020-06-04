@@ -5,6 +5,7 @@ OPENVIDU_FOLDER=openvidu
 OPENVIDU_VERSION=master
 AWS_SCRIPTS_FOLDER=${OPENVIDU_FOLDER}/cluster/aws
 ELASTICSEARCH_FOLDER=${OPENVIDU_FOLDER}/elasticsearch
+BEATS_FOLDER=${OPENVIDU_FOLDER}/beats
 DOWNLOAD_URL=https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${OPENVIDU_VERSION}
 
 fatal_error() {
@@ -50,6 +51,10 @@ new_ov_installation() {
      curl --silent ${DOWNLOAD_URL}/docker/openvidu-server-pro/cluster/aws/openvidu_launch_kms.sh \
           --output "${AWS_SCRIPTS_FOLDER}/openvidu_launch_kms.sh" || fatal_error "Error when downloading the file 'openvidu_launch_kms.sh'"
      printf '\n          - openvidu_launch_kms.sh'
+
+     curl --silent ${DOWNLOAD_URL}/docker/openvidu-server-pro/cluster/beats/filebeat.yml \
+          --output "${BEATS_FOLDER}/filebeat.yml" || fatal_error "Error when downloading the file 'filebeat.yml'"
+     printf '\n          - filebeat.yml'
 
      curl --silent ${DOWNLOAD_URL}/docker/openvidu-server-pro/.env \
           --output "${OPENVIDU_FOLDER}/.env" || fatal_error "Error when downloading the file '.env'"
@@ -178,6 +183,10 @@ upgrade_ov() {
           --output "${TMP_FOLDER}/openvidu_launch_kms.sh" || fatal_error "Error when downloading the file 'openvidu_launch_kms.sh'"
      printf '\n          - openvidu_launch_kms.sh'
 
+     curl --silent ${DOWNLOAD_URL}/docker/openvidu-server-pro/cluster/beats/filebeat.yml \
+          --output "${TMP_FOLDER}/filebeat.yml" || fatal_error "Error when downloading the file 'filebeat.yml'"
+     printf '\n          - filebeat.yml'
+
      curl --silent ${DOWNLOAD_URL}/docker/openvidu-server-pro/.env \
           --output "${TMP_FOLDER}/.env" || fatal_error "Error when downloading the file '.env'"
      printf '\n          - .env'
@@ -276,6 +285,9 @@ upgrade_ov() {
 
      mv "${TMP_FOLDER}/openvidu_launch_kms.sh" "${OPENVIDU_PREVIOUS_FOLDER}/cluster/aws" || fatal_error "Error while updating 'readme.md'"
      printf '\n          - openvidu_launch_kms.sh'
+
+     mv "${TMP_FOLDER}/filebeat.yml" "${OPENVIDU_PREVIOUS_FOLDER}/beats/filebeat.yml" || fatal_error "Error while updating 'filebeat.yml'"
+     printf '\n          - filebeat.yml'
 
      printf "\n     => Deleting 'tmp' folder"
      rm -rf "${TMP_FOLDER}" || fatal_error "Error deleting 'tmp' folder"
