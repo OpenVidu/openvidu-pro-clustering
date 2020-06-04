@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 set -e -o pipefail
 
 # Set debug mode
@@ -43,12 +43,22 @@ docker run --rm amazon/aws-cli:2.0.7 ec2 run-instances \
     --tag-specifications "ResourceType=instance,Tags=[{Key='Name',Value='Kurento Media Server'},{Key='ov-cluster-member',Value='kms'},{Key='ov-stack-name',Value='${AWS_STACK_NAME}'},{Key='ov-stack-region',Value='${AWS_DEFAULT_REGION}'}]" \
     --iam-instance-profile Name="OpenViduInstanceProfile-${AWS_STACK_NAME}-${AWS_DEFAULT_REGION}" \
     --security-group-ids ${AWS_SECURITY_GROUP} > ${OUTPUT} 2> ${ERROUTPUT}
-    
+
 docker run --rm amazon/aws-cli:2.0.7 ec2 wait instance-running --instance-ids $(cat ${OUTPUT} | jq --raw-output ' .Instances[] | .InstanceId')
 
 # Generating the output
 KMS_IP=$(cat ${OUTPUT} | jq --raw-output ' .Instances[] | .NetworkInterfaces[0] | .PrivateIpAddress')
 KMS_ID=$(cat ${OUTPUT} | jq --raw-output ' .Instances[] | .InstanceId')
+
+# Wait media-node controller
+while true
+do
+  HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -u OPENVIDUAPP:${OPENVIDU_SECRET} "http://${KMS_IP}:3000/media-node/status")
+  if [ "$HTTP_STATUS" == "200" ]; then
+    break
+  fi
+  sleep 1
+done
 
 jq -n \
   --arg id "${KMS_ID}" \

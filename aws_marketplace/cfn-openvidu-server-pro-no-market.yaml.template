@@ -76,7 +76,7 @@ Parameters:
   MaxLoadAutoScaling:
     Description: "Maximum load to scale up in autoscaling"
     Type: Number
-    Default: 30
+    Default: 70
 
   # Kibana configuration
 
