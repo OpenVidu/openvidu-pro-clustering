@@ -537,6 +537,10 @@ Resources:
           FromPort: 8888
           ToPort: 8888
           CidrIp: !Join [ "/", [ !GetAtt OpenViduServer.PrivateIp, "32" ] ]
+        - IpProtocol: tcp
+          FromPort: 3000
+          ToPort: 3000
+          CidrIp: !Join [ "/", [ !GetAtt OpenViduServer.PrivateIp, "32" ] ]
         - IpProtocol: udp
           FromPort: 40000
           ToPort: 65535
