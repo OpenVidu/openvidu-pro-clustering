@@ -40,6 +40,7 @@ cp cfn-mkt-kms-ami.yaml.template cfn-mkt-kms-ami.yaml
 cp cfn-mkt-ov-ami.yaml.template cfn-mkt-ov-ami.yaml
 
 ## Setting Openvidu Version and Ubuntu Latest AMIs
+AWS_KEY_NAME=""
 if [[ ! -z ${AWS_KEY_NAME} ]]; then
   sed -i "s/      KeyName: AWS_KEY_NAME/      KeyName: ${AWS_KEY_NAME}/g" cfn-mkt-ov-ami.yaml
   sed -i "s/      KeyName: AWS_KEY_NAME/      KeyName: ${AWS_KEY_NAME}/g" cfn-mkt-kms-ami.yaml
