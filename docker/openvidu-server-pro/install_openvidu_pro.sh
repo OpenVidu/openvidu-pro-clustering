@@ -32,7 +32,7 @@ new_ov_installation() {
 
      # Create beats folder
      printf "\n     => Creating folder 'cluster/aws'..."
-     mkdir -p "${BEATS_FOLDER}" || fatal_error "Error while creating the folder 'cluster/aws'"
+     mkdir -p "${BEATS_FOLDER}" || fatal_error "Error while creating the folder 'beats'"
 
      # Create elasticsearch folder
      printf "\n     => Creating folder 'elasticsearch'..."
