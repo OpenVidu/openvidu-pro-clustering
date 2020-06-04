@@ -40,12 +40,21 @@ cp cfn-mkt-kms-ami.yaml.template cfn-mkt-kms-ami.yaml
 cp cfn-mkt-ov-ami.yaml.template cfn-mkt-ov-ami.yaml
 
 ## Setting Openvidu Version and Ubuntu Latest AMIs
+if [[ ! -z ${AWS_KEY_NAME} ]]; then
+  sed -i "s/      KeyName: AWS_KEY_NAME/      KeyName: ${AWS_KEY_NAME}/g" cfn-mkt-ov-ami.yaml
+  sed -i "s/      KeyName: AWS_KEY_NAME/      KeyName: ${AWS_KEY_NAME}/g" cfn-mkt-kms-ami.yaml
+else
+  sed -i '/      KeyName: AWS_KEY_NAME/d' cfn-mkt-ov-ami.yaml
+  sed -i '/      KeyName: AWS_KEY_NAME/d' cfn-mkt-kms-ami.yaml
+fi
+sed -i "s/AWS_KEY_NAME/${AWS_KEY_NAME}/g" cfn-mkt-ov-ami.yaml
 sed -i "s/OPENVIDU_VERSION/${OPENVIDU_PRO_VERSION}/g" cfn-mkt-ov-ami.yaml
 sed -i "s/AWS_DOCKER_TAG/${AWS_DOCKER_TAG}/g" cfn-mkt-ov-ami.yaml
 sed -i "s/OPENVIDU_RECORDING_DOCKER_TAG/${OPENVIDU_RECORDING_DOCKER_TAG}/g" cfn-mkt-ov-ami.yaml
 sed -i "s/AMIEUWEST1/${AMIEUWEST1}/g" cfn-mkt-ov-ami.yaml
 sed -i "s/AMIUSEAST1/${AMIUSEAST1}/g" cfn-mkt-ov-ami.yaml
 
+sed -i "s/AWS_KEY_NAME/${AWS_KEY_NAME}/g" cfn-mkt-kms-ami.yaml
 sed -i "s/OPENVIDU_VERSION/${OPENVIDU_PRO_VERSION}/g" cfn-mkt-kms-ami.yaml
 sed -i "s/AMIEUWEST1/${AMIEUWEST1}/g" cfn-mkt-kms-ami.yaml
 sed -i "s/AMIUSEAST1/${AMIUSEAST1}/g" cfn-mkt-kms-ami.yaml

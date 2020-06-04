@@ -104,6 +104,7 @@ Resources:
     Properties:
       ImageId: !FindInMap [AMIMAP, !Ref 'AWS::Region', AMI]
       InstanceType: "t2.2xlarge"
+      KeyName: AWS_KEY_NAME
       Tags:
         - Key: Name
           Value: !Ref AWS::StackName

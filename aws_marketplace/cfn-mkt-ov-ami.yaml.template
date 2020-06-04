@@ -38,7 +38,7 @@ Resources:
               content: |
                 #!/bin/bash
                 set -eu -o pipefail
-                
+
                 # Install Docker
                 apt-get update && apt-get install -y \
                     apt-transport-https \
@@ -70,7 +70,7 @@ Resources:
               content: !Sub |
                 #!/bin/bash
                 set -eu -o pipefail
-                
+
                 # Install openvidu-pro
                 cd /opt
                 curl https://s3-eu-west-1.amazonaws.com/aws.openvidu.io/install_openvidu_pro_OPENVIDU_VERSION.sh | bash
@@ -84,13 +84,13 @@ Resources:
               content: !Sub |
                 #!/bin/bash
                 set -eu -o pipefail
-                
+
                 # AWS cli
                 docker pull amazon/aws-cli:AWS_DOCKER_TAG
 
                 # Openvidu recording
                 docker pull openvidu/openvidu-recording:OPENVIDU_RECORDING_DOCKER_TAG
-              
+
                 # Openvidu PRO images
                 cd /opt/openvidu
                 docker-compose pull
@@ -100,6 +100,7 @@ Resources:
     Properties:
       ImageId: !FindInMap [AMIMAP, !Ref 'AWS::Region', AMI]
       InstanceType: "t2.2xlarge"
+      KeyName: AWS_KEY_NAME
       Tags:
         - Key: Name
           Value: !Ref AWS::StackName
