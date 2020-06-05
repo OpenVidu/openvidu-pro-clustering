@@ -51,13 +51,15 @@ KMS_IP=$(cat ${OUTPUT} | jq --raw-output ' .Instances[] | .NetworkInterfaces[0] 
 KMS_ID=$(cat ${OUTPUT} | jq --raw-output ' .Instances[] | .InstanceId')
 
 # Wait media-node controller
-while true
-do
-  HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -u OPENVIDUAPP:${OPENVIDU_SECRET} "http://${KMS_IP}:3000/media-node/status")
-  if [ "$HTTP_STATUS" == "200" ]; then
-    break
-  fi
-  sleep 1
+attempt_counter=0
+max_attempts=10
+
+until $(curl --output /dev/null --silent --head --fail -u OPENVIDUAPP:${OPENVIDU_SECRET} http://${KMS_IP}:3000/media-node/status); do
+    if [ ${attempt_counter} -eq ${max_attempts} ];then
+      exit 1
+    fi
+    attempt_counter=$(($attempt_counter+1))
+    sleep 5
 done
 
 jq -n \
