@@ -524,6 +524,7 @@ Resources:
     Properties:
       VpcId: !Ref OpenViduVPC
       GroupDescription: SSH, Proxy and KMS WebRTC Ports
+      GroupName: !Join [ "-", [ !Ref 'AWS::StackName', 'KMSSecurityGroup'] ]
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 22
@@ -532,15 +533,15 @@ Resources:
         - IpProtocol: tcp
           FromPort: 80
           ToPort: 80
-          CidrIp: !Join [ "/", [ !GetAtt OpenViduServer.PrivateIp, "32" ] ]
+          SourceSecurityGroupName: !Join [ "-", [ !Ref 'AWS::StackName', 'OpenViduSecurityGroup'] ]
         - IpProtocol: tcp
           FromPort: 8888
           ToPort: 8888
-          CidrIp: !Join [ "/", [ !GetAtt OpenViduServer.PrivateIp, "32" ] ]
+          SourceSecurityGroupName: !Join [ "-", [ !Ref 'AWS::StackName', 'OpenViduSecurityGroup'] ]
         - IpProtocol: tcp
           FromPort: 3000
           ToPort: 3000
-          CidrIp: !Join [ "/", [ !GetAtt OpenViduServer.PrivateIp, "32" ] ]
+          SourceSecurityGroupName: !Join [ "-", [ !Ref 'AWS::StackName', 'OpenViduSecurityGroup'] ]
         - IpProtocol: udp
           FromPort: 40000
           ToPort: 65535
@@ -563,6 +564,7 @@ Resources:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
       GroupDescription: SSH, Proxy and OpenVidu WebRTC Ports
+      GroupName:  !Join [ "-", [ !Ref 'AWS::StackName', 'OpenViduSecurityGroup'] ]
       VpcId: !Ref OpenViduVPC
       SecurityGroupIngress:
         - IpProtocol: tcp
@@ -585,14 +587,14 @@ Resources:
           FromPort: 3478
           ToPort: 3478
           CidrIp: 0.0.0.0/0
-        - IpProtocol: udp
+        - IpProtocol: tcp
           FromPort: 5044
           ToPort: 5044
-          SourceSecurityGroupId: !Ref KMSSecurityGroup
-        - IpProtocol: udp
+          SourceSecurityGroupName: !Join [ "-", [ !Ref 'AWS::StackName', 'KMSSecurityGroup'] ]
+        - IpProtocol: tcp
           FromPort: 9200
           ToPort: 9200
-          SourceSecurityGroupId: !Ref KMSSecurityGroup
+          SourceSecurityGroupName: !Join [ "-", [ !Ref 'AWS::StackName', 'KMSSecurityGroup'] ]
         - IpProtocol: udp
           FromPort: 40000
           ToPort: 65535
