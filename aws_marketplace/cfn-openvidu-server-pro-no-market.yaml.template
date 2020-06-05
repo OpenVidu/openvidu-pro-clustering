@@ -586,6 +586,10 @@ Resources:
           ToPort: 3478
           CidrIp: 0.0.0.0/0
         - IpProtocol: udp
+          FromPort: 5044
+          ToPort: 5044
+          SourceSecurityGroupId: !Ref KMSSecurityGroup
+        - IpProtocol: udp
           FromPort: 9200
           ToPort: 9200
           SourceSecurityGroupId: !Ref KMSSecurityGroup
