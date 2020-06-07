@@ -58,25 +58,10 @@ Parameters:
     NoEcho: true
     ConstraintDescription: OpenVidu Secret is mandatory (no whitespaces or quotations allowed)
 
-  MinMediaNodes:
-    Description: "Minimum number of Media Nodes to launch on Autoscaling (EC2 instances will be launched)"
+  MediaNodesStartNumber:
+    Description: "How many Media Nodes do you want on startup (EC2 instances will be launched)"
     Type: Number
     Default: 1
-
-  MaxMediaNodes:
-    Description: "Maximum number of Media Nodes to launch on Autoscaling (EC2 instances will be launched)"
-    Type: Number
-    Default: 3
-
-  MinLoadAutoScaling:
-    Description: "Minimum load to scale down in autoscaling"
-    Type: Number
-    Default: 30
-
-  MaxLoadAutoScaling:
-    Description: "Maximum load to scale up in autoscaling"
-    Type: Number
-    Default: 70
 
   # Kibana configuration
 
@@ -227,10 +212,7 @@ Metadata:
         Parameters:
           - OpenViduLicense
           - OpenViduSecret
-          - MinMediaNodes
-          - MaxMediaNodes
-          - MinLoadAutoScaling
-          - MaxLoadAutoScaling
+          - MediaNodesStartNumber
       - Label:
           default: Kibana configuration
         Parameters:
@@ -269,16 +251,10 @@ Metadata:
       # OpenVidu configuration
       OpenViduLicense:
         default: "OpenVidu Pro License key"
+      MediaNodesStartNumber:
+        default: "Initial number of Media Node in your cluster"
       OpenViduSecret:
         default: "Openvidu Secret"
-      MinMediaNodes:
-        default: "Minimum number of Media Nodes to launch on Autoscaling"
-      MaxMediaNodes:
-        default: "Maximum number of Media Nodes to launch on Autoscaling"
-      MinLoadAutoScaling:
-        default: "Minimum load to scale down in autoscaling"
-      MaxLoadAutoScaling:
-        default: "Maximum load to scale up in autoscaling"
       # Kibana configuration
       KibanaUser:
         default: "Kibana username"
@@ -398,11 +374,9 @@ Resources:
 
                 # Openvidu Pro mode
                 sed -i "s/OPENVIDU_PRO_CLUSTER_MODE=manual/OPENVIDU_PRO_CLUSTER_MODE=auto/" $WORKINGDIR/.env
-                sed -i "s/OPENVIDU_PRO_CLUSTER_AUTOSCALING=false/OPENVIDU_PRO_CLUSTER_AUTOSCALING=true/" $WORKINGDIR/.env
-                sed -i "s/#OPENVIDU_PRO_CLUSTER_AUTOSCALING_MAX_NODES=/OPENVIDU_PRO_CLUSTER_AUTOSCALING_MAX_NODES=${MaxMediaNodes}/" $WORKINGDIR/.env
-                sed -i "s/#OPENVIDU_PRO_CLUSTER_AUTOSCALING_MIN_NODES=/OPENVIDU_PRO_CLUSTER_AUTOSCALING_MIN_NODES=${MinMediaNodes}/" $WORKINGDIR/.env
-                sed -i "s/#OPENVIDU_PRO_CLUSTER_AUTOSCALING_MAX_LOAD=/OPENVIDU_PRO_CLUSTER_AUTOSCALING_MAX_LOAD=${MaxLoadAutoScaling}/" $WORKINGDIR/.env
-                sed -i "s/#OPENVIDU_PRO_CLUSTER_AUTOSCALING_MIN_LOAD=/OPENVIDU_PRO_CLUSTER_AUTOSCALING_MIN_LOAD=${MinLoadAutoScaling}/" $WORKINGDIR/.env
+
+                # Openvidu Pro Media Nodes
+                sed -i "s/#OPENVIDU_PRO_CLUSTER_MEDIA_NODES=/OPENVIDU_PRO_CLUSTER_MEDIA_NODES=${MediaNodesStartNumber}/" $WORKINGDIR/.env
 
                 # Openvidu Pro enviroment
                 sed -i "s/OPENVIDU_PRO_CLUSTER_ENVIRONMENT=on_premise/OPENVIDU_PRO_CLUSTER_ENVIRONMENT=aws/" $WORKINGDIR/.env
