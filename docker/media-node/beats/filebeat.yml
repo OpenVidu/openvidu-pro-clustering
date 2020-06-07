@@ -37,3 +37,5 @@ output:
 
 logging.json: true
 logging.metrics.enabled: false
+setup.ilm.enabled: true
+setup.ilm.policy_name: "openvidu_cleanup_policy"
