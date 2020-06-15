@@ -30,14 +30,16 @@ These ports need to be opened and publicly accessible for each type of instance 
 - **443 TCP** (OpenVidu Inspector is served on port 443 by default)
 - **3478 TCP** (coturn listens on port 3478 by default)
 - **3478 UDP** (opening also UDP port has been proved to facilitate connections with certain type of clients)
+- **5044 TCP** (**must only be accessible for Media Node instances**) This port is necessary for Media Nodes instances to send metrics to OpenVidu
+- **9200 TCP** (**must only be accessible for Media Node instances**) This port is necessary for Media Nodes Instances to send metrics and logs to ElasticSearch.
 
 #### Media Node instances
 
 - **22 TCP**: to connect using SSH to admin OpenVidu.
 - **40000 - 65535 UDP** (WebRTC connections with clients may be established using a random port inside this range)
 - **40000 - 65535 TCP** (WebRTC connections with clients may be established using a random port inside this range, if UDP can't be used because client network is blocking it)
-- **8888 TCP (must only be accessible for OpenVidu Server Pro instance)** (Kurento Media Server listens on port 8888 by default)
 - **3000 TCP (must only be accessible for OpenVidu Server Pro instance)** Media nodes are orchestrated through and intermediary service called media-node-controller via http. This service listens on port 3000.
+- **8888 TCP (must only be accessible for OpenVidu Server Pro instance)** (Kurento Media Server listens on port 8888 by default)
 
 
 > **NOTE**: in production environments you will have to configure a **fully qualified domain name** in your **OpenVidu Server Pro instance**. You can register a FQDN for the OpenVidu Server Pro instance using a DNS server, pairing the OpenVidu Server Pro instance public IP with your domain name. This is the only way to later set up a valid certificate in OpenVidu Server Pro instance, so clients don't get a warning when connecting to a video session
