@@ -368,10 +368,6 @@ Resources:
                   echo $PublicHostname > /usr/share/openvidu/old-host-name
                 fi
 
-                # Replace OpenVidu Private ip
-                PRIVATE_IP=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
-                sed -i "s/OPENVIDU_PRO_PRIVATE_IP=/OPENVIDU_PRO_PRIVATE_IP=$PRIVATE_IP/" $WORKINGDIR/.env
-
                 # Openvidu Pro mode
                 sed -i "s/OPENVIDU_PRO_CLUSTER_MODE=manual/OPENVIDU_PRO_CLUSTER_MODE=auto/" $WORKINGDIR/.env
 
