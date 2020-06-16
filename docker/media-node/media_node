@@ -157,7 +157,7 @@ generate_report() {
       printf '\n'
     done
 
-  } >> "${REPORT_OUPUT}"
+  } >> "${REPORT_OUPUT}" 2>&1
 
   printf "\n  Generation of the report completed with success"
   printf "\n  You can get your report at path '%s'" "${REPORT_OUPUT}"
