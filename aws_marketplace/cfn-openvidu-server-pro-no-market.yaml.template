@@ -308,6 +308,7 @@ Resources:
                   - 'ec2:CreateTags'
                   - 'ec2:DescribeSecurityGroups'
                   - 'ec2:AuthorizeSecurityGroupIngress'
+                  - 'ec2:DescribeSubnets'
                   - 'iam:PassRole'
                   - 'route53:ChangeResourceRecordSets'
                   - 'route53:ListHostedZones'
@@ -426,9 +427,9 @@ Resources:
                                 --filters "Name=tag:aws:cloudformation:logical-id,Values=KMSSecurityGroup" \
                                           "Name=tag:aws:cloudformation:stack-id,Values=${AWS::StackId}" \
                                 --query 'SecurityGroups[].GroupId[]'
-                mode: "000755"
-                owner: "root"
-                group: "root"
+              mode: "000755"
+              owner: "root"
+              group: "root"
             '/usr/local/bin/getSecurityGroupOpenVidu.sh':
               content: !Sub |
                 #!/bin/bash -x
