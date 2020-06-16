@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-MEDIA_NODE_FOLDER=media-node
+MEDIA_NODE_FOLDER=kms
 MEDIA_NODE_VERSION=master
 BEATS_FOLDER=${MEDIA_NODE_FOLDER}/beats
 DOWNLOAD_URL=https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}
@@ -18,7 +18,7 @@ new_media_node_installation() {
      printf '\n     ======================================='
      printf '\n'
 
-     # Create media-node folder
+     # Create kms folder
      printf '\n     => Creating folder '%s'...' "${MEDIA_NODE_FOLDER}"
      mkdir "${MEDIA_NODE_FOLDER}" || fatal_error "Error while creating the folder '${MEDIA_NODE_FOLDER}'"
 
@@ -86,8 +86,8 @@ new_media_node_installation() {
      printf "\n          Media Node successfully installed."
      printf '\n     ======================================='
      printf "\n"
-     printf '\n     1. Go to media-node folder:'
-     printf '\n     $ cd media-node'
+     printf '\n     1. Go to kms folder:'
+     printf '\n     $ cd kms'
      printf "\n"
      printf '\n     2. Start Media Node Controller'
      printf '\n     $ ./media_node start'
@@ -108,7 +108,6 @@ upgrade_media_node() {
 
      SEARCH_IN_FOLDERS=(
           "${PWD}"
-          "/opt/kms"
           "/opt/${MEDIA_NODE_FOLDER}"
      )
 
@@ -116,15 +115,6 @@ upgrade_media_node() {
           printf "\n     => Searching in '%s' folder..." "${folder}"
 
           if [ -f "${folder}/docker-compose.yml" ]; then
-
-               # Rename installation folder to avoid conflicts in future releases
-               if [[ $folder == "/opt/kms" ]]; then
-                    printf "\n     => Renaming installation folder '%s' to '%s'" "${folder}" "/opt/${MEDIA_NODE_FOLDER}"
-                    mv /opt/kms "/opt/${MEDIA_NODE_FOLDER}"
-                    MEDIA_NODE_PREVIOUS_FOLDER="/opt/${MEDIA_NODE_FOLDER}"
-                    break
-               fi
-
                MEDIA_NODE_PREVIOUS_FOLDER="${folder}"
 
                printf "\n     => Found installation in folder '%s'" "${folder}"
