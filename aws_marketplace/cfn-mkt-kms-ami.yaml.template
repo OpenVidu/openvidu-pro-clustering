@@ -76,7 +76,7 @@ Resources:
                 curl https://s3-eu-west-1.amazonaws.com/aws.openvidu.io/install_media_node_OPENVIDU_VERSION.sh | bash
 
                 # Define Installation Type
-                sed -i "s/Installation Mode: On Premises/Installation Mode: Cloud Formation/" /opt/media-node/docker-compose.yml
+                sed -i "s/Installation Mode: On Premises/Installation Mode: Cloud Formation/" /opt/kms/docker-compose.yml
 
                 # Create recording folder
                 mkdir -p /opt/openvidu/recordings
@@ -96,7 +96,7 @@ Resources:
                 set -eu -o pipefail
 
                 # Run KMS
-                cd /opt/media-node
+                cd /opt/kms
                 docker-compose up -d
               mode: "000755"
               owner: "root"
