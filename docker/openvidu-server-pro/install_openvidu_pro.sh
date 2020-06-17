@@ -256,6 +256,9 @@ upgrade_ov() {
      mv "${OPENVIDU_PREVIOUS_FOLDER}/cluster/aws" "${ROLL_BACK_FOLDER}" || fatal_error "Error while moving previous 'cluster/aws'"
      printf '\n          - cluster/aws'
 
+     cp "${OPENVIDU_PREVIOUS_FOLDER}/.env" "${ROLL_BACK_FOLDER}" || fatal_error "Error while moving previous '.env'"
+     printf '\n          - .env'
+
      # Move tmp files to Openvidu
      printf '\n     => Updating files:'
 
@@ -316,6 +319,17 @@ upgrade_ov() {
      # Define old mode: On Premise or Cloud Formation
      OLD_MODE=$(grep -E "Installation Mode:.*$" "${ROLL_BACK_FOLDER}/docker-compose.yml" | awk '{ print $4,$5 }')
      [ ! -z "${OLD_MODE}" ] && sed -i -r "s/Installation Mode:.+/Installation Mode: ${OLD_MODE}/" "${OPENVIDU_PREVIOUS_FOLDER}/docker-compose.yml"
+
+     CHECK_AWS=$(curl -s -o /dev/null -w "%{http_code}" http://169.254.169.254)
+     if [[ ${CHECK_AWS} == "200" ]]; then
+          AWS_REGION=$(grep -E "AWS_DEFAULT_REGION=.*$" "${OPENVIDU_PREVIOUS_FOLDER}/.env" | cut -d'=' -f2)
+          [[ -z ${AWS_REGION} ]] && fatal_error "Error while getting AWS_REGION"
+          NEW_AMI_ID=$(curl https://s3-eu-west-1.amazonaws.com/aws.openvidu.io/CF-OpenVidu-Pro-${OPENVIDU_VERSION//v}.yaml --silent |
+                         sed -n -e '/KMSAMIMAP:/,/Metadata:/ p' |
+                         grep -A 1 ${AWS_REGION} | grep AMI | tr -d " " | cut -d":" -f2)
+          [[ -z ${NEW_AMI_ID} ]] || fatal_error "Error while getting new AWS_IMAGE_ID for Media Nodes"
+          sed -i "s/.*AWS_IMAGE_ID=.*/AWS_IMAGE_ID=${NEW_AMI_ID}/" "${OPENVIDU_PREVIOUS_FOLDER}/.env" || fatal_error "Error while updating new AWS_IMAGE_ID for Media Nodes"
+     fi
 
      # Ready to use
      printf '\n'
