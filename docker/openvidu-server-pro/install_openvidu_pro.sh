@@ -320,6 +320,7 @@ upgrade_ov() {
      OLD_MODE=$(grep -E "Installation Mode:.*$" "${ROLL_BACK_FOLDER}/docker-compose.yml" | awk '{ print $4,$5 }')
      [ ! -z "${OLD_MODE}" ] && sed -i -r "s/Installation Mode:.+/Installation Mode: ${OLD_MODE}/" "${OPENVIDU_PREVIOUS_FOLDER}/docker-compose.yml"
 
+     # In Aws, update AMI ID
      CHECK_AWS=$(curl -s -o /dev/null -w "%{http_code}" http://169.254.169.254)
      if [[ ${CHECK_AWS} == "200" ]]; then
           AWS_REGION=$(grep -E "AWS_DEFAULT_REGION=.*$" "${OPENVIDU_PREVIOUS_FOLDER}/.env" | cut -d'=' -f2)
