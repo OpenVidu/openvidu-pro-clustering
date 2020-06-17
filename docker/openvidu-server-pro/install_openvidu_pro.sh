@@ -327,7 +327,7 @@ upgrade_ov() {
           NEW_AMI_ID=$(curl https://s3-eu-west-1.amazonaws.com/aws.openvidu.io/CF-OpenVidu-Pro-${OPENVIDU_VERSION//v}.yaml --silent |
                          sed -n -e '/KMSAMIMAP:/,/Metadata:/ p' |
                          grep -A 1 ${AWS_REGION} | grep AMI | tr -d " " | cut -d":" -f2)
-          [[ -z ${NEW_AMI_ID} ]] || fatal_error "Error while getting new AWS_IMAGE_ID for Media Nodes"
+          [[ -z ${NEW_AMI_ID} ]] && fatal_error "Error while getting new AWS_IMAGE_ID for Media Nodes"
           sed -i "s/.*AWS_IMAGE_ID=.*/AWS_IMAGE_ID=${NEW_AMI_ID}/" "${OPENVIDU_PREVIOUS_FOLDER}/.env" || fatal_error "Error while updating new AWS_IMAGE_ID for Media Nodes"
      fi
 
