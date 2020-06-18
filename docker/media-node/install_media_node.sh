@@ -229,6 +229,9 @@ upgrade_media_node() {
      mv "${MEDIA_NODE_PREVIOUS_FOLDER}/nginx_conf" "${ROLL_BACK_FOLDER}" || fatal_error "Error while moving previous 'nginx_conf'"
      printf '\n          - nginx_conf'
 
+     cp "${MEDIA_NODE_PREVIOUS_FOLDER}/.env" "${ROLL_BACK_FOLDER}" || fatal_error "Error while moving previous '.env'"
+     printf '\n          - .env'
+
      # Move tmp files to Openvidu
      printf '\n     => Updating files:'
 
