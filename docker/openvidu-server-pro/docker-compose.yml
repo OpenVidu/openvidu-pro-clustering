@@ -67,7 +67,7 @@ services:
             - MAX_PORT=65535
 
     nginx:
-        image: openvidu/openvidu-proxy:3.0.0-beta1
+        image: openvidu/openvidu-proxy:3.0.0
         restart: on-failure
         network_mode: host
         entrypoint: ['/bin/sh', '-c', 'htpasswd -bc /etc/nginx/kibana.htpasswd "${KIBANA_USER}" "${KIBANA_PASSWORD}" && /usr/local/bin/entrypoint.sh']
