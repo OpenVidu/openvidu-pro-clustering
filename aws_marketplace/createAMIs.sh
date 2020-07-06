@@ -1,5 +1,4 @@
 #!/bin/bash -x
-set -eu -o pipefail
 
 CF_OVP_TARGET=${CF_OVP_TARGET:-nomarket}
 
