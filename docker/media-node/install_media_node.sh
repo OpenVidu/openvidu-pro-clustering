@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 MEDIA_NODE_FOLDER=kms
-MEDIA_NODE_VERSION=master
+MEDIA_NODE_VERSION=v2.15.1
 BEATS_FOLDER=${MEDIA_NODE_FOLDER}/beats
 DOWNLOAD_URL=https://raw.githubusercontent.com/OpenVidu/openvidu-pro-clustering/${MEDIA_NODE_VERSION}
 fatal_error() {
