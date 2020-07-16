@@ -7,7 +7,7 @@
 
 :warning: :warning: :warning: **WARNING** :warning: :warning: :warning:
 
-> If you are here because you want to deploy OpenVidu CE follow this instructions:
+> If you are here because you want to deploy OpenVidu PRO follow this instructions:
 > - AWS: https://docs.openvidu.io/en/latest/openvidu-pro/deployment/aws/
 > - On Premises: https://docs.openvidu.io/en/latest/openvidu-pro/deployment/on-premises/
 
